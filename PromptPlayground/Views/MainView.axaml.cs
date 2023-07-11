@@ -1,12 +1,19 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Microsoft;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.TemplateEngine;
+using Microsoft.SemanticKernel.TemplateEngine.Blocks;
 using MsBox.Avalonia;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
@@ -38,7 +45,16 @@ public partial class MainView : UserControl
         {
             Loading(true);
 
+
+           
+
             var kernel = CreateKernel();
+
+            var context = kernel.CreateNewContext();
+            if (model.Blocks.Count > 0)
+            {
+               throw new Exception("请先填充参数");
+            }
 
             var service = new PromptService(kernel);
             model.Results.Clear();
@@ -97,5 +113,32 @@ public partial class MainView : UserControl
     private async void OnGenerateButtonClick(object sender, RoutedEventArgs e)
     {
         await GenerateAsync().ConfigureAwait(false);
+    }
+
+    private async void OnImportFile(object sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+        {
+            return;
+        }
+        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions()
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new FilePickerFileType[]
+            {
+                new FilePickerFileType("sk prompt")
+                {
+                    Patterns = new string[] { "skprompt.txt" }
+                }
+            }
+        });
+        if (file.Count > 0)
+        {
+            using var stream = await file[0].OpenReadAsync();
+            using var streamReader = new StreamReader(stream);
+            var text = await streamReader.ReadToEndAsync();
+            model.Prompt = text;
+        }
     }
 }
