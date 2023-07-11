@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="PromptPlayground.Views.MainView"
+             x:DataType="vm:MainViewModel">
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:MainViewModel />
+	</Design.DataContext>
+	<DockPanel >
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="配置" Click="OnConfigClick">
+			</MenuItem>
+		</Menu>
+
+		<WrapPanel DockPanel.Dock="Bottom">
+			<ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Loading}" IsIndeterminate="{Binding Loading}"/>
+		</WrapPanel>
+
+		<Grid ColumnDefinitions="*,80" RowDefinitions="80,40,40,*" DockPanel.Dock="Bottom" Margin="10,0,10,10">
+			<TextBox Text="{Binding Prompt}" AcceptsReturn="True" TextWrapping="Wrap" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"/>
+			<Button Click="OnGenerateButtonClick" Content="生成" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsEnabled="{Binding !Loading}" Margin="10"/>
+			<ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
+				<StackPanel Margin="0,10">
+					<ItemsControl ItemsSource="{Binding Results}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="0,5">
+									<ScrollViewer>
+										<SelectableTextBlock Padding="12" Text="{Binding}" ScrollViewer.AllowAutoHide="True"
+												   ScrollViewer.IsScrollChainingEnabled="True"/>
+									</ScrollViewer>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl >
+
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+
+	</DockPanel>
+</UserControl>
