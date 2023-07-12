@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using AvaloniaEdit.Document;
 using Microsoft;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TemplateEngine;
@@ -138,7 +139,7 @@ public partial class MainView : UserControl
             using var stream = await file[0].OpenReadAsync();
             using var streamReader = new StreamReader(stream);
             var text = await streamReader.ReadToEndAsync();
-            model.Prompt = text;
+            model.Document = new TextDocument(new StringTextSource(text));
         }
     }
 }

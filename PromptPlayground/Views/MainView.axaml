@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
+			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PromptPlayground.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -22,8 +23,15 @@
 			<ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Loading}" IsIndeterminate="{Binding Loading}"/>
 		</StackPanel>
 
-		<Grid ColumnDefinitions="*,80" RowDefinitions="80,40,40,*" DockPanel.Dock="Bottom" Margin="10,0,10,10">
-			<TextBox Text="{Binding Prompt}" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
+		<Grid ColumnDefinitions="*,80" RowDefinitions="120,40,40,*" DockPanel.Dock="Bottom" Margin="10,0,10,10">
+			<ae:TextEditor 
+				Document="{Binding Document}"
+			    ContextMenu=""
+			    BorderBrush="LightGray"
+				BorderThickness="1"
+				ShowLineNumbers="True" 
+				FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+				Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
 			<Button Click="OnGenerateButtonClick" Content="生成" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsEnabled="{Binding !Loading}" Margin="10"/>
 			<ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3">
 				<StackPanel Margin="0,10">

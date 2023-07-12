@@ -14,6 +14,7 @@ using Microsoft.SemanticKernel.TemplateEngine;
 using System.Reflection;
 using System.Linq;
 using System.Reflection.Emit;
+using AvaloniaEdit.Document;
 
 namespace PromptPlayground.ViewModels;
 
@@ -23,6 +24,20 @@ public partial class MainViewModel : ViewModelBase
     {
         Results = new ObservableCollection<string>(new List<string>() { });
 
+    }
+
+    public TextDocument Document
+    {
+        get => document;
+        set
+        {
+            if (document != value)
+            {
+                document = value;
+                OnPropertyChanged(nameof(Document));
+                OnPropertyChanged(nameof(Prompt));
+            }
+        }
     }
     public bool Loading
     {
@@ -35,18 +50,7 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
-    public string Prompt
-    {
-        get => prompt; set
-        {
-            if (prompt != value)
-            {
-                prompt = value;
-                OnPropertyChanged(nameof(Prompt));
-                OnPropertyChanged(nameof(Blocks));
-            }
-        }
-    }
+    public string Prompt => document.Text;
     public ObservableCollection<string> Results { get; set; }
 
     public string Status
@@ -65,8 +69,9 @@ public partial class MainViewModel : ViewModelBase
     }
     public ConfigViewModel Config = new(true);
     private bool loading = false;
-    private string prompt = string.Empty;
 
+
+    private TextDocument document = new();
 
     public IList<string> Blocks => new PromptTemplateEngine().ExtractBlocks(this.Prompt)
             .Where(IsVariableBlock)
@@ -76,7 +81,6 @@ public partial class MainViewModel : ViewModelBase
     private static bool IsVariableBlock(Block block)
     {
         return block.GetType().Name == "VarBlock";
-       
     }
 
     private static string GetBlockContent(Block block)
