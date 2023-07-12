@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.AI.TextCompletion;
+using Microsoft.SemanticKernel.Orchestration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +19,11 @@ namespace PromptPlayground.Services
             this._kernel = kernel;
         }
 
-        public Task<string> RunAsync(string prompt, CancellationToken cancellationToken = default)
+        public async Task<string> RunAsync(string prompt, SKContext context, CancellationToken cancellationToken = default)
         {
-            var completion = this._kernel.GetService<ITextCompletion>();
-
-            var result = completion.CompleteAsync(prompt, new CompleteRequestSettings()
-            {
-                 MaxTokens = 2000,
-            }, cancellationToken);
-
-            return result;
+            var func = _kernel.CreateSemanticFunction(prompt, maxTokens: 2000);
+            var result = await func.InvokeAsync(context);
+            return result.Result;
         }
     }
 }

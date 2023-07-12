@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using AvaloniaEdit.Document;
 using Microsoft;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TemplateEngine;
 using Microsoft.SemanticKernel.TemplateEngine.Blocks;
@@ -47,21 +48,40 @@ public partial class MainView : UserControl
             Loading(true);
 
 
-
-
             var kernel = CreateKernel();
 
             var context = kernel.CreateNewContext();
             if (model.Blocks.Count > 0)
             {
-                throw new Exception("请先填充参数");
+                var variables = this.model.Blocks.Select(_ => new Variable()
+                {
+                    Name = _.TrimStart('$')
+                }).Distinct().ToList();
+                var variablesVm = new VariablesViewModel(variables);
+                var variableWindows = new VariablesWindows()
+                {
+                    DataContext = variablesVm
+                };
+                await variableWindows.ShowDialog(this.mainWindow);
+                if (variableWindows.Canceled)
+                {
+                    throw new Exception("生成已取消");
+                }
+                if (!variablesVm.Configured())
+                {
+                    throw new Exception("变量未配置");
+                }
+                foreach (var variable in variablesVm.Variables)
+                {
+                    context[variable.Name] = variable.Value;
+                }
             }
 
             var service = new PromptService(kernel);
             model.Results.Clear();
             for (int i = 0; i < model.Config.MaxCount; i++)
             {
-                var result = await service.RunAsync(model.Prompt);
+                var result = await service.RunAsync(model.Prompt, context);
                 model.Results.Add(result);
             }
         }

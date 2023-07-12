@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		SizeToContent="WidthAndHeight"
+		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
+        x:Class="PromptPlayground.Views.VariablesWindows"
+		x:DataType="vm:VariablesViewModel"
+		SystemDecorations="Full"
+		Icon="/Assets/logo.png"
+		WindowStartupLocation="CenterOwner"
+        Title="Variables"
+		>
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top">
+			<ItemsControl ItemsSource="{Binding Variables}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Grid ColumnDefinitions="*,6*" Margin="30,10">
+							<Label Content="{Binding Name}" MinWidth="50" Grid.Column="0"/>
+							<TextBox AcceptsReturn="True" Text="{Binding Value}" MinWidth="80" Grid.Column="1"/>
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</StackPanel>
+		<StackPanel Margin="10" DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Button Content="继续 🚀"  Click="OnContinuedClick" Margin="30,0"/>
+			<Button Content="取消 ❌"  Click="OnCanceledClick" Margin="30,0"/>
+		</StackPanel>
+	</DockPanel>
+
+</Window>

@@ -24,7 +24,12 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         Results = new ObservableCollection<string>(new List<string>() { });
+        Results.CollectionChanged += Results_CollectionChanged;
+    }
 
+    private void Results_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(StatusBar));
     }
 
     public TextDocument Document
@@ -68,7 +73,7 @@ public partial class MainViewModel : ViewModelBase
         {
             if (Loading)
             {
-                return "loading ...";
+                return $"({Results.Count}/{Config.MaxCount})生成中 ......";
             }
             else if (LinkDocument)
             {
