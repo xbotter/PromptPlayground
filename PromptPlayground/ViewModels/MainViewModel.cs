@@ -1,19 +1,9 @@
-﻿
-using MsBox.Avalonia.Enums;
-using MsBox.Avalonia;
-using System.Threading.Tasks;
-using Microsoft.SemanticKernel;
-using Avalonia.Controls;
-using PromptPlayground.Views;
-using Avalonia;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.SemanticKernel.TemplateEngine.Blocks;
 using Microsoft.SemanticKernel.TemplateEngine;
 using System.Reflection;
 using System.Linq;
-using System.Reflection.Emit;
 using AvaloniaEdit.Document;
 using System.IO;
 
@@ -24,12 +14,10 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel()
     {
         Results = new ObservableCollection<string>(new List<string>() { });
-        Results.CollectionChanged += Results_CollectionChanged;
-    }
-
-    private void Results_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        OnPropertyChanged(nameof(StatusBar));
+        Results.CollectionChanged += (sender, e) =>
+        {
+            OnPropertyChanged(nameof(StatusBar));
+        };
     }
 
     public TextDocument Document
