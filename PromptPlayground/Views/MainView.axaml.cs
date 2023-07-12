@@ -108,7 +108,6 @@ public partial class MainView : UserControl
     private void Loading(bool loading)
     {
         model.Loading = loading;
-
     }
 
     private async void OnGenerateButtonClick(object sender, RoutedEventArgs e)

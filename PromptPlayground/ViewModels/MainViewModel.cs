@@ -39,6 +39,7 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(Document));
                 OnPropertyChanged(nameof(Prompt));
                 OnPropertyChanged(nameof(LinkDocument));
+                OnPropertyChanged(nameof(StatusBar));
                 value.TextChanged += (s, e) =>
                 {
                     OnPropertyChanged(nameof(Prompt));
@@ -61,6 +62,22 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
+    public string StatusBar
+    {
+        get
+        {
+            if (Loading)
+            {
+                return "loading ...";
+            }
+            else if (LinkDocument)
+            {
+                return "open file: " + this.document.FileName;
+            }
+            return string.Empty;
+
+        }
+    }
 
     public bool Loading
     {
@@ -70,6 +87,7 @@ public partial class MainViewModel : ViewModelBase
             {
                 loading = value;
                 OnPropertyChanged(nameof(Loading));
+                OnPropertyChanged(nameof(StatusBar));
             }
         }
     }
