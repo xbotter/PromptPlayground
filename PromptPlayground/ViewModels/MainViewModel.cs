@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Linq;
 using System.Reflection.Emit;
 using AvaloniaEdit.Document;
+using System.IO;
 
 namespace PromptPlayground.ViewModels;
 
@@ -34,11 +35,33 @@ public partial class MainViewModel : ViewModelBase
             if (document != value)
             {
                 document = value;
+                textChanged = false;
                 OnPropertyChanged(nameof(Document));
                 OnPropertyChanged(nameof(Prompt));
+                OnPropertyChanged(nameof(LinkDocument));
+                value.TextChanged += (s, e) =>
+                {
+                    OnPropertyChanged(nameof(Prompt));
+                    TextChanged = true;
+                };
             }
         }
     }
+
+    public bool LinkDocument => File.Exists(this.document.FileName);
+    public bool TextChanged
+    {
+        get => textChanged;
+        set
+        {
+            if (textChanged != value)
+            {
+                textChanged = value;
+                OnPropertyChanged(nameof(TextChanged));
+            }
+        }
+    }
+
     public bool Loading
     {
         get => loading; set
@@ -72,6 +95,7 @@ public partial class MainViewModel : ViewModelBase
 
 
     private TextDocument document = new();
+    private bool textChanged;
 
     public IList<string> Blocks => new PromptTemplateEngine().ExtractBlocks(this.Prompt)
             .Where(IsVariableBlock)

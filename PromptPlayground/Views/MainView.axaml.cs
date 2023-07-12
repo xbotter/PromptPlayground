@@ -47,14 +47,14 @@ public partial class MainView : UserControl
             Loading(true);
 
 
-           
+
 
             var kernel = CreateKernel();
 
             var context = kernel.CreateNewContext();
             if (model.Blocks.Count > 0)
             {
-               throw new Exception("请先填充参数");
+                throw new Exception("请先填充参数");
             }
 
             var service = new PromptService(kernel);
@@ -116,6 +116,15 @@ public partial class MainView : UserControl
         await GenerateAsync().ConfigureAwait(false);
     }
 
+    private void OnSaveButtonClick(object sender, RoutedEventArgs e)
+    {
+        if (model.LinkDocument)
+        {
+            File.WriteAllText(model.Document.FileName, model.Document.Text);
+            model.TextChanged = false;
+        }
+    }
+
     private async void OnImportFile(object sender, RoutedEventArgs e)
     {
         var topLevel = TopLevel.GetTopLevel(this);
@@ -123,7 +132,7 @@ public partial class MainView : UserControl
         {
             return;
         }
-        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions()
+        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = false,
             FileTypeFilter = new FilePickerFileType[]
@@ -139,7 +148,10 @@ public partial class MainView : UserControl
             using var stream = await file[0].OpenReadAsync();
             using var streamReader = new StreamReader(stream);
             var text = await streamReader.ReadToEndAsync();
-            model.Document = new TextDocument(new StringTextSource(text));
+            model.Document = new TextDocument(new StringTextSource(text))
+            {
+                FileName = file[0].TryGetLocalPath()
+            };
         }
     }
 }
