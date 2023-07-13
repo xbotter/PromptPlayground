@@ -88,7 +88,6 @@ public partial class MainViewModel : ViewModelBase
 
         }
     }
-
     public bool Loading
     {
         get => loading; set
@@ -114,25 +113,10 @@ public partial class MainViewModel : ViewModelBase
         }
     }
     public ObservableCollection<GenerateResult> Results { get; set; }
-
-    public string Status
-    {
-        get
-        {
-            if (loading)
-            {
-                return "loading";
-            }
-            else
-            {
-                return "ready";
-            }
-        }
-    }
     public ConfigViewModel Config = new(true);
+
+
     private bool loading = false;
-
-
     private TextDocument document = new();
     private bool textChanged;
     private TextDocument configJson = new();
