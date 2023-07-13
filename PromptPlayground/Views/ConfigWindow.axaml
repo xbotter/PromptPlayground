@@ -7,7 +7,7 @@
 		Width="300"
 		Height="300"
 		x:Class="PromptPlayground.Views.ConfigWindow"
-		Icon="/Assets/logo.png"
+		Icon="/Assets/logo.ico"
 		x:DataType="vm:ConfigViewModel"
         Title="Config">
 	<Design.DataContext>
@@ -22,7 +22,7 @@
 				</DataTemplate>
 			</ComboBox.ItemTemplate>
 		</ComboBox>
-	
+
 		<StackPanel IsVisible="{Binding ModelSelectAzure}">
 			<TextBlock Text="Azure Deployment:"/>
 			<TextBox Text="{Binding AzureDeployment}"/>
@@ -37,6 +37,7 @@
 			<TextBlock Text="Baidu Secret:"/>
 			<TextBox Text="{Binding BaiduSecret}"/>
 		</StackPanel>
+		<TextBlock/>
 		<TextBlock Text="Max Generate Results:"/>
 		<TextBox Text="{Binding MaxCount}"/>
 	</StackPanel>

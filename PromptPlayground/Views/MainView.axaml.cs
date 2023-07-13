@@ -48,7 +48,6 @@ public partial class MainView : UserControl
         {
             Loading(true);
 
-
             var kernel = CreateKernel();
             cancellationTokenSource?.Dispose();
 

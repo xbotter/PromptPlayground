@@ -105,7 +105,7 @@ public partial class MainViewModel : ViewModelBase
     {
         get
         {
-            if (configJson != null)
+            if (configJson != null && !string.IsNullOrEmpty(configJson.Text))
             {
                 return PromptTemplateConfig.FromJson(configJson.Text);
             }

@@ -8,7 +8,7 @@
         x:Class="PromptPlayground.Views.VariablesWindows"
 		x:DataType="vm:VariablesViewModel"
 		SystemDecorations="Full"
-		Icon="/Assets/logo.png"
+		Icon="/Assets/logo.ico"
 		WindowStartupLocation="CenterOwner"
         Title="Variables"
 		>
