@@ -35,6 +35,8 @@ public partial class MainView : UserControl
         var configWindow = new ConfigWindow()
         {
             DataContext = model.Config,
+            ShowInTaskbar = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
         configWindow.ShowDialog(mainWindow);
@@ -61,7 +63,9 @@ public partial class MainView : UserControl
                 var variablesVm = new VariablesViewModel(variables);
                 var variableWindows = new VariablesWindows()
                 {
-                    DataContext = variablesVm
+                    DataContext = variablesVm,
+                    ShowInTaskbar = false,
+                    WindowStartupLocation= WindowStartupLocation.CenterOwner
                 };
                 await variableWindows.ShowDialog(this.mainWindow);
                 if (variableWindows.Canceled)

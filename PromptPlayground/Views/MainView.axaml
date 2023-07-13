@@ -17,12 +17,18 @@
 			<Setter Property="Background" Value="Transparent"/>
 			<Setter Property="BorderBrush" Value="Gray"/>
 		</Style>
+		<Style Selector="ae|TextEditor.editor">
+			<Setter Property="BorderBrush" Value="LightGray"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="ShowLineNumbers" Value="True"/>
+			<Setter Property="FontFamily" Value="Cascadia Code,Consolas,Menlo,Monospace"/>
+		</Style>
 	</UserControl.Styles>
 	<DockPanel >
 		<Menu DockPanel.Dock="Top">
 			<MenuItem Header="配置 🔧" Click="OnConfigClick">
 			</MenuItem>
-			<MenuItem Header="打开 📁" Click="OnImportFile" />
+			<MenuItem Header="打开 📁" HotKey="Ctrl+O" Click="OnImportFile" />
 		</Menu>
 
 		<StackPanel DockPanel.Dock="Bottom">
@@ -34,24 +40,16 @@
 			<TabControl TabStripPlacement="Right" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4">
 				<TabItem Header="📝">
 					<ae:TextEditor
+				Classes="editor"
 				Document="{Binding Document}"
-			    ContextMenu=""
-			    BorderBrush="LightGray"
-				BorderThickness="1"
-				ShowLineNumbers="True"
-				FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
 				/>
 				</TabItem>
 				<TabItem Header="🛠"
 						 IsVisible="{Binding LinkDocument}">
 					<ae:TextEditor
+				Classes="editor"
 				Document="{Binding ConfigJson}"
 				SyntaxHighlighting="Json"
-			    ContextMenu=""
-			    BorderBrush="LightGray"
-				BorderThickness="1"
-				ShowLineNumbers="True"
-				FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
 				/>
 				</TabItem>
 			</TabControl>
