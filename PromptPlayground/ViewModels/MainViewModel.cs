@@ -35,7 +35,7 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(Prompt));
                 OnPropertyChanged(nameof(LinkDocument));
                 OnPropertyChanged(nameof(StatusBar));
-                OnPropertyChanged(nameof(HasConfigFile));
+                OnPropertyChanged(nameof(ConfigJson));
                 value.TextChanged += (s, e) =>
                 {
                     OnPropertyChanged(nameof(Prompt));
@@ -44,7 +44,23 @@ public partial class MainViewModel : ViewModelBase
             }
         }
     }
-
+    public TextDocument ConfigJson
+    {
+        get => configJson;
+        set
+        {
+            if (configJson != value)
+            {
+                configJson = value;
+                OnPropertyChanged(nameof(ConfigJson));
+                value.TextChanged += (s, e) =>
+                {
+                    OnPropertyChanged(nameof(PromptConfig));
+                    TextChanged = true;
+                };
+            }
+        }
+    }
     public bool LinkDocument => File.Exists(this.document.FileName);
     public bool TextChanged
     {
@@ -88,19 +104,13 @@ public partial class MainViewModel : ViewModelBase
         }
     }
     public string Prompt => document.Text;
-    public bool HasConfigFile => File.Exists(document.FileName) && File.Exists(Path.Combine(Path.GetDirectoryName(document.FileName)!, "config.json"));
     public PromptTemplateConfig PromptConfig
     {
         get
         {
-            if (File.Exists(document.FileName))
+            if (configJson != null)
             {
-                var configFilePath = Path.Combine(Path.GetDirectoryName(document.FileName)!, "config.json");
-
-                if (configFilePath is not null && File.Exists(configFilePath))
-                {
-                    return PromptTemplateConfig.FromJson(File.ReadAllText(configFilePath));
-                }
+                return PromptTemplateConfig.FromJson(configJson.Text);
             }
             return new PromptTemplateConfig();
         }
@@ -127,6 +137,7 @@ public partial class MainViewModel : ViewModelBase
 
     private TextDocument document = new();
     private bool textChanged;
+    private TextDocument configJson = new();
 
     public IList<string> Blocks => new PromptTemplateEngine().ExtractBlocks(this.Prompt)
             .Where(IsVariableBlock)

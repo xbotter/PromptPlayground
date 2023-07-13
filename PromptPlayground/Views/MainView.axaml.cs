@@ -4,12 +4,14 @@ using Avalonia.Platform.Storage;
 using AvaloniaEdit.Document;
 using Microsoft;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.SemanticFunctions;
 using MsBox.Avalonia;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -148,6 +150,7 @@ public partial class MainView : UserControl
         if (model.LinkDocument)
         {
             File.WriteAllText(model.Document.FileName, model.Document.Text);
+            File.WriteAllText(model.ConfigJson.FileName, model.ConfigJson.Text);
             model.TextChanged = false;
         }
     }
@@ -179,12 +182,26 @@ public partial class MainView : UserControl
             {
                 FileName = file[0].TryGetLocalPath()
             };
+            var configFile = Path.Combine(Path.GetDirectoryName(model.Document.FileName)!, "config.json");
+            if (File.Exists(configFile))
+            {
+                model.ConfigJson = new TextDocument(new StringTextSource(File.ReadAllText(configFile)))
+                {
+                    FileName = configFile
+                };
+            }
+            else
+            {
+                var configJson = JsonSerializer.Serialize(new PromptTemplateConfig(), new JsonSerializerOptions()
+                {
+                    WriteIndented = true
+                });
+                model.ConfigJson = new TextDocument(new StringTextSource(configJson))
+                {
+                    FileName = configFile
+                };
+            }
         }
     }
 
-    private async void OnConfigJsonClick(object sender, RoutedEventArgs e)
-    {
-        await MessageBoxManager.GetMessageBoxStandard("config.json", "暂不支持配置config.json", MsBox.Avalonia.Enums.ButtonEnum.Ok)
-             .ShowWindowDialogAsync(mainWindow);
-    }
 }
