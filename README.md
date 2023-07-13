@@ -2,7 +2,7 @@
 
 一个简易的Semantic Kernel提示词调试工具。
 
-![mainWindows](assets/README/image.png)
+
 
 ## 使用方法 🐣
 
@@ -21,7 +21,7 @@
 
 点击配置菜单，即可进入配置界面。
 
-![Config Windows](assets/README/image-1.png)
+![Config Windows](assets/README/image-2.png)
 
 目前模型的选择支持 Azure OpenAI ChatCompletion 和 Baidu ERNIE-Bot Turbo。
 
@@ -30,6 +30,8 @@ Max Generate Results 指最大生成结果数量，默认为3。
 填写入对应的参数，关闭即可。
 
 ### 直接使用
+
+![mainWindows](assets/README/image.png)
 
 在主界面的提示词框中直接输入提示词，点击生成(Ctrl+G)即可。
 
@@ -40,6 +42,7 @@ Max Generate Results 指最大生成结果数量，默认为3。
 对于没有config.json文件的skprompt，会自动创建一个默认的config.json文件。
 
 点击输入框右侧的Tab按钮，可以切换到config.json编辑界面。
+![Config.Json](assets/README/image-1.png)
 
 ### 导出skprompt
 
