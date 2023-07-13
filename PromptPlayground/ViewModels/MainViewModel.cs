@@ -35,7 +35,6 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(Prompt));
                 OnPropertyChanged(nameof(LinkDocument));
                 OnPropertyChanged(nameof(StatusBar));
-                OnPropertyChanged(nameof(ConfigJson));
                 value.TextChanged += (s, e) =>
                 {
                     OnPropertyChanged(nameof(Prompt));
@@ -55,7 +54,6 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(ConfigJson));
                 value.TextChanged += (s, e) =>
                 {
-                    OnPropertyChanged(nameof(PromptConfig));
                     TextChanged = true;
                 };
             }
