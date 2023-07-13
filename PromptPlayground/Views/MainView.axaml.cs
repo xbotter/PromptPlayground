@@ -75,7 +75,7 @@ public partial class MainView : UserControl
             model.Results.Clear();
             for (int i = 0; i < model.Config.MaxCount; i++)
             {
-                var result = await service.RunAsync(model.Prompt, context);
+                var result = await service.RunAsync(model.Prompt, model.PromptConfig, context);
                 model.Results.Add(result);
             }
         }
@@ -166,5 +166,11 @@ public partial class MainView : UserControl
                 FileName = file[0].TryGetLocalPath()
             };
         }
+    }
+
+    private async void OnConfigJsonClick(object sender, RoutedEventArgs e)
+    {
+        await MessageBoxManager.GetMessageBoxStandard("config.json", "暂不支持配置config.json", MsBox.Avalonia.Enums.ButtonEnum.Ok)
+             .ShowWindowDialogAsync(mainWindow);
     }
 }

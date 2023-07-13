@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Linq;
 using AvaloniaEdit.Document;
 using System.IO;
+using Microsoft.SemanticKernel.SemanticFunctions;
 
 namespace PromptPlayground.ViewModels;
 
@@ -33,6 +34,7 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(Prompt));
                 OnPropertyChanged(nameof(LinkDocument));
                 OnPropertyChanged(nameof(StatusBar));
+                OnPropertyChanged(nameof(HasConfigFile));
                 value.TextChanged += (s, e) =>
                 {
                     OnPropertyChanged(nameof(Prompt));
@@ -85,6 +87,23 @@ public partial class MainViewModel : ViewModelBase
         }
     }
     public string Prompt => document.Text;
+    public bool HasConfigFile => File.Exists(document.FileName) && File.Exists(Path.Combine(Path.GetDirectoryName(document.FileName)!, "config.json"));
+    public PromptTemplateConfig PromptConfig
+    {
+        get
+        {
+            if (File.Exists(document.FileName))
+            {
+                var configFilePath = Path.Combine(Path.GetDirectoryName(document.FileName)!, "config.json");
+
+                if (configFilePath is not null && File.Exists(configFilePath))
+                {
+                    return PromptTemplateConfig.FromJson(File.ReadAllText(configFilePath));
+                }
+            }
+            return new PromptTemplateConfig();
+        }
+    }
     public ObservableCollection<string> Results { get; set; }
 
     public string Status
