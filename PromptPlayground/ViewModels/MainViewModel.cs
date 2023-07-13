@@ -7,6 +7,7 @@ using System.Linq;
 using AvaloniaEdit.Document;
 using System.IO;
 using Microsoft.SemanticKernel.SemanticFunctions;
+using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels;
 
@@ -14,7 +15,7 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        Results = new ObservableCollection<string>(new List<string>() { });
+        Results = new ObservableCollection<GenerateResult>();
         Results.CollectionChanged += (sender, e) =>
         {
             OnPropertyChanged(nameof(StatusBar));
@@ -104,7 +105,7 @@ public partial class MainViewModel : ViewModelBase
             return new PromptTemplateConfig();
         }
     }
-    public ObservableCollection<string> Results { get; set; }
+    public ObservableCollection<GenerateResult> Results { get; set; }
 
     public string Status
     {

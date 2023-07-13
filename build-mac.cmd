@@ -1,1 +1,0 @@
-dotnet publish -c Release -o publish/mac --self-contained true -r osx.13-arm64 -p:PublishSingleFile=true .\PromptPlayground.Desktop\PromptPlayground.Desktop.csproj

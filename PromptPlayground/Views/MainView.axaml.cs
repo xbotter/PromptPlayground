@@ -10,6 +10,7 @@ using PromptPlayground.ViewModels;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
@@ -18,6 +19,8 @@ public partial class MainView : UserControl
 {
     private MainViewModel model => (this.DataContext as MainViewModel)!;
     private Window mainWindow => (this.Parent as Window)!;
+
+    private CancellationTokenSource? cancellationTokenSource;
 
     public MainView()
     {
@@ -43,8 +46,10 @@ public partial class MainView : UserControl
 
 
             var kernel = CreateKernel();
+            cancellationTokenSource?.Dispose();
 
-            var context = kernel.CreateNewContext();
+            cancellationTokenSource = new CancellationTokenSource();
+            var context = kernel.CreateNewContext(cancellationTokenSource.Token);
             if (model.Blocks.Count > 0)
             {
                 var variables = this.model.Blocks.Select(_ => new Variable()
@@ -75,7 +80,11 @@ public partial class MainView : UserControl
             model.Results.Clear();
             for (int i = 0; i < model.Config.MaxCount; i++)
             {
-                var result = await service.RunAsync(model.Prompt, model.PromptConfig, context);
+                if (cancellationTokenSource?.IsCancellationRequested == true)
+                {
+                    break;
+                }
+                var result = await service.RunAsync(model.Prompt, model.PromptConfig, context, cancellationToken: cancellationTokenSource!.Token);
                 model.Results.Add(result);
             }
         }
@@ -127,6 +136,11 @@ public partial class MainView : UserControl
     private async void OnGenerateButtonClick(object sender, RoutedEventArgs e)
     {
         await GenerateAsync().ConfigureAwait(false);
+    }
+
+    private void OnCancelButtonClick(object sender, RoutedEventArgs e)
+    {
+        cancellationTokenSource?.Cancel();
     }
 
     private void OnSaveButtonClick(object sender, RoutedEventArgs e)
