@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using PromptPlayground.ViewModels.LLMConfigViewModels;
 
 namespace PromptPlayground.ViewModels;
 
 public partial class ConfigViewModel : ViewModelBase
 {
+    public AzureOpenAIConfigViewModel AzureConfig { get; set; } = new AzureOpenAIConfigViewModel();
+    public BaiduTurboConfigViewModel BaiduTurboConfig { get; set; } = new BaiduTurboConfigViewModel();
+    public BaiduConfigViewModel BaiduConfig { get; set; } = new BaiduConfigViewModel();
+
     private int modelSelectedIndex = 0;
 
-    public string AzureDeployment { get; set; } = string.Empty;
-    public string AzureEndpoint { get; set; } = string.Empty;
-    public string AzureSecret { get; set; } = string.Empty;
-    public string BaiduClientId { get; set; } = string.Empty;
-    public string BaiduSecret { get; set; } = string.Empty;
     public int MaxCount { get; set; } = 3;
-
     public int ModelSelectedIndex
     {
         get => modelSelectedIndex; set
@@ -25,22 +27,23 @@ public partial class ConfigViewModel : ViewModelBase
                 modelSelectedIndex = value;
                 OnPropertyChanged(nameof(ModelSelectedIndex));
                 OnPropertyChanged(nameof(SelectedModel));
-                OnPropertyChanged(nameof(ModelSelectAzure));
-                OnPropertyChanged(nameof(ModelSelectBaidu));
+                OnPropertyChanged(nameof(Attributes));
             }
         }
     }
-    public string SelectedModel => Models[ModelSelectedIndex];
-
-    public bool ModelSelectAzure => SelectedModel == "Azure";
-    public bool ModelSelectBaidu => SelectedModel == "Baidu";
-
-
-
-    public List<string> Models => new()
+    
+    [JsonIgnore]
+    public List<string> ModelLists => LLMs.Select(_ => _.Name).ToList();
+    [JsonIgnore]
+    public ObservableCollection<ConfigAttribute> Attributes => SelectedModel.Attributes;
+    [JsonIgnore]
+    public ILLMConfigViewModel SelectedModel => LLMs[ModelSelectedIndex];
+    [JsonIgnore]
+    public List<ILLMConfigViewModel> LLMs => new()
     {
-         "Azure",
-         "Baidu"
+        this.AzureConfig,
+        this.BaiduTurboConfig,
+        this.BaiduConfig
     };
 
     public ConfigViewModel(bool requireLoadConfig = false)
@@ -64,12 +67,11 @@ public partial class ConfigViewModel : ViewModelBase
             var vm = JsonSerializer.Deserialize<ConfigViewModel>(File.ReadAllText(profile));
             if (vm != null)
             {
-                this.AzureDeployment = vm.AzureDeployment;
-                this.AzureEndpoint = vm.AzureEndpoint;
-                this.AzureSecret = vm.AzureSecret;
+                this.AzureConfig = vm.AzureConfig;
+                this.BaiduTurboConfig = vm.BaiduTurboConfig;
+                this.BaiduConfig = vm.BaiduConfig;
+
                 this.MaxCount = vm.MaxCount;
-                this.BaiduClientId = vm.BaiduClientId;
-                this.BaiduSecret = vm.BaiduSecret;
                 this.ModelSelectedIndex = vm.ModelSelectedIndex;
             }
         }

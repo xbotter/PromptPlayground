@@ -8,7 +8,16 @@
 			 x:DataType="vm:SkillViewModel">
 
 	<StackPanel>
-		<TextBlock Text="{Binding Folder}"/>
+		<TextBlock Text="{Binding FolderName}" ToolTip.Tip="{Binding Folder}"/>
+		<ListBox ItemsSource="{Binding Functions}"
+			     SelectedItem="{Binding SelectedFunction}"
+				 SelectionChanged ="OnSelectedFunctionChangedAsync">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Name}" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 	</StackPanel>
 
 </UserControl>

@@ -12,7 +12,6 @@
 		<PublishSingleFile>true</PublishSingleFile>
 		<AssemblyName>prompt-playground</AssemblyName>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
-		
 	</PropertyGroup>
 	<ItemGroup>
 	  <Content Include="logo.ico" />

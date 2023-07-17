@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
+			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+			 xmlns:views="clr-namespace:PromptPlayground.Views"
+			 x:Class="PromptPlayground.Views.EditorView"
+			 x:DataType="vm:SemanticFunctionViewModel">
+	<UserControl.Styles>
+		<Style Selector="Button.MainBtn">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+		</Style>
+		<Style Selector="ae|TextEditor.editor">
+			<Setter Property="BorderBrush" Value="LightGray"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="ShowLineNumbers" Value="True"/>
+			<Setter Property="FontFamily" Value="Cascadia Code,Consolas,Menlo,Monospace"/>
+		</Style>
+	</UserControl.Styles>
+	<Grid ColumnDefinitions="*,100" RowDefinitions="60,60,60,60,1,*" DockPanel.Dock="Bottom" Margin="10,0,10,10">
+		<TabControl TabStripPlacement="Right" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4">
+			<TabItem Header="📝">
+				<ae:TextEditor
+			Classes="editor"
+			Document="{Binding Prompt}"
+				/>
+			</TabItem>
+			<TabItem Header="🛠">
+				<ae:TextEditor
+			Classes="editor"
+			Document="{Binding Config}"
+			SyntaxHighlighting="Json"
+				/>
+			</TabItem>
+		</TabControl>
+
+		<Button Classes="MainBtn" Click="OnGenerateButtonClick" Content="生成 🐣" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsVisible="{Binding !IsGenerating}" Margin="10"/>
+		<Button Classes="MainBtn" Click="OnCancelButtonClick" Content="取消 ❌" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsVisible="{Binding IsGenerating}" Margin="10"/>
+		<Button Classes="MainBtn" Click="OnSaveButtonClick" Content="保存 💾"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" IsEnabled="{Binding IsChanged}" Margin="10"/>
+		<GridSplitter Grid.Row="4" Background="Transparent" ResizeDirection="Rows"/>
+		
+	</Grid>
+</UserControl>

@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
+	  <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   
@@ -29,7 +30,6 @@
     <PackageReference Include="ERNIE-Bot.SemanticKernel" Version="0.3.2-preview" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.0.0" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230704.3-preview" />
-    <PackageReference Include="Semi.Avalonia" Version="$(AvaloniaVersion)" />
   </ItemGroup>
 
   <ItemGroup>
