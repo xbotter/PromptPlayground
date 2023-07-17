@@ -64,7 +64,7 @@ public partial class MainView : UserControl
                 {
                     DataContext = variablesVm,
                     ShowInTaskbar = false,
-                    WindowStartupLocation= WindowStartupLocation.CenterOwner
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
                 };
                 await variableWindows.ShowDialog(this.mainWindow);
                 if (variableWindows.Canceled)
@@ -207,4 +207,24 @@ public partial class MainView : UserControl
         }
     }
 
+    private async void OnSkillDirOpen(object sender, RoutedEventArgs e)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+        {
+            return;
+        }
+        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
+        {
+            AllowMultiple = false
+        });
+        if (folder.Count > 0)
+        {
+            var localPath = folder[0].TryGetLocalPath();
+            if (Path.Exists(localPath))
+            {
+                this.SkillView.OpenFolder(localPath);
+            }
+        }
+    }
 }

@@ -31,4 +31,8 @@
     <PackageReference Include="Microsoft.SemanticKernel" Version="0.17.230704.3-preview" />
     <PackageReference Include="Semi.Avalonia" Version="$(AvaloniaVersion)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\SkillView.axaml" />
+  </ItemGroup>
 </Project>
