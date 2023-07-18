@@ -1,16 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Microsoft.SemanticKernel.TemplateEngine.Blocks;
-using Microsoft.SemanticKernel.TemplateEngine;
-using System.Reflection;
-using System.Linq;
-using AvaloniaEdit.Document;
-using System.IO;
-using Microsoft.SemanticKernel.SemanticFunctions;
-using PromptPlayground.Services;
-using System;
-
-namespace PromptPlayground.ViewModels;
+﻿namespace PromptPlayground.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {

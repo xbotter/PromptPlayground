@@ -1,11 +1,11 @@
-﻿using System;
+﻿using PromptPlayground.ViewModels.LLMConfigViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using PromptPlayground.ViewModels.LLMConfigViewModels;
 
 namespace PromptPlayground.ViewModels;
 
@@ -31,7 +31,7 @@ public partial class ConfigViewModel : ViewModelBase
             }
         }
     }
-    
+
     [JsonIgnore]
     public List<string> ModelLists => LLMs.Select(_ => _.Name).ToList();
     [JsonIgnore]

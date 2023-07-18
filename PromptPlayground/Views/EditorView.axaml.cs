@@ -1,21 +1,16 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Microsoft.SemanticKernel;
-using Microsoft;
 using MsBox.Avalonia;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-using System.Linq;
-using System.IO;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PromptPlayground.Views.Args;
-using Avalonia.Platform.Storage;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 

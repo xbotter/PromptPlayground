@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.SemanticKernel;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 

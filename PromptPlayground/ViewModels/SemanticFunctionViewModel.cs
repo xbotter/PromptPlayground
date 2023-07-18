@@ -1,13 +1,11 @@
 ﻿using AvaloniaEdit.Document;
-using Microsoft.SemanticKernel.TemplateEngine.Blocks;
+using Microsoft.SemanticKernel.SemanticFunctions;
 using Microsoft.SemanticKernel.TemplateEngine;
+using Microsoft.SemanticKernel.TemplateEngine.Blocks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.SemanticKernel.SemanticFunctions;
-using System.Collections.ObjectModel;
-using PromptPlayground.Services;
 using System.Text.Json;
 
 namespace PromptPlayground.ViewModels

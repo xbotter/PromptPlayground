@@ -1,20 +1,9 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using AvaloniaEdit.Document;
-using Microsoft;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.SemanticFunctions;
-using MsBox.Avalonia;
-using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
 using PromptPlayground.Views.Args;
-using System;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 
@@ -94,22 +83,23 @@ public partial class MainView : UserControl
     }
     private void OpenFile(string filePath)
     {
-        if(this.SkillView.TrySelectFunction(filePath,out var func))
+        if (this.SkillView.TrySelectFunction(filePath, out var func))
         {
             this.EditorView.DataContext = func;
-        }else if (File.Exists(filePath) && Path.GetFileName(filePath) == Constants.SkPrompt)
+        }
+        else if (File.Exists(filePath) && Path.GetFileName(filePath) == Constants.SkPrompt)
         {
             this.EditorView.DataContext = new SemanticFunctionViewModel(Path.GetDirectoryName(filePath)!);
         }
     }
 
-    
+
     private async void OnSkillDirOpen(object sender, RoutedEventArgs e)
     {
         await this.SkillView.OpenFolderAsync();
     }
 
-    private void OnNewFile(object sender,RoutedEventArgs e)
+    private void OnNewFile(object sender, RoutedEventArgs e)
     {
         this.SkillView.NoFunctionSelected();
         this.EditorView.DataContext = new SemanticFunctionViewModel("");
