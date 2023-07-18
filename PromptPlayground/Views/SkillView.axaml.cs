@@ -2,10 +2,13 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using MsBox.Avalonia;
 using PromptPlayground.ViewModels;
 using PromptPlayground.Views.Args;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 
@@ -22,9 +25,27 @@ public partial class SkillView : UserControl
         FunctionSelected += (sender, e) => { };
     }
 
-    public void OpenFolder(string folder)
+    public async Task OpenFolderAsync()
     {
-        this.Model.Folder = folder;
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+        {
+            return;
+        }
+        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
+        {
+            AllowMultiple = false
+        });
+        if (folder.Count > 0)
+        {
+            var localPath = folder[0].TryGetLocalPath();
+            if (Path.Exists(localPath))
+            {
+                this.Model.Folder = localPath;
+                
+            }
+        }
+       
     }
 
     public void OnSelectedFunctionChangedAsync(object e, SelectionChangedEventArgs args)
@@ -35,4 +56,10 @@ public partial class SkillView : UserControl
             FunctionSelected?.Invoke(this, new FunctionSelectedArgs(Model.SelectedFunction));
         }
     }
+
+    public async void OnOpenFolder(object sender, RoutedEventArgs e)
+    {
+        await OpenFolderAsync();
+    }
+
 }

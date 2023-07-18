@@ -14,14 +14,25 @@ namespace PromptPlayground.ViewModels
 {
     public class SemanticFunctionViewModel : ViewModelBase
     {
+        private bool isChanged;
+        private bool isGenerating;
+
         public SemanticFunctionViewModel(string folder)
         {
             if (Directory.Exists(folder))
             {
                 this.Folder = folder;
                 Name = Path.GetFileName(folder);
-                this.Prompt = new TextDocument(new StringTextSource(File.ReadAllText(Path.Combine(folder, Constants.SkPrompt))));
-                this.Config = new TextDocument(new StringTextSource(File.ReadAllText(Path.Combine(Folder, Constants.SkConfig))));
+                var promptPath = Path.Combine(folder, Constants.SkPrompt);
+                var configPath = Path.Combine(folder, Constants.SkConfig);
+                this.Prompt = new TextDocument(new StringTextSource(File.ReadAllText(promptPath)))
+                {
+                    FileName = promptPath
+                };
+                this.Config = new TextDocument(new StringTextSource(File.ReadAllText(configPath)))
+                {
+                    FileName = configPath
+                };
                 this.IsChanged = false;
             }
             else
@@ -30,6 +41,14 @@ namespace PromptPlayground.ViewModels
                 this.Prompt = new TextDocument(new StringTextSource(""));
                 this.Config = new TextDocument(new StringTextSource(DefaultConfig()));
             }
+            this.Prompt.TextChanged += (sender, e) =>
+            {
+                IsChanged = true;
+            };
+            this.Config.TextChanged += (sender, e) =>
+            {
+                IsChanged = true;
+            };
         }
         private string DefaultConfig()
         {
@@ -38,7 +57,7 @@ namespace PromptPlayground.ViewModels
                 WriteIndented = true
             });
         }
-        public bool IsChanged { get; set; }
+        public bool IsChanged { get => isChanged; set => SetProperty(ref isChanged, value); }
         public TextDocument Prompt { get; set; }
         public TextDocument Config { get; set; }
         public static SemanticFunctionViewModel Create(string folder) => new(folder);
@@ -62,6 +81,6 @@ namespace PromptPlayground.ViewModels
             return block.GetType().GetRuntimeProperties().First(_ => _.Name == "Content").GetValue(block) as string ?? string.Empty;
         }
 
-        public bool IsGenerating { get; set; }
+        public bool IsGenerating { get => isGenerating; set => SetProperty(ref isGenerating, value); }
     }
 }

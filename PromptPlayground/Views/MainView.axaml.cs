@@ -23,26 +23,31 @@ public partial class MainView : UserControl
     private MainViewModel model => (this.DataContext as MainViewModel)!;
     private Window mainWindow => (this.Parent as Window)!;
 
-
     public MainView()
     {
         InitializeComponent();
         this.SkillView.FunctionSelected += SkillView_FunctionSelected;
         this.EditorView.DataContext = new SemanticFunctionViewModel("");
+        this.ResultsView.DataContext ??= new ResultsViewModel();
         this.EditorView.OnGenerating += (sender, e) =>
         {
             this.model.Loading = true;
-            this.model.Results.Clear();
-            this.ResultsView.DataContext = new ResultsViewModel(model.Results);
+            this.ResultsView.Clear();
+            this.model.StatusBar = "(0/{model.Config.MaxCount}) 生成中...";
+
         };
-        this.EditorView.OnGenerated += (sender, e) => this.model.Loading = false;
+        this.EditorView.OnGenerated += (sender, e) =>
+        {
+            this.model.Loading = false;
+            this.model.StatusBar = string.Empty;
+        };
         this.EditorView.OnGeneratedResult += (sender, result) =>
         {
-            this.model.Results.Add(result.Result);
+            this.ResultsView.AddResult(result.Result);
+            this.model.StatusBar = $"({this.ResultsView.GetCount()}/{model.Config.MaxCount}) 生成中...";
         };
         this.EditorView.CreateKernel = () => this.model.Config.SelectedModel.CreateKernel();
         this.EditorView.GetMaxCount = () => this.model.Config.MaxCount;
-
     }
 
     private void SkillView_FunctionSelected(object? sender, FunctionSelectedArgs e)
@@ -97,22 +102,6 @@ public partial class MainView : UserControl
 
     private async void OnSkillDirOpen(object sender, RoutedEventArgs e)
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel is null)
-        {
-            return;
-        }
-        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
-        {
-            AllowMultiple = false
-        });
-        if (folder.Count > 0)
-        {
-            var localPath = folder[0].TryGetLocalPath();
-            if (Path.Exists(localPath))
-            {
-                this.SkillView.OpenFolder(localPath);
-            }
-        }
+        await this.SkillView.OpenFolderAsync();
     }
 }

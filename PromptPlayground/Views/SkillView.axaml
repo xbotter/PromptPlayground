@@ -7,17 +7,36 @@
 			 x:Class="PromptPlayground.Views.SkillView"
 			 x:DataType="vm:SkillViewModel">
 
-	<StackPanel>
-		<TextBlock Text="{Binding FolderName}" ToolTip.Tip="{Binding Folder}"/>
-		<ListBox ItemsSource="{Binding Functions}"
-			     SelectedItem="{Binding SelectedFunction}"
-				 SelectionChanged ="OnSelectedFunctionChangedAsync">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<TextBlock Text="{Binding Name}" />
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-	</StackPanel>
+	<UserControl.Styles>
+		<Style Selector="Button.skillBtn">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Margin" Value="2"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="MinWidth" Value="30"/>
+			<Setter Property="MinHeight" Value="30"/>
+		</Style>
+	</UserControl.Styles>
+	<Expander
+            ExpandDirection="Right"
+            Header="{Binding FolderName}">
+		<StackPanel>
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Classes="skillBtn" Content="📁" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
+				<Button Classes="skillBtn" Content="🆕" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>
+			</WrapPanel>
+			<Separator/>
+			<ListBox
+				IsVisible="{Binding OpenSkillFolder}"
+				ItemsSource="{Binding Functions}"
+				SelectedItem="{Binding SelectedFunction}"
+				SelectionChanged ="OnSelectedFunctionChangedAsync">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+	</Expander>
 
 </UserControl>

@@ -8,6 +8,7 @@ using AvaloniaEdit.Document;
 using System.IO;
 using Microsoft.SemanticKernel.SemanticFunctions;
 using PromptPlayground.Services;
+using System;
 
 namespace PromptPlayground.ViewModels;
 
@@ -15,40 +16,21 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-        Results = new ObservableCollection<GenerateResult>();
+
     }
 
-    public string StatusBar
-    {
-        get
-        {
-            if (Loading)
-            {
-                return $"({Results.Count}/{Config.MaxCount})生成中 ......";
-            }
-            return string.Empty;
-
-        }
-    }
+    public string StatusBar { get => statusBar; set => SetProperty(ref statusBar, value); }
     public bool Loading
     {
-        get => loading; set
-        {
-            if (loading != value)
-            {
-                loading = value;
-                OnPropertyChanged(nameof(Loading));
-                OnPropertyChanged(nameof(StatusBar));
-            }
-        }
+        get => loading; set => SetProperty(ref loading, value);
     }
 
-    public ObservableCollection<GenerateResult> Results { get; set; }
+
     public ConfigViewModel Config = new(true);
 
 
     private bool loading = false;
-
+    private string statusBar = string.Empty;
 }
 
 

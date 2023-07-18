@@ -12,7 +12,6 @@ namespace PromptPlayground.ViewModels
     {
         private string folder = string.Empty;
         private SemanticFunctionViewModel? selectedFunction;
-
         public SemanticFunctionViewModel? SelectedFunction
         {
             get => selectedFunction;
@@ -37,6 +36,7 @@ namespace PromptPlayground.ViewModels
                     OnPropertyChanged(nameof(Folder));
                     OnPropertyChanged(nameof(FolderName));
                     OnPropertyChanged(nameof(Functions));
+                    OnPropertyChanged(nameof(OpenSkillFolder));
                 }
             }
         }
@@ -51,6 +51,6 @@ namespace PromptPlayground.ViewModels
         }
         private bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
 
-
+        public bool OpenSkillFolder => Directory.Exists(folder);
     }
 }

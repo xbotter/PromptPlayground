@@ -11,17 +11,15 @@ namespace PromptPlayground.ViewModels
 {
     public class ResultsViewModel : ViewModelBase
     {
-        public ResultsViewModel(ObservableCollection<GenerateResult> results)
-        {
-            Results = results;
-            Results.CollectionChanged += Results_CollectionChanged;
-        }
 
-        private void Results_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        public ResultsViewModel()
         {
-            OnPropertyChanged(nameof(Results));
+            Results = new ObservableCollection<GenerateResult>();
+            Results.CollectionChanged += (sender, e) =>
+            {
+                OnPropertyChanged(nameof(Results));
+            };
         }
-
         public ObservableCollection<GenerateResult> Results { get; set; }
     }
 }
