@@ -18,9 +18,10 @@
 		<Menu DockPanel.Dock="Top">
 			<MenuItem Header="配置" Click="OnConfigClick">
 			</MenuItem>
-			<MenuItem Header="打开">
-				<MenuItem Header="文件 📝"  Click="OnImportFile"/>
-				<MenuItem Header="文件夹 📁" Click="OnSkillDirOpen"/>
+			<MenuItem Header="文件">
+				<MenuItem Header="新建 🆕" Click="OnNewFile"/>
+				<MenuItem Header="打开文件 📝"  Click="OnImportFile"/>
+				<MenuItem Header="打开文件夹 📁" Click="OnSkillDirOpen"/>
 			</MenuItem>
 		</Menu>
 		<StackPanel DockPanel.Dock="Bottom">

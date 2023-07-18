@@ -22,17 +22,17 @@
 		<StackPanel>
 			<WrapPanel HorizontalAlignment="Right">
 				<Button Classes="skillBtn" Content="📁" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
-				<Button Classes="skillBtn" Content="🆕" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>
+				<!--<Button Classes="skillBtn" Content="🆕" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
 			</WrapPanel>
 			<Separator/>
 			<ListBox
 				IsVisible="{Binding OpenSkillFolder}"
 				ItemsSource="{Binding Functions}"
-				SelectedItem="{Binding SelectedFunction}"
+				SelectedIndex="{Binding SelectedIndex}"
 				SelectionChanged ="OnSelectedFunctionChangedAsync">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding Name}" />
+						<ListBoxItem Content="{Binding Name}"/>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>

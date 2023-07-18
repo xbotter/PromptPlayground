@@ -94,14 +94,24 @@ public partial class MainView : UserControl
     }
     private void OpenFile(string filePath)
     {
-        if (File.Exists(filePath) && Path.GetFileName(filePath) == Constants.SkPrompt)
+        if(this.SkillView.TrySelectFunction(filePath,out var func))
+        {
+            this.EditorView.DataContext = func;
+        }else if (File.Exists(filePath) && Path.GetFileName(filePath) == Constants.SkPrompt)
         {
             this.EditorView.DataContext = new SemanticFunctionViewModel(Path.GetDirectoryName(filePath)!);
         }
     }
 
+    
     private async void OnSkillDirOpen(object sender, RoutedEventArgs e)
     {
         await this.SkillView.OpenFolderAsync();
+    }
+
+    private void OnNewFile(object sender,RoutedEventArgs e)
+    {
+        this.SkillView.NoFunctionSelected();
+        this.EditorView.DataContext = new SemanticFunctionViewModel("");
     }
 }

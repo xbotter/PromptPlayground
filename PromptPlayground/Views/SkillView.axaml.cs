@@ -8,6 +8,7 @@ using PromptPlayground.ViewModels;
 using PromptPlayground.Views.Args;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
@@ -42,10 +43,9 @@ public partial class SkillView : UserControl
             if (Path.Exists(localPath))
             {
                 this.Model.Folder = localPath;
-                
             }
         }
-       
+
     }
 
     public void OnSelectedFunctionChangedAsync(object e, SelectionChangedEventArgs args)
@@ -62,4 +62,25 @@ public partial class SkillView : UserControl
         await OpenFolderAsync();
     }
 
+    public void NoFunctionSelected()
+    {
+        Model.SelectedFunction = null;
+    }
+
+
+    internal bool TrySelectFunction(string filePath, out SemanticFunctionViewModel func)
+    {
+        var fileFolder = Path.GetDirectoryName(filePath);
+        if (this.Model.Functions.Any(f => f.Folder == fileFolder))
+        {
+            func = this.Model.Functions.First(f => f.Folder == fileFolder);
+            this.Model.SelectedFunction = func;
+            return true;
+        }
+        else
+        {
+            func = null!;
+            return false;
+        }
+    }
 }

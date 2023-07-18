@@ -21,8 +21,15 @@ namespace PromptPlayground.ViewModels
                 {
                     selectedFunction = value;
                     OnPropertyChanged(nameof(SelectedFunction));
+                    OnPropertyChanged(nameof(SelectedIndex));
                 }
             }
+        }
+
+        public int SelectedIndex
+        {
+
+            get => SelectedFunction != null ? Functions.IndexOf(SelectedFunction) : -1;
         }
 
         public string FolderName => Directory.Exists(Folder) ? Path.GetFileName(Folder) : string.Empty;
@@ -33,6 +40,13 @@ namespace PromptPlayground.ViewModels
                 if (value != folder)
                 {
                     folder = value;
+                    if (Path.Exists(Folder))
+                    {
+                        Functions = Directory.GetDirectories(Folder)
+                                     .Where(IsFunctionDir)
+                                     .Select(SemanticFunctionViewModel.Create)
+                                     .ToList();
+                    }
                     OnPropertyChanged(nameof(Folder));
                     OnPropertyChanged(nameof(FolderName));
                     OnPropertyChanged(nameof(Functions));
@@ -41,14 +55,7 @@ namespace PromptPlayground.ViewModels
             }
         }
 
-        public List<SemanticFunctionViewModel> Functions
-        {
-            get => !Path.Exists(Folder) ? new List<SemanticFunctionViewModel>()
-                    : Directory.GetDirectories(Folder)
-                     .Where(IsFunctionDir)
-                     .Select(SemanticFunctionViewModel.Create)
-                     .ToList();
-        }
+        public List<SemanticFunctionViewModel> Functions { get; set; } = new List<SemanticFunctionViewModel>();
         private bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
 
         public bool OpenSkillFolder => Directory.Exists(folder);

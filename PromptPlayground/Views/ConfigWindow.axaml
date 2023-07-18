@@ -38,6 +38,6 @@
 		
 		<TextBlock/>
 		<TextBlock Text="Max Generate Results:"/>
-		<TextBox Text="{Binding MaxCount}"/>
+		<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" />
 	</StackPanel>
 </Window>
