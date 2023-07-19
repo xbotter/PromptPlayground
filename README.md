@@ -2,8 +2,6 @@
 
 一个简易的Semantic Kernel提示词调试工具。
 
-
-
 ## 使用方法 🐣
 
 ### 下载安装
@@ -11,27 +9,23 @@
 1. 从Release下载最新的构建好的压缩包, 解压到任意目录。
 2. 运行`prompt-playground.exe` 即可。
 
-### 自行构建
-
-参考[构建](#构建-🛠)章节。
-
 ### 首次使用
 
 首次使用需要先进入配置设置。
 
 点击配置菜单，即可进入配置界面。
 
-![Config Windows](assets/README/image-2.png)
+目前模型的选择支持:
 
-目前模型的选择支持 Azure OpenAI ChatCompletion 和 Baidu ERNIE-Bot Turbo。
+1. Azure OpenAI ChatCompletion
+1. Baidu ERNIE-Bot Turbo
+1. Baidu ERNIE-Bot
 
 Max Generate Results 指最大生成结果数量，默认为3。
 
 填写入对应的参数，关闭即可。
 
 ### 直接使用
-
-![mainWindows](assets/README/image.png)
 
 在主界面的提示词框中直接输入提示词，点击生成(Ctrl+G)即可。
 
@@ -41,12 +35,21 @@ Max Generate Results 指最大生成结果数量，默认为3。
 
 对于没有config.json文件的skprompt，会自动创建一个默认的config.json文件。
 
-点击输入框右侧的Tab按钮，可以切换到config.json编辑界面。
-![Config.Json](assets/README/image-1.png)
+点击输入框上方的Tab，可以切换到config.json编辑界面。
 
 ### 导出skprompt
 
 对于skprompt.txt或者config.json文件修改后，点击保存(Ctrl+S)按钮，即可保存到对应的文件。
+
+## 导入Semantic Skill
+
+1. 点击[文件]菜单，选择[打开文件夹]，选择包含Semantic Functions的文件夹
+1. 展开侧边栏，即可看到当前文件夹下的所有Semantic Functions
+1. 选择对应的 Function ，即可进行编辑运行
+
+## 截图
+
+![界面截图](assets/README/image-3.png)
 
 ## 构建 🛠
 
