@@ -41,6 +41,7 @@
 			</TabItem>
 		</TabControl>
 		<WrapPanel HorizontalAlignment="Right">
+			<Button IsVisible="False" Click="OnGenerateButtonClick" HotKey="Ctrl+Enter"/>
 			<Button Classes="MainBtn" Click="OnGenerateButtonClick" Content="▶" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding !IsGenerating}"/>
 			<Button Classes="MainBtn" Click="OnCancelButtonClick" Content="❌" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"  IsVisible="{Binding IsGenerating}"/>
 			<Button Classes="MainBtn" Click="OnSaveButtonClick" Content="💾"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsEnabled="{Binding IsChanged}"/>

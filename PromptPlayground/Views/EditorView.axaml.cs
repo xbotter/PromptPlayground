@@ -1,4 +1,6 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using Microsoft.SemanticKernel;
@@ -17,6 +19,8 @@ namespace PromptPlayground.Views;
 public partial class EditorView : UserControl
 {
     private CancellationTokenSource? cancellationTokenSource;
+    private WindowNotificationManager? _manager;
+
     private SemanticFunctionViewModel model => (this.DataContext as SemanticFunctionViewModel)!;
     private Window mainWindow => (TopLevel.GetTopLevel(this) as Window)!;
 
@@ -35,6 +39,14 @@ public partial class EditorView : UserControl
         OnGenerating += (sender, args) => this.model.IsGenerating = true;
         OnGenerated += (sender, args) => this.model.IsGenerating = false;
     }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        var topLevel = TopLevel.GetTopLevel(this);
+        _manager = new WindowNotificationManager(topLevel) { MaxItems = 3 };
+    }
+
     private async Task GenerateAsync()
     {
         try
@@ -148,7 +160,11 @@ public partial class EditorView : UserControl
                     }
                 }
             }
+        }
 
+        if (!model.IsChanged)
+        {
+            _manager?.Show(new Notification("Saved!", model.Folder, NotificationType.Success, TimeSpan.FromSeconds(1.5)));
         }
     }
 
