@@ -5,24 +5,22 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
 {
     public class AzureOpenAIConfigViewModel : LLMConfigViewModelBase
     {
-        const string Deployment = nameof(Deployment);
-        const string Endpoint = nameof(Endpoint);
-        const string Secret = nameof(Secret);
-        public AzureOpenAIConfigViewModel()
+
+        public AzureOpenAIConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
-            RequireAttribute(Deployment);
-            RequireAttribute(Endpoint);
-            RequireAttribute(Secret);
+            RequireAttribute(ConfigAttribute.AzureDeployment);
+            RequireAttribute(ConfigAttribute.AzureEndpoint);
+            RequireAttribute(ConfigAttribute.AzureSecret);
         }
         public override string Name => "Azure OpenAI";
 
         public override IKernel CreateKernel()
         {
-            Requires.NotNullOrWhiteSpace(GetAttribute(Deployment), Deployment);
-            Requires.NotNullOrWhiteSpace(GetAttribute(Endpoint), Endpoint);
-            Requires.NotNullOrWhiteSpace(GetAttribute(Secret), Secret);
+            Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureDeployment), ConfigAttribute.AzureDeployment);
+            Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureEndpoint), ConfigAttribute.AzureEndpoint);
+            Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureSecret), ConfigAttribute.AzureSecret);
             return Kernel.Builder
-            .WithAzureChatCompletionService(GetAttribute(Deployment), GetAttribute(Endpoint), GetAttribute(Secret))
+            .WithAzureChatCompletionService(GetAttribute(ConfigAttribute.AzureDeployment), GetAttribute(ConfigAttribute.AzureEndpoint), GetAttribute(ConfigAttribute.AzureSecret))
             .Build();
         }
     }

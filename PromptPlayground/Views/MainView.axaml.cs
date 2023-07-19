@@ -22,7 +22,7 @@ public partial class MainView : UserControl
         {
             this.model.Loading = true;
             this.ResultsView.Clear();
-            this.model.StatusBar = "(0/{model.Config.MaxCount}) 生成中...";
+            this.model.StatusBar = $"(0/{model.Config.MaxCount}) 生成中...";
 
         };
         this.EditorView.OnGenerated += (sender, e) =>

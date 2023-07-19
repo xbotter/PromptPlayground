@@ -15,11 +15,18 @@
 						<StackPanel>
 							<TextBlock Text="{Binding Elapsed}" FontWeight="ExtraLight"/>
 							<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="0,5">
-								<ScrollViewer>
-									<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
-											   TextWrapping="WrapWithOverflow"
-											   ScrollViewer.IsScrollChainingEnabled="True"/>
-								</ScrollViewer>
+								<StackPanel>
+									<TextBlock Text="{Binding Error}" 
+											   Padding="12" Foreground="Red"
+											   FontWeight="Bold"
+											   IsVisible="{Binding HasError}" TextWrapping="WrapWithOverflow"/>
+									<ScrollViewer IsVisible="{Binding !HasError}">
+										<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
+												   TextWrapping="WrapWithOverflow"
+												   ScrollViewer.IsScrollChainingEnabled="True">
+										</SelectableTextBlock>
+									</ScrollViewer>
+								</StackPanel>
 							</Border>
 						</StackPanel>
 					</DataTemplate>

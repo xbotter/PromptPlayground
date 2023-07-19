@@ -5,12 +5,12 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
 {
     public class BaiduConfigViewModel : LLMConfigViewModelBase
     {
-        const string ClientId = nameof(ClientId);
-        const string Secret = nameof(Secret);
+        const string ClientId = ConfigAttribute.BaiduClientId;
+        const string Secret = ConfigAttribute.BaiduSecret;
 
         public override string Name => "Baidu";
 
-        public BaiduConfigViewModel()
+        public BaiduConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
             RequireAttribute(ClientId);
             RequireAttribute(Secret);

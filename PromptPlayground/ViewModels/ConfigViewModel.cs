@@ -9,11 +9,9 @@ using System.Text.Json.Serialization;
 
 namespace PromptPlayground.ViewModels;
 
-public partial class ConfigViewModel : ViewModelBase
+public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
 {
-    public AzureOpenAIConfigViewModel AzureConfig { get; set; } = new AzureOpenAIConfigViewModel();
-    public BaiduTurboConfigViewModel BaiduTurboConfig { get; set; } = new BaiduTurboConfigViewModel();
-    public BaiduConfigViewModel BaiduConfig { get; set; } = new BaiduConfigViewModel();
+    public List<ConfigAttribute> AllAttributes { get; set; } = new();
 
     private int modelSelectedIndex = 0;
 
@@ -35,18 +33,21 @@ public partial class ConfigViewModel : ViewModelBase
     [JsonIgnore]
     public List<string> ModelLists => LLMs.Select(_ => _.Name).ToList();
     [JsonIgnore]
-    public ObservableCollection<ConfigAttribute> Attributes => SelectedModel.Attributes;
+    public ObservableCollection<ConfigAttribute> Attributes => SelectedModel.SelectAttributes(this.AllAttributes);
+
     [JsonIgnore]
     public ILLMConfigViewModel SelectedModel => LLMs[ModelSelectedIndex];
     [JsonIgnore]
     public List<ILLMConfigViewModel> LLMs => new()
     {
-        this.AzureConfig,
-        this.BaiduTurboConfig,
-        this.BaiduConfig
+        new AzureOpenAIConfigViewModel(this),
+        new BaiduTurboConfigViewModel(this),
+        new BaiduConfigViewModel(this)
     };
 
-    public ConfigViewModel(bool requireLoadConfig = false)
+    IList<ConfigAttribute> IConfigAttributesProvider.AllAttributes => this.AllAttributes;
+
+    public ConfigViewModel(bool requireLoadConfig = false) : this()
     {
         if (requireLoadConfig)
         {
@@ -56,7 +57,7 @@ public partial class ConfigViewModel : ViewModelBase
 
     public ConfigViewModel()
     {
-
+        this.AllAttributes = CheckAttributes(this.AllAttributes);
     }
 
     private void LoadConfigFromUserProfile()
@@ -67,15 +68,31 @@ public partial class ConfigViewModel : ViewModelBase
             var vm = JsonSerializer.Deserialize<ConfigViewModel>(File.ReadAllText(profile));
             if (vm != null)
             {
-                this.AzureConfig = vm.AzureConfig;
-                this.BaiduTurboConfig = vm.BaiduTurboConfig;
-                this.BaiduConfig = vm.BaiduConfig;
-
+                this.AllAttributes = CheckAttributes(vm.AllAttributes);
                 this.MaxCount = vm.MaxCount;
                 this.ModelSelectedIndex = vm.ModelSelectedIndex;
             }
         }
     }
+    private List<ConfigAttribute> CheckAttributes(List<ConfigAttribute> list)
+    {
+        foreach (var item in RequiredAttributes)
+        {
+            if (!list.Any(_ => _.Name == item))
+            {
+                list.Add(new ConfigAttribute(item));
+            }
+        }
+        return list;
+    }
+    private string[] RequiredAttributes = new string[]
+    {
+        ConfigAttribute.AzureDeployment,
+        ConfigAttribute.AzureEndpoint,
+        ConfigAttribute.AzureSecret,
+        ConfigAttribute.BaiduClientId,
+        ConfigAttribute.BaiduSecret,
+    };
 
     private void SaveConfigToUserProfile()
     {
