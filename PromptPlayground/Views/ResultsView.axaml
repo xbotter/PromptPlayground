@@ -8,7 +8,7 @@
 			 x:DataType="vm:ResultsViewModel"
 			 >
 	<ScrollViewer>
-		<StackPanel Margin="10">
+		<StackPanel>
 			<ItemsControl ItemsSource="{Binding Results}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>

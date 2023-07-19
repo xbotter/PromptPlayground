@@ -34,7 +34,7 @@
 		<Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
 			<views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
 			<GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
-			<views:ResultsView Name="ResultsView" Grid.Row="2"/>
+			<views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
 		</Grid>
 	</DockPanel>
 </UserControl>
