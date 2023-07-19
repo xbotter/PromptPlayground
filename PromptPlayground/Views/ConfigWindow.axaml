@@ -15,7 +15,7 @@
 	</Design.DataContext>
 	<StackPanel Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto">
 		<TextBlock Text="Select Model:"/>
-		<ComboBox ItemsSource="{Binding Models}" SelectedIndex="{Binding ModelSelectedIndex}">
+		<ComboBox ItemsSource="{Binding ModelLists}" SelectedIndex="{Binding ModelSelectedIndex}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
 					<ComboBoxItem Content="{Binding}"/>
@@ -23,22 +23,21 @@
 			</ComboBox.ItemTemplate>
 		</ComboBox>
 
-		<StackPanel IsVisible="{Binding ModelSelectAzure}">
-			<TextBlock Text="Azure Deployment:"/>
-			<TextBox Text="{Binding AzureDeployment}"/>
-			<TextBlock Text="Azure Endpoint:"/>
-			<TextBox Text="{Binding AzureEndpoint}"/>
-			<TextBlock Text="Azure Secret:"/>
-			<TextBox Text="{Binding AzureSecret}"/>
+		<StackPanel>
+			<ItemsControl ItemsSource="{Binding Attributes}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<StackPanel>
+							<TextBlock Text="{Binding Name}"/>
+							<TextBox Text="{Binding Value}"/>
+						</StackPanel>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 		</StackPanel>
-		<StackPanel IsVisible="{Binding ModelSelectBaidu}">
-			<TextBlock Text="Baidu ClientId:"/>
-			<TextBox Text="{Binding BaiduClientId}"/>
-			<TextBlock Text="Baidu Secret:"/>
-			<TextBox Text="{Binding BaiduSecret}"/>
-		</StackPanel>
+		
 		<TextBlock/>
 		<TextBlock Text="Max Generate Results:"/>
-		<TextBox Text="{Binding MaxCount}"/>
+		<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" />
 	</StackPanel>
 </Window>

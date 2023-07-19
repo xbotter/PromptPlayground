@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
 			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:views="clr-namespace:PromptPlayground.Views"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PromptPlayground.Views.MainView"
              x:DataType="vm:MainViewModel">
 	<Design.DataContext>
@@ -12,73 +13,28 @@
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 		<vm:MainViewModel />
 	</Design.DataContext>
-	<UserControl.Styles>
-		<Style Selector="Button.MainBtn">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="BorderBrush" Value="Gray"/>
-		</Style>
-		<Style Selector="ae|TextEditor.editor">
-			<Setter Property="BorderBrush" Value="LightGray"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="ShowLineNumbers" Value="True"/>
-			<Setter Property="FontFamily" Value="Cascadia Code,Consolas,Menlo,Monospace"/>
-		</Style>
-	</UserControl.Styles>
+	
 	<DockPanel >
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="配置 🔧" Click="OnConfigClick">
+			<MenuItem Header="配置" Click="OnConfigClick">
 			</MenuItem>
-			<MenuItem Header="打开 📁" HotKey="Ctrl+O" Click="OnImportFile" />
+			<MenuItem Header="文件">
+				<MenuItem Header="新建 🆕" Click="OnNewFile"/>
+				<MenuItem Header="打开文件 📝"  Click="OnImportFile"/>
+				<MenuItem Header="打开文件夹 📁" Click="OnSkillDirOpen"/>
+			</MenuItem>
 		</Menu>
-
 		<StackPanel DockPanel.Dock="Bottom">
 			<TextBlock Text="{Binding StatusBar}" Background="LightGray" Padding="10,0"></TextBlock>
 			<ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Loading}" IsIndeterminate="{Binding Loading}"/>
 		</StackPanel>
-
-		<Grid ColumnDefinitions="*,100" RowDefinitions="60,60,60,60,1,*" DockPanel.Dock="Bottom" Margin="10,0,10,10">
-			<TabControl TabStripPlacement="Right" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4">
-				<TabItem Header="📝">
-					<ae:TextEditor
-				Classes="editor"
-				Document="{Binding Document}"
-				/>
-				</TabItem>
-				<TabItem Header="🛠"
-						 IsVisible="{Binding LinkDocument}">
-					<ae:TextEditor
-				Classes="editor"
-				Document="{Binding ConfigJson}"
-				SyntaxHighlighting="Json"
-				/>
-				</TabItem>
-			</TabControl>
-
-			<Button Classes="MainBtn" Click="OnGenerateButtonClick" Content="生成 🐣" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsVisible="{Binding !Loading}" Margin="10"/>
-			<Button Classes="MainBtn" Click="OnCancelButtonClick" Content="取消 ❌" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="0" IsVisible="{Binding Loading}" Margin="10"/>
-			<Button Classes="MainBtn" Click="OnSaveButtonClick" Content="保存 💾"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" IsVisible="{Binding LinkDocument}" IsEnabled="{Binding TextChanged}" Margin="10"/>
-			<GridSplitter Grid.Row="4" Background="Transparent" ResizeDirection="Rows"/>
-			<ScrollViewer Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
-				<StackPanel Margin="0,10">
-					<ItemsControl ItemsSource="{Binding Results}">
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<StackPanel>
-									<TextBlock Text="{Binding Elapsed}" FontWeight="ExtraLight"/>
-									<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="0,5">
-										<ScrollViewer>
-											<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
-													   TextWrapping="WrapWithOverflow"
-													   ScrollViewer.IsScrollChainingEnabled="True"/>
-										</ScrollViewer>
-									</Border>
-								</StackPanel>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl >
-				</StackPanel>
-			</ScrollViewer>
+		<StackPanel DockPanel.Dock="Left">
+			<views:SkillView Name="SkillView"/>
+		</StackPanel>
+		<Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
+			<views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
+			<GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
+			<views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
 		</Grid>
-
 	</DockPanel>
 </UserControl>

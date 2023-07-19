@@ -3,7 +3,6 @@ using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SemanticFunctions;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,6 +27,7 @@ namespace PromptPlayground.Services
             {
                 Text = result.Result,
                 Elapsed = sw.Elapsed,
+                Error = result.LastErrorDescription
             };
         }
     }
@@ -35,5 +35,8 @@ namespace PromptPlayground.Services
     {
         public string Text { get; set; } = string.Empty;
         public TimeSpan Elapsed { get; set; }
+        public string Error { get; set; } = string.Empty;
+
+        public bool HasError => !string.IsNullOrWhiteSpace(Error);
     }
 }
