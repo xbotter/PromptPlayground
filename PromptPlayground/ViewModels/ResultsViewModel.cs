@@ -14,6 +14,6 @@ namespace PromptPlayground.ViewModels
                 OnPropertyChanged(nameof(Results));
             };
         }
-        public ObservableCollection<GenerateResult> Results { get; set; }
+        public ObservableCollection<GenerateResult> Results { get; set; } 
     }
 }

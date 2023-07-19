@@ -16,15 +16,22 @@
 							<TextBlock Text="{Binding Elapsed}" FontWeight="ExtraLight"/>
 							<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="0,5">
 								<StackPanel>
-									<TextBlock Text="{Binding Error}" 
+									<TextBlock Text="{Binding Error}"
 											   Padding="12" Foreground="Red"
 											   FontWeight="Bold"
 											   IsVisible="{Binding HasError}" TextWrapping="WrapWithOverflow"/>
 									<ScrollViewer IsVisible="{Binding !HasError}">
-										<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
-												   TextWrapping="WrapWithOverflow"
-												   ScrollViewer.IsScrollChainingEnabled="True">
-										</SelectableTextBlock>
+										<Grid>
+											<WrapPanel Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+												<Button DataContext="{Binding}" Content="📋" Background="Transparent"  Margin="5" Click="OnCopyClick" />
+											</WrapPanel>
+											<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
+													   TextWrapping="WrapWithOverflow"
+																 Grid.RowSpan="2"
+																 Grid.Row="0"
+													   ScrollViewer.IsScrollChainingEnabled="True">
+											</SelectableTextBlock>
+										</Grid>
 									</ScrollViewer>
 								</StackPanel>
 							</Border>
