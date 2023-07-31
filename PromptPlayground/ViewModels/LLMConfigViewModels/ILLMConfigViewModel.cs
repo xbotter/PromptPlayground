@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+using PromptPlayground.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +13,7 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
     {
         string Name { get; }
         public IKernel CreateKernel();
+        public ResultTokenUsage? GetUsage(ModelResult resultModel);
         public ObservableCollection<ConfigAttribute> SelectAttributes(List<ConfigAttribute> allAttributes);
     }
 
@@ -44,6 +47,11 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
         public ObservableCollection<ConfigAttribute> SelectAttributes(List<ConfigAttribute> allAttributes)
         {
             return new ObservableCollection<ConfigAttribute>(allAttributes.Where(_ => _requiredAttributes.Contains(_.Name)));
+        }
+
+        public virtual ResultTokenUsage? GetUsage(ModelResult result)
+        {
+            return null;
         }
     }
 

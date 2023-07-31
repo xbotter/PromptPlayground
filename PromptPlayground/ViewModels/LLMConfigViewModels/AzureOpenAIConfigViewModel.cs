@@ -1,5 +1,8 @@
-﻿using Microsoft;
+﻿using Azure.AI.OpenAI;
+using Microsoft;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels.LLMConfigViewModels
 {
@@ -22,6 +25,17 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
             return Kernel.Builder
             .WithAzureChatCompletionService(GetAttribute(ConfigAttribute.AzureDeployment), GetAttribute(ConfigAttribute.AzureEndpoint), GetAttribute(ConfigAttribute.AzureSecret))
             .Build();
+        }
+
+        public override ResultTokenUsage? GetUsage(ModelResult result)
+        {
+            var completions = result.GetResult<ChatCompletions>();
+            return new ResultTokenUsage()
+            {
+                Total = completions.Usage.TotalTokens,
+                Prompt = completions.Usage.PromptTokens,
+                Completion = completions.Usage.CompletionTokens
+            };
         }
     }
 

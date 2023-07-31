@@ -13,22 +13,27 @@
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<StackPanel>
-							<TextBlock Text="{Binding Elapsed}" FontWeight="ExtraLight"/>
+							
 							<Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="5" Margin="0,5">
 								<StackPanel>
+									
+									
 									<TextBlock Text="{Binding Error}"
 											   Padding="12" Foreground="Red"
 											   FontWeight="Bold"
 											   IsVisible="{Binding HasError}" TextWrapping="WrapWithOverflow"/>
+									
 									<ScrollViewer IsVisible="{Binding !HasError}">
 										<Grid>
-											<WrapPanel Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+											<WrapPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+												<TextBlock Text="{Binding TokenUsageText}" FontWeight="ExtraLight" Background="Transparent"  Margin="5"></TextBlock>
+												<TextBlock Text="{Binding ElapsedText}" FontWeight="ExtraLight" Background="Transparent"  Margin="5"></TextBlock>
 												<Button DataContext="{Binding}" Content="📋" Background="Transparent"  Margin="5" Click="OnCopyClick" />
 											</WrapPanel>
 											<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
 													   TextWrapping="WrapWithOverflow"
 																 Grid.RowSpan="2"
-																 Grid.Row="0"
+																 Grid.Row="1"
 													   ScrollViewer.IsScrollChainingEnabled="True">
 											</SelectableTextBlock>
 										</Grid>

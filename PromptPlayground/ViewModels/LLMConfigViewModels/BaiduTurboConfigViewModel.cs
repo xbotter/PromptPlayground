@@ -1,5 +1,8 @@
-﻿using Microsoft;
+﻿using ERNIE_Bot.SDK.Models;
+using Microsoft;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Orchestration;
+using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels.LLMConfigViewModels
 {
@@ -23,6 +26,16 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
             return Kernel.Builder
             .WithERNIEBotTurboChatCompletionService(GetAttribute(ClientId), GetAttribute(Secret))
                 .Build();
+        }
+        public override ResultTokenUsage? GetUsage(ModelResult result)
+        {
+            var completions = result.GetResult<ChatResponse>();
+            return new ResultTokenUsage()
+            {
+                Total = completions.Usage.TotalTokens,
+                Prompt = completions.Usage.PromptTokens,
+                Completion = completions.Usage.CompletionTokens
+            };
         }
     }
 }
