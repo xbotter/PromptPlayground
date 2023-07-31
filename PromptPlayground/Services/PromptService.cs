@@ -48,7 +48,7 @@ namespace PromptPlayground.Services
         public string ElapsedText => $"{Elapsed.TotalSeconds:0.000} s";
         public string Error { get; set; } = string.Empty;
         public ResultTokenUsage? TokenUsage { get; set; }
-        public string TokenUsageText => TokenUsage!=null ? $"({TokenUsage.Total}/{TokenUsage.Prompt}/{TokenUsage.Completion})" : string.Empty;
+        public string TokenUsageText => TokenUsage!=null ? $"{TokenUsage.Total}({TokenUsage.Prompt}|{TokenUsage.Completion})" : string.Empty;
 
         public bool HasError => !string.IsNullOrWhiteSpace(Error);
     }
