@@ -1,0 +1,1 @@
+dotnet publish -c Release -o publish/windows --self-contained true -r win-x64  .\PromptPlayground.Desktop\PromptPlayground.Desktop.csproj
