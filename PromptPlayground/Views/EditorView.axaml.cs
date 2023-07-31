@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel;
 using MsBox.Avalonia;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
+using PromptPlayground.ViewModels.LLMConfigViewModels;
 using PromptPlayground.Views.Args;
 using System;
 using System.IO;
@@ -24,7 +25,7 @@ public partial class EditorView : UserControl
     private SemanticFunctionViewModel model => (this.DataContext as SemanticFunctionViewModel)!;
     private Window mainWindow => (TopLevel.GetTopLevel(this) as Window)!;
 
-    public Func<IKernel>? CreateKernel { get; set; }
+    public Func<ILLMConfigViewModel>? GetLLMModel { get; set; }
     public Func<int> GetMaxCount { get; set; }
 
     public event EventHandler OnGenerating;
@@ -53,11 +54,14 @@ public partial class EditorView : UserControl
         {
             OnGenerating?.Invoke(this, new());
 
-            var kernel = (CreateKernel?.Invoke()) ?? throw new Exception("无法创建Kernel，请检查LLM配置");
+            var llm = (GetLLMModel?.Invoke()) ?? throw new Exception("无法创建Kernel，请检查LLM配置");
+
             cancellationTokenSource?.Dispose();
 
             cancellationTokenSource = new CancellationTokenSource();
-            var context = kernel.CreateNewContext(cancellationTokenSource.Token);
+            var service = new PromptService(llm);
+
+            var context = service.CreateContext();
             if (model.Blocks.Count > 0)
             {
                 var variables = this.model.Blocks.Select(_ => new Variable()
@@ -85,9 +89,6 @@ public partial class EditorView : UserControl
                     context[variable.Name] = variable.Value;
                 }
             }
-
-            var service = new PromptService(kernel);
-
 
             for (int i = 0; i < MaxCount(); i++)
             {
