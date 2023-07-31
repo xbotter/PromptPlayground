@@ -8,11 +8,8 @@
 		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<UseAppHost>true</UseAppHost>
-		<PublishReadyToRun>true</PublishReadyToRun>
-		<PublishSingleFile>true</PublishSingleFile>
 		<AssemblyName>prompt-playground</AssemblyName>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
-		<Version>0.2.0</Version>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Content Include="logo.ico" />
