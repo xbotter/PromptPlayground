@@ -17,36 +17,29 @@
 			<Setter Property="MinHeight" Value="30"/>
 		</Style>
 	</UserControl.Styles>
-	<Expander
-            ExpandDirection="Right"
-            Header="{Binding FolderName}"
-			Margin="0">
-		<StackPanel>
-			<WrapPanel HorizontalAlignment="Right">
-				<Button Classes="skillBtn" i:Attached.Icon="mdi-folder-outline" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
-				<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
-			</WrapPanel>
-			<Separator/>
-			<ListBox
-				IsVisible="{Binding OpenSkillFolder}"
-				ItemsSource="{Binding Functions}"
-				SelectedIndex="{Binding SelectedIndex}"
-				SelectionChanged ="OnSelectedFunctionChangedAsync">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<ListBoxItem>
-							<ListBoxItem.Content>
-								<WrapPanel>
-									<TextBlock Text="{Binding Name}"/>
-									<TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
-								</WrapPanel>
-							</ListBoxItem.Content>
-						</ListBoxItem>
-						
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-		</StackPanel>
-		</Expander>
+	<StackPanel>
+		<WrapPanel HorizontalAlignment="Left">
+			<Button Classes="skillBtn" i:Attached.Icon="mdi-folder-outline" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
+			
+			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
+			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-right"/>-->
+			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-left"/>-->
+		</WrapPanel>
+		<ListBox
+					IsVisible="{Binding OpenSkillFolder}"
+					ItemsSource="{Binding Functions}"
+					SelectedIndex="{Binding SelectedIndex}"
+					SelectionChanged ="OnSelectedFunctionChangedAsync">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<WrapPanel Margin="5">
+						<TextBlock Text="{Binding Name}"/>
+						<TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
+					</WrapPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 
-	</UserControl>
+	</StackPanel>
+
+</UserControl>
