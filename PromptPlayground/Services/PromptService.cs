@@ -26,17 +26,27 @@ namespace PromptPlayground.Services
             var sw = Stopwatch.StartNew();
             var func = _kernel.CreateSemanticFunction(prompt, config);
             var result = await func.InvokeAsync(context);
-
-            var usage = model.GetUsage(result.ModelResults.Last());
-
             sw.Stop();
-            return new GenerateResult()
+            if (!result.ErrorOccurred)
             {
-                Text = result.Result,
-                Elapsed = sw.Elapsed,
-                Error = result.LastErrorDescription,
-                TokenUsage = usage
-            };
+                var usage = model.GetUsage(result.ModelResults.Last());
+
+                return new GenerateResult()
+                {
+                    Text = result.Result,
+                    Elapsed = sw.Elapsed,
+                    Error = result.LastErrorDescription,
+                    TokenUsage = usage
+                };
+            }else
+            {
+                return new GenerateResult()
+                {
+                    Text = result.Result,
+                    Elapsed = sw.Elapsed,
+                    Error = result.LastErrorDescription,
+                };
+            }
         }
 
         public SKContext CreateContext() => _kernel.CreateNewContext();

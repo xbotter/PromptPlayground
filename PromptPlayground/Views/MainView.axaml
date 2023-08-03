@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
 			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
 			 xmlns:views="clr-namespace:PromptPlayground.Views"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PromptPlayground.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -16,12 +17,11 @@
 	
 	<DockPanel >
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="配置" Click="OnConfigClick">
-			</MenuItem>
+			<MenuItem Header="配置" Click="OnConfigClick"/>
 			<MenuItem Header="文件">
-				<MenuItem Header="新建 🆕" Click="OnNewFile"/>
-				<MenuItem Header="打开文件 📝"  Click="OnImportFile"/>
-				<MenuItem Header="打开文件夹 📁" Click="OnSkillDirOpen"/>
+				<MenuItem Header="新建" Click="OnNewFile" i:MenuItem.Icon="mdi-file-plus-outline"/>
+				<MenuItem Header="打开文件"  Click="OnImportFile" i:MenuItem.Icon="mdi-file-document-outline"/>
+				<MenuItem Header="打开文件夹" Click="OnSkillDirOpen" i:MenuItem.Icon="mdi-folder-outline"/>
 			</MenuItem>
 		</Menu>
 		<StackPanel DockPanel.Dock="Bottom">

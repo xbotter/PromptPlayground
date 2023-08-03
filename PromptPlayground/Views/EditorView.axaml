@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
 			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
 			 xmlns:views="clr-namespace:PromptPlayground.Views"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
 			 x:Class="PromptPlayground.Views.EditorView"
 			 x:DataType="vm:SemanticFunctionViewModel">
 	<UserControl.Styles>
@@ -26,13 +27,19 @@
 	</UserControl.Styles>
 	<Grid ColumnDefinitions="*" RowDefinitions="60,*" DockPanel.Dock="Bottom" >
 		<TabControl TabStripPlacement="Top" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
-			<TabItem Header="📝">
+			<TabItem>
+				<TabItem.Header>
+					<i:Icon Value="mdi-file-edit-outline"/>
+				</TabItem.Header>
 				<ae:TextEditor
 			Classes="editor"
 			Document="{Binding Prompt}"
 				/>
 			</TabItem>
-			<TabItem Header="🛠">
+			<TabItem>
+				<TabItem.Header>
+					<i:Icon Value="mdi-cogs"/>
+				</TabItem.Header>
 				<ae:TextEditor
 			Classes="editor"
 			Document="{Binding Config}"
@@ -42,9 +49,9 @@
 		</TabControl>
 		<WrapPanel HorizontalAlignment="Right">
 			<Button IsVisible="False" Click="OnGenerateButtonClick" HotKey="Ctrl+Enter"/>
-			<Button Classes="MainBtn" Click="OnGenerateButtonClick" Content="▶" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding !IsGenerating}"/>
-			<Button Classes="MainBtn" Click="OnCancelButtonClick" Content="❌" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"  IsVisible="{Binding IsGenerating}"/>
-			<Button Classes="MainBtn" Click="OnSaveButtonClick" Content="💾"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsEnabled="{Binding IsChanged}"/>
+			<Button Classes="MainBtn" Click="OnGenerateButtonClick" i:Attached.Icon="mdi-play" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding !IsGenerating}"/>
+			<Button Classes="MainBtn" Click="OnCancelButtonClick" i:Attached.Icon="mdi-cancel" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"  IsVisible="{Binding IsGenerating}"/>
+			<Button Classes="MainBtn" Click="OnSaveButtonClick" i:Attached.Icon="mdi-content-save-outline"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsEnabled="{Binding IsChanged}"/>
 		</WrapPanel>
 	</Grid>
 </UserControl>
