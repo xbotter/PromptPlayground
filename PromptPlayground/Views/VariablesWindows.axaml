@@ -5,6 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		SizeToContent="WidthAndHeight"
 		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
+		xmlns:i="https://github.com/projektanker/icons.avalonia"
         x:Class="PromptPlayground.Views.VariablesWindows"
 		x:DataType="vm:VariablesViewModel"
 		SystemDecorations="Full"
@@ -26,8 +27,8 @@
 			</ItemsControl>
 		</StackPanel>
 		<StackPanel Margin="10" DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-			<Button Content="继续 🚀"  Click="OnContinuedClick" Margin="30,0"/>
-			<Button Content="取消 ❌"  Click="OnCanceledClick" Margin="30,0"/>
+			<Button  i:Attached.Icon="mdi-run"  Click="OnContinuedClick" Margin="30,0"/>
+			<Button  i:Attached.Icon="mdi-cancel"  Click="OnCanceledClick" Margin="30,0"/>
 		</StackPanel>
 	</DockPanel>
 
