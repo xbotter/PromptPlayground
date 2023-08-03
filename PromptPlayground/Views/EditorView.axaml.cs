@@ -96,7 +96,8 @@ public partial class EditorView : UserControl
                 {
                     break;
                 }
-                var result = await service.RunAsync(model.Prompt.Text, model.PromptConfig, context, cancellationToken: cancellationTokenSource!.Token);
+
+                var result = await service.RunAsync(model.Prompt.Text, model.PromptConfig, context.Clone(), cancellationToken: cancellationTokenSource!.Token);
                 OnGeneratedResult?.Invoke(this, new GenerateResultArgs(result));
             }
         }
