@@ -38,7 +38,7 @@ namespace PromptPlayground.ViewModels
             return true;
         }
     }
-    public class Variable: ObservableObject
+    public class Variable : ObservableObject
     {
         public string Name { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;

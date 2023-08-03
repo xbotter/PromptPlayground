@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
+			 xmlns:i="https://github.com/projektanker/icons.avalonia"
 			 x:Class="PromptPlayground.Views.SkillView"
 			 x:DataType="vm:SkillViewModel">
 
@@ -18,11 +19,12 @@
 	</UserControl.Styles>
 	<Expander
             ExpandDirection="Right"
-            Header="{Binding FolderName}">
+            Header="{Binding FolderName}"
+			Margin="0">
 		<StackPanel>
 			<WrapPanel HorizontalAlignment="Right">
-				<Button Classes="skillBtn" Content="📁" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
-				<!--<Button Classes="skillBtn" Content="🆕" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
+				<Button Classes="skillBtn" i:Attached.Icon="mdi-folder-outline" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
+				<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
 			</WrapPanel>
 			<Separator/>
 			<ListBox
@@ -32,11 +34,19 @@
 				SelectionChanged ="OnSelectedFunctionChangedAsync">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<ListBoxItem Content="{Binding Name}"/>
+						<ListBoxItem>
+							<ListBoxItem.Content>
+								<WrapPanel>
+									<TextBlock Text="{Binding Name}"/>
+									<TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
+								</WrapPanel>
+							</ListBoxItem.Content>
+						</ListBoxItem>
+						
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</StackPanel>
-	</Expander>
+		</Expander>
 
-</UserControl>
+	</UserControl>

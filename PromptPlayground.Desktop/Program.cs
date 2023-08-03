@@ -1,4 +1,6 @@
 ﻿using Avalonia;
+using Projektanker.Icons.Avalonia.MaterialDesign;
+using Projektanker.Icons.Avalonia;
 using System;
 
 namespace PromptPlayground.Desktop;
@@ -14,9 +16,13 @@ class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        IconProvider.Current
+            .Register<MaterialDesignIconProvider>();
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+    }
 
 }
