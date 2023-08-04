@@ -83,7 +83,31 @@
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
 				</StackPanel>
+				<Grid ColumnDefinitions="80,3*" Margin="10,3">
+					<TextBlock Text="Embedding" Grid.Column="0" />
+					<ComboBox
+						Grid.Column="1"
+						ItemsSource="{Binding EmbeddingLists}" SelectedIndex="{Binding EmbeddingSelectedIndex}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<ComboBoxItem Content="{Binding}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
 
+
+				<StackPanel>
+					<ItemsControl ItemsSource="{Binding EmbeddingAttributes}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="80,4*" Margin="12">
+									<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
 			</StackPanel>
 			<WrapPanel HorizontalAlignment="Right">
 				<Button i:Attached.Icon="mdi-content-save-cog-outline" Click="SaveConfig" Margin="20,0"/>

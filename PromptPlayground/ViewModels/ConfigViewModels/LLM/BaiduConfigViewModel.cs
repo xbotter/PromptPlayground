@@ -6,7 +6,7 @@ using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    public class BaiduConfigViewModel : LLMConfigViewModelBase
+    public class BaiduConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
     {
         const string ClientId = ConfigAttribute.BaiduClientId;
         const string Secret = ConfigAttribute.BaiduSecret;
@@ -18,16 +18,16 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
             RequireAttribute(ClientId);
             RequireAttribute(Secret);
         }
-        public override IKernel CreateKernel()
+        public KernelBuilder CreateKernelBuilder()
         {
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
 
             return Kernel.Builder
-            .WithERNIEBotChatCompletionService(GetAttribute(ClientId), GetAttribute(Secret))
-                .Build();
+                .WithERNIEBotChatCompletionService(GetAttribute(ClientId), GetAttribute(Secret))
+                ;
         }
-        public override ResultTokenUsage? GetUsage(ModelResult result)
+        public ResultTokenUsage? GetUsage(ModelResult result)
         {
             var completions = result.GetResult<ChatResponse>();
             return new ResultTokenUsage()

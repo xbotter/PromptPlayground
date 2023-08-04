@@ -6,9 +6,8 @@ using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    public class AzureOpenAIConfigViewModel : LLMConfigViewModelBase
+    public class AzureOpenAIConfigViewModel : ConfigViewModelBase,ILLMConfigViewModel
     {
-
         public AzureOpenAIConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
             RequireAttribute(ConfigAttribute.AzureDeployment);
@@ -17,17 +16,18 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
         }
         public override string Name => "Azure OpenAI";
 
-        public override IKernel CreateKernel()
+        public KernelBuilder CreateKernelBuilder()
         {
             Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureDeployment), ConfigAttribute.AzureDeployment);
             Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureEndpoint), ConfigAttribute.AzureEndpoint);
             Requires.NotNullOrWhiteSpace(GetAttribute(ConfigAttribute.AzureSecret), ConfigAttribute.AzureSecret);
+
             return Kernel.Builder
-            .WithAzureChatCompletionService(GetAttribute(ConfigAttribute.AzureDeployment), GetAttribute(ConfigAttribute.AzureEndpoint), GetAttribute(ConfigAttribute.AzureSecret))
-            .Build();
+                .WithAzureChatCompletionService(GetAttribute(ConfigAttribute.AzureDeployment), GetAttribute(ConfigAttribute.AzureEndpoint), GetAttribute(ConfigAttribute.AzureSecret))
+                 ;
         }
 
-        public override ResultTokenUsage? GetUsage(ModelResult result)
+        public ResultTokenUsage? GetUsage(ModelResult result)
         {
             var completions = result.GetResult<ChatCompletions>();
             return new ResultTokenUsage()
