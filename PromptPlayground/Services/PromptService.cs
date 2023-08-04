@@ -1,7 +1,8 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SemanticFunctions;
-using PromptPlayground.ViewModels.LLMConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels.LLM;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -38,7 +39,8 @@ namespace PromptPlayground.Services
                     Error = result.LastErrorDescription,
                     TokenUsage = usage
                 };
-            }else
+            }
+            else
             {
                 return new GenerateResult()
                 {

@@ -1,22 +1,17 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace PromptPlayground.ViewModels.LLMConfigViewModels
+namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    public interface ILLMConfigViewModel
+    public interface ILLMConfigViewModel : IConfigViewModel
     {
-        string Name { get; }
         public IKernel CreateKernel();
         public ResultTokenUsage? GetUsage(ModelResult resultModel);
-        public ObservableCollection<ConfigAttribute> SelectAttributes(List<ConfigAttribute> allAttributes);
     }
-
     public abstract class LLMConfigViewModelBase : ViewModelBase, ILLMConfigViewModel
     {
         private readonly IConfigAttributesProvider attributesProvider;
@@ -54,31 +49,4 @@ namespace PromptPlayground.ViewModels.LLMConfigViewModels
             return null;
         }
     }
-
-    public interface IConfigAttributesProvider
-    {
-        IList<ConfigAttribute> AllAttributes { get; }
-    }
-
-    public class ConfigAttribute : ObservableObject
-    {
-        public ConfigAttribute(string name)
-        {
-            Name = name;
-        }
-        private string _value = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Value { get => _value; set => SetProperty(ref _value, value, nameof(Value)); }
-
-        #region Constants
-        public const string AzureDeployment = nameof(AzureDeployment);
-        public const string AzureEndpoint = nameof(AzureEndpoint);
-        public const string AzureSecret = nameof(AzureSecret);
-
-        public const string BaiduClientId = nameof(BaiduClientId);
-        public const string BaiduSecret = nameof(BaiduSecret);
-        #endregion
-    }
-
-
 }

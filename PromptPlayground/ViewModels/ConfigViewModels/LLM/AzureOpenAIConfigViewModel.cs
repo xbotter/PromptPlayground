@@ -4,7 +4,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
 
-namespace PromptPlayground.ViewModels.LLMConfigViewModels
+namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
     public class AzureOpenAIConfigViewModel : LLMConfigViewModelBase
     {

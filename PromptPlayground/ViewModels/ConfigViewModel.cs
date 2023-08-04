@@ -1,4 +1,6 @@
-﻿using PromptPlayground.ViewModels.LLMConfigViewModels;
+﻿using PromptPlayground.ViewModels.ConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels.LLM;
+using PromptPlayground.ViewModels.ConfigViewModels.VectorDB;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,11 +13,29 @@ namespace PromptPlayground.ViewModels;
 
 public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
 {
+    private string[] RequiredAttributes = new string[]
+   {
+#region LLM Config
+       ConfigAttribute.AzureDeployment,
+        ConfigAttribute.AzureEndpoint,
+        ConfigAttribute.AzureSecret,
+        ConfigAttribute.BaiduClientId,
+        ConfigAttribute.BaiduSecret,
+       #endregion
+#region Vector DB
+        ConfigAttribute.QdrantEndpoint,
+        ConfigAttribute.QdrantApiKey,
+#endregion
+   };
+
     public List<ConfigAttribute> AllAttributes { get; set; } = new();
 
-    private int modelSelectedIndex = 0;
 
     public int MaxCount { get; set; } = 3;
+    #region Model
+    private int modelSelectedIndex = 0;
+
+
     public int ModelSelectedIndex
     {
         get => modelSelectedIndex; set
@@ -25,7 +45,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
                 modelSelectedIndex = value;
                 OnPropertyChanged(nameof(ModelSelectedIndex));
                 OnPropertyChanged(nameof(SelectedModel));
-                OnPropertyChanged(nameof(Attributes));
+                OnPropertyChanged(nameof(ModelAttributes));
             }
         }
     }
@@ -33,8 +53,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     [JsonIgnore]
     public List<string> ModelLists => LLMs.Select(_ => _.Name).ToList();
     [JsonIgnore]
-    public ObservableCollection<ConfigAttribute> Attributes => SelectedModel.SelectAttributes(this.AllAttributes);
-
+    public ObservableCollection<ConfigAttribute> ModelAttributes => SelectedModel.SelectAttributes(this.AllAttributes);
     [JsonIgnore]
     public ILLMConfigViewModel SelectedModel => LLMs[ModelSelectedIndex];
     [JsonIgnore]
@@ -44,6 +63,43 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
         new BaiduTurboConfigViewModel(this),
         new BaiduConfigViewModel(this)
     };
+    #endregion
+
+    #region vector DB
+    private bool enableVectorDB;
+    public bool EnableVectorDB { get => enableVectorDB; set => SetProperty(ref enableVectorDB, value); }
+
+    private int vectorDbSelectedIndex = 0;
+    public int VectorDbSelectedIndex
+    {
+        get => vectorDbSelectedIndex; set
+        {
+            if (vectorDbSelectedIndex != value)
+            {
+                vectorDbSelectedIndex = value;
+                OnPropertyChanged(nameof(VectorDbSelectedIndex));
+                OnPropertyChanged(nameof(SelectedVectorDb));
+                OnPropertyChanged(nameof(VectorDbAttributes));
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public List<string> VectorDbLists => VectorDbs.Select(_ => _.Name).ToList();
+
+    [JsonIgnore]
+    public IVectorDbConfigViewModel SelectedVectorDb => VectorDbs[VectorDbSelectedIndex];
+
+    [JsonIgnore]
+    public List<IVectorDbConfigViewModel> VectorDbs => new()
+    {
+        new QdrantConfigViewModel(this)
+    };
+
+    [JsonIgnore]
+    public ObservableCollection<ConfigAttribute> VectorDbAttributes => SelectedVectorDb.SelectAttributes(this.AllAttributes);
+
+    #endregion
 
     IList<ConfigAttribute> IConfigAttributesProvider.AllAttributes => this.AllAttributes;
 
@@ -85,14 +141,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
         }
         return list;
     }
-    private string[] RequiredAttributes = new string[]
-    {
-        ConfigAttribute.AzureDeployment,
-        ConfigAttribute.AzureEndpoint,
-        ConfigAttribute.AzureSecret,
-        ConfigAttribute.BaiduClientId,
-        ConfigAttribute.BaiduSecret,
-    };
+
 
     private void SaveConfigToUserProfile()
     {
@@ -109,5 +158,10 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     public void SaveConfig()
     {
         SaveConfigToUserProfile();
+    }
+
+    public void ReloadConfig()
+    {
+        this.LoadConfigFromUserProfile();
     }
 }

@@ -4,7 +4,6 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel()
     {
-
     }
 
     public string StatusBar { get => statusBar; set => SetProperty(ref statusBar, value); }

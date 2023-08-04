@@ -8,10 +8,9 @@
 		xmlns:i="https://github.com/projektanker/icons.avalonia"
         x:Class="PromptPlayground.Views.VariablesWindows"
 		x:DataType="vm:VariablesViewModel"
-		SystemDecorations="Full"
 		Icon="/Assets/logo.ico"
 		WindowStartupLocation="CenterOwner"
-        Title="Variables"
+        Title="变量"
 		>
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top">

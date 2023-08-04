@@ -16,13 +16,25 @@
 	</Design.DataContext>
 	
 	<DockPanel >
+		<DockPanel.Styles>
+			<Style Selector="MenuItem">
+				<Setter Property="Padding" Value="12,4"/>
+			</Style>
+		</DockPanel.Styles>
 		<Menu DockPanel.Dock="Top">
-			<MenuItem Header="配置" Click="OnConfigClick"/>
-			<MenuItem Header="文件">
+			<MenuItem>
+				<MenuItem.Header>
+					<i:Icon Value="mdi-menu"/>
+				</MenuItem.Header>
 				<MenuItem Header="新建" Click="OnNewFile" i:MenuItem.Icon="mdi-file-plus-outline"/>
 				<MenuItem Header="打开文件"  Click="OnImportFile" i:MenuItem.Icon="mdi-file-document-outline"/>
 				<MenuItem Header="打开文件夹" Click="OnSkillDirOpen" i:MenuItem.Icon="mdi-folder-outline"/>
+				<Separator/>
+				<MenuItem Header="配置" i:MenuItem.Icon="mdi-robot-outline" Click="OnConfigClick"/>
+				<!--<Separator/>
+				<MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline"/>-->
 			</MenuItem>
+	
 		</Menu>
 		<StackPanel DockPanel.Dock="Bottom">
 			<TextBlock Text="{Binding StatusBar}" Background="LightGray" Padding="10,0"></TextBlock>
