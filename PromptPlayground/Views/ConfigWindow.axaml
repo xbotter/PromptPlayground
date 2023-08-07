@@ -3,41 +3,116 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
-		Width="300"
-		Height="300"
+		xmlns:i="https://github.com/projektanker/icons.avalonia"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="NaN"
+		Width="450"
+		Height="NaN"
 		x:Class="PromptPlayground.Views.ConfigWindow"
 		Icon="/Assets/logo.ico"
 		x:DataType="vm:ConfigViewModel"
-        Title="Config">
+        Title="配置">
 	<Design.DataContext>
-		<vm:MainViewModel />
+		<vm:ConfigViewModel />
 	</Design.DataContext>
-	<StackPanel Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto">
-		<TextBlock Text="Select Model:"/>
-		<ComboBox ItemsSource="{Binding ModelLists}" SelectedIndex="{Binding ModelSelectedIndex}">
-			<ComboBox.ItemTemplate>
-				<DataTemplate>
-					<ComboBoxItem Content="{Binding}"/>
-				</DataTemplate>
-			</ComboBox.ItemTemplate>
-		</ComboBox>
+	<ScrollViewer>
+		<StackPanel Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto">
+			<StackPanel.Styles>
+				<Style Selector="TextBlock">
+					<Setter Property="VerticalAlignment" Value="Center"/>
+				</Style>
+				<Style Selector="Grid:nth-child(0)">
+					<Setter Property="MinWidth" Value="200"/>
+				</Style>
+			</StackPanel.Styles>
+			<Grid ColumnDefinitions="80,4*" Margin="10,3">
+				<TextBlock Text="生成数量" Grid.Column="0"/>
+				<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" Grid.Column="1" />
+			</Grid>
+			<Separator/>
+			<Grid ColumnDefinitions="80,4*" Margin="10,3">
+				<TextBlock Text="模型" Grid.Column="0" />
+				<ComboBox
+					Grid.Column="1"
+					ItemsSource="{Binding ModelLists}" SelectedIndex="{Binding ModelSelectedIndex}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<ComboBoxItem Content="{Binding}"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+			</Grid>
 
-		<StackPanel>
-			<ItemsControl ItemsSource="{Binding Attributes}">
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
-						<StackPanel>
-							<TextBlock Text="{Binding Name}"/>
-							<TextBox Text="{Binding Value}"/>
-						</StackPanel>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
+			<StackPanel>
+				<ItemsControl ItemsSource="{Binding ModelAttributes}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Grid ColumnDefinitions="80,4*" Margin="12">
+								<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+
+			<Separator/>
+			<ToggleSwitch OffContent="不使用向量数据库" OnContent="使用向量数据库" IsChecked="{Binding EnableVectorDB}"></ToggleSwitch>
+
+			<StackPanel IsVisible="{Binding EnableVectorDB}">
+				<Grid ColumnDefinitions="80,3*" Margin="10,3">
+					<TextBlock Text="向量数据库" Grid.Column="0" />
+					<ComboBox
+						Grid.Column="1"
+						ItemsSource="{Binding VectorDbLists}" SelectedIndex="{Binding VectorDbSelectedIndex}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<ComboBoxItem Content="{Binding}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+
+
+				<StackPanel>
+					<ItemsControl ItemsSource="{Binding VectorDbAttributes}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="80,4*" Margin="12">
+									<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+				<Grid ColumnDefinitions="80,3*" Margin="10,3">
+					<TextBlock Text="Embedding" Grid.Column="0" />
+					<ComboBox
+						Grid.Column="1"
+						ItemsSource="{Binding EmbeddingLists}" SelectedIndex="{Binding EmbeddingSelectedIndex}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<ComboBoxItem Content="{Binding}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+
+
+				<StackPanel>
+					<ItemsControl ItemsSource="{Binding EmbeddingAttributes}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="80,4*" Margin="12">
+									<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+			</StackPanel>
+			<WrapPanel HorizontalAlignment="Right">
+				<Button i:Attached.Icon="mdi-content-save-cog-outline" Click="SaveConfig" Margin="20,0"/>
+				<Button i:Attached.Icon="mdi-close-circle-outline" Click="ResetConfig"/>
+			</WrapPanel>
 		</StackPanel>
-		
-		<TextBlock/>
-		<TextBlock Text="Max Generate Results:"/>
-		<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" />
-	</StackPanel>
+	</ScrollViewer>
 </Window>

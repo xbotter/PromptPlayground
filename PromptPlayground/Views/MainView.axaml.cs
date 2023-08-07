@@ -35,7 +35,7 @@ public partial class MainView : UserControl
             this.ResultsView.AddResult(result.Result);
             this.model.StatusBar = $"({this.ResultsView.GetCount()}/{model.Config.MaxCount}) 生成中...";
         };
-        this.EditorView.GetLLMModel = () => this.model.Config.SelectedModel;
+        this.EditorView.GetConfigProvider = () => this.model.Config;
         this.EditorView.GetMaxCount = () => this.model.Config.MaxCount;
     }
 

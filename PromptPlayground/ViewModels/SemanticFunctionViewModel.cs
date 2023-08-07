@@ -1,17 +1,24 @@
 ﻿using AvaloniaEdit.Document;
+using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SemanticFunctions;
-using Microsoft.SemanticKernel.TemplateEngine;
-using Microsoft.SemanticKernel.TemplateEngine.Blocks;
+using Microsoft.SemanticKernel.SkillDefinition;
+using Moq;
+using PromptPlayground.Services.TemplateEngine;
+using PromptPlayground.Services.TemplateEngine.Abstractions.Blocks;
+using PromptPlayground.Services.TemplateEngine.Blocks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels
 {
     public class SemanticFunctionViewModel : ViewModelBase
     {
+        static PromptTemplateEngine _engine = new();
+
         private bool isChanged;
         private bool isGenerating;
 
@@ -64,21 +71,30 @@ namespace PromptPlayground.ViewModels
 
         public PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config.Text);
 
-        public IList<string> Blocks => new PromptTemplateEngine().ExtractBlocks(this.Prompt.Text)
-            .Where(IsVariableBlock)
-            .Select(GetBlockContent)
-            .ToList();
+        public IList<string> Blocks => _engine.ExtractBlocks(this.Prompt.Text)
+                                        .Where(HasVariable)
+                                        .Select(GetBlockContent)
+                                        .ToList();
 
-        private static bool IsVariableBlock(Block block)
+        private static bool HasVariable(Block block)
         {
-            return block.GetType().Name == "VarBlock";
+            return block is VarBlock || (block is CodeBlock code && code.HasVar());
         }
 
         private static string GetBlockContent(Block block)
         {
-            return block.GetType().GetRuntimeProperties().First(_ => _.Name == "Content").GetValue(block) as string ?? string.Empty;
+            if (block is VarBlock var)
+            {
+                return var.Content;
+            }
+            else if (block is CodeBlock code)
+            {
+                return code.VarContent();
+            }
+            return string.Empty;
         }
 
         public bool IsGenerating { get => isGenerating; set => SetProperty(ref isGenerating, value); }
+
     }
 }

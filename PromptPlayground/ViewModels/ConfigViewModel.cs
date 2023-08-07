@@ -1,4 +1,8 @@
-﻿using PromptPlayground.ViewModels.LLMConfigViewModels;
+﻿using Azure.AI.OpenAI;
+using PromptPlayground.ViewModels.ConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels.Embedding;
+using PromptPlayground.ViewModels.ConfigViewModels.LLM;
+using PromptPlayground.ViewModels.ConfigViewModels.VectorDB;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,11 +15,31 @@ namespace PromptPlayground.ViewModels;
 
 public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
 {
+    private string[] RequiredAttributes = new string[]
+   {
+#region LLM Config
+       ConfigAttribute.AzureDeployment,
+        ConfigAttribute.AzureEndpoint,
+        ConfigAttribute.AzureSecret,
+        ConfigAttribute.BaiduClientId,
+        ConfigAttribute.BaiduSecret,
+#endregion
+#region Vector DB
+        ConfigAttribute.VectorSize,
+        ConfigAttribute.QdrantEndpoint,
+        ConfigAttribute.QdrantApiKey,
+#endregion
+#region Embedding
+        ConfigAttribute.AzureEmbeddingDeployment,
+#endregion
+   };
+
     public List<ConfigAttribute> AllAttributes { get; set; } = new();
 
+    public int MaxCount { get => maxCount; set => SetProperty(ref maxCount, value); }
+    #region Model
     private int modelSelectedIndex = 0;
 
-    public int MaxCount { get; set; } = 3;
     public int ModelSelectedIndex
     {
         get => modelSelectedIndex; set
@@ -25,7 +49,8 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
                 modelSelectedIndex = value;
                 OnPropertyChanged(nameof(ModelSelectedIndex));
                 OnPropertyChanged(nameof(SelectedModel));
-                OnPropertyChanged(nameof(Attributes));
+                OnPropertyChanged(nameof(ModelAttributes));
+                OnPropertyChanged(nameof(SelectedModel.Name));
             }
         }
     }
@@ -33,19 +58,91 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     [JsonIgnore]
     public List<string> ModelLists => LLMs.Select(_ => _.Name).ToList();
     [JsonIgnore]
-    public ObservableCollection<ConfigAttribute> Attributes => SelectedModel.SelectAttributes(this.AllAttributes);
-
+    public ObservableCollection<ConfigAttribute> ModelAttributes => SelectedModel.SelectAttributes(this.AllAttributes);
     [JsonIgnore]
     public ILLMConfigViewModel SelectedModel => LLMs[ModelSelectedIndex];
     [JsonIgnore]
-    public List<ILLMConfigViewModel> LLMs => new()
-    {
-        new AzureOpenAIConfigViewModel(this),
-        new BaiduTurboConfigViewModel(this),
-        new BaiduConfigViewModel(this)
-    };
+    private readonly List<ILLMConfigViewModel> LLMs = new();
+    #endregion
 
+    #region vector DB
+    private bool enableVectorDB;
+    public bool EnableVectorDB { get => enableVectorDB; set => SetProperty(ref enableVectorDB, value); }
+
+    private int vectorDbSelectedIndex = 0;
+    public int VectorDbSelectedIndex
+    {
+        get => vectorDbSelectedIndex; set
+        {
+            if (vectorDbSelectedIndex != value)
+            {
+                vectorDbSelectedIndex = value;
+                OnPropertyChanged(nameof(VectorDbSelectedIndex));
+                OnPropertyChanged(nameof(SelectedVectorDb));
+                OnPropertyChanged(nameof(VectorDbAttributes));
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public List<string> VectorDbLists => VectorDbs.Select(_ => _.Name).ToList();
+
+    [JsonIgnore]
+    public IVectorDbConfigViewModel SelectedVectorDb => VectorDbs[VectorDbSelectedIndex];
+
+    private List<IVectorDbConfigViewModel> VectorDbs = new();
+
+    [JsonIgnore]
+    public ObservableCollection<ConfigAttribute> VectorDbAttributes => SelectedVectorDb.SelectAttributes(this.AllAttributes);
+
+    #endregion
+
+    #region Embedding 
+    private int embeddingSelectedIndex = 0;
+    private int maxCount = 3;
+
+    public int EmbeddingSelectedIndex
+    {
+        get => embeddingSelectedIndex; set
+        {
+            if (embeddingSelectedIndex != value)
+            {
+                embeddingSelectedIndex = value;
+                OnPropertyChanged(nameof(EmbeddingSelectedIndex));
+                OnPropertyChanged(nameof(SelectedEmbedding));
+                OnPropertyChanged(nameof(EmbeddingAttributes));
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public List<string> EmbeddingLists => Embeddings.Select(_ => _.Name).ToList();
+
+    [JsonIgnore]
+    public IEmbeddingConfigViewModel SelectedEmbedding => Embeddings[VectorDbSelectedIndex];
+
+    private readonly List<IEmbeddingConfigViewModel> Embeddings = new();
+
+    [JsonIgnore]
+    public ObservableCollection<ConfigAttribute> EmbeddingAttributes => SelectedEmbedding.SelectAttributes(this.AllAttributes);
+
+
+    #endregion
     IList<ConfigAttribute> IConfigAttributesProvider.AllAttributes => this.AllAttributes;
+    public ILLMConfigViewModel GetLLM()
+    {
+        return this.SelectedModel;
+    }
+
+    public IVectorDbConfigViewModel GetVectorDb()
+    {
+        return this.SelectedVectorDb;
+    }
+
+    public IEmbeddingConfigViewModel GetEmbedding()
+    {
+        return this.SelectedEmbedding;
+    }
 
     public ConfigViewModel(bool requireLoadConfig = false) : this()
     {
@@ -58,6 +155,16 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     public ConfigViewModel()
     {
         this.AllAttributes = CheckAttributes(this.AllAttributes);
+
+        LLMs.Add(new AzureOpenAIConfigViewModel(this));
+        LLMs.Add(new BaiduTurboConfigViewModel(this));
+        LLMs.Add(new BaiduConfigViewModel(this));
+
+        Embeddings.Add(new AzureOpenAIEmbeddingConfigViewModel(this));
+
+        VectorDbs.Add(new QdrantConfigViewModel(this));
+
+
     }
 
     private void LoadConfigFromUserProfile()
@@ -70,7 +177,10 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
             {
                 this.AllAttributes = CheckAttributes(vm.AllAttributes);
                 this.MaxCount = vm.MaxCount;
+                this.EnableVectorDB = vm.EnableVectorDB;
                 this.ModelSelectedIndex = vm.ModelSelectedIndex;
+                this.VectorDbSelectedIndex = vm.VectorDbSelectedIndex;
+                this.EmbeddingSelectedIndex = vm.EmbeddingSelectedIndex;
             }
         }
     }
@@ -85,14 +195,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
         }
         return list;
     }
-    private string[] RequiredAttributes = new string[]
-    {
-        ConfigAttribute.AzureDeployment,
-        ConfigAttribute.AzureEndpoint,
-        ConfigAttribute.AzureSecret,
-        ConfigAttribute.BaiduClientId,
-        ConfigAttribute.BaiduSecret,
-    };
+
 
     private void SaveConfigToUserProfile()
     {
@@ -109,5 +212,10 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     public void SaveConfig()
     {
         SaveConfigToUserProfile();
+    }
+
+    public void ReloadConfig()
+    {
+        this.LoadConfigFromUserProfile();
     }
 }

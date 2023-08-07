@@ -4,30 +4,30 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
 
-namespace PromptPlayground.ViewModels.LLMConfigViewModels
+namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    public class BaiduConfigViewModel : LLMConfigViewModelBase
+    public class BaiduTurboConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
     {
         const string ClientId = ConfigAttribute.BaiduClientId;
         const string Secret = ConfigAttribute.BaiduSecret;
 
-        public override string Name => "Baidu";
+        public override string Name => "Baidu Turbo";
 
-        public BaiduConfigViewModel(IConfigAttributesProvider provider) : base(provider)
+        public BaiduTurboConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
             RequireAttribute(ClientId);
             RequireAttribute(Secret);
         }
-        public override IKernel CreateKernel()
+        public KernelBuilder CreateKernelBuilder()
         {
+
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
 
             return Kernel.Builder
-            .WithERNIEBotChatCompletionService(GetAttribute(ClientId), GetAttribute(Secret))
-                .Build();
+            .WithERNIEBotTurboChatCompletionService(GetAttribute(ClientId), GetAttribute(Secret));
         }
-        public override ResultTokenUsage? GetUsage(ModelResult result)
+        public ResultTokenUsage? GetUsage(ModelResult result)
         {
             var completions = result.GetResult<ChatResponse>();
             return new ResultTokenUsage()

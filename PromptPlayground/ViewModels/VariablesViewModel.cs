@@ -21,8 +21,6 @@ namespace PromptPlayground.ViewModels
             }
         }
 
-
-
         public ObservableCollection<Variable> Variables { get; set; }
 
         public bool Configured()

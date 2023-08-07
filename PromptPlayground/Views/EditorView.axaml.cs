@@ -7,7 +7,9 @@ using Microsoft.SemanticKernel;
 using MsBox.Avalonia;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
-using PromptPlayground.ViewModels.LLMConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels;
+using PromptPlayground.ViewModels.ConfigViewModels.LLM;
+using PromptPlayground.ViewModels.ConfigViewModels.VectorDB;
 using PromptPlayground.Views.Args;
 using System;
 using System.IO;
@@ -25,7 +27,8 @@ public partial class EditorView : UserControl
     private SemanticFunctionViewModel model => (this.DataContext as SemanticFunctionViewModel)!;
     private Window mainWindow => (TopLevel.GetTopLevel(this) as Window)!;
 
-    public Func<ILLMConfigViewModel>? GetLLMModel { get; set; }
+    public Func<IConfigAttributesProvider>? GetConfigProvider { get; set; }
+
     public Func<int> GetMaxCount { get; set; }
 
     public event EventHandler OnGenerating;
@@ -54,17 +57,16 @@ public partial class EditorView : UserControl
         {
             OnGenerating?.Invoke(this, new());
 
-            var llm = (GetLLMModel?.Invoke()) ?? throw new Exception("无法创建Kernel，请检查LLM配置");
-
             cancellationTokenSource?.Dispose();
 
             cancellationTokenSource = new CancellationTokenSource();
-            var service = new PromptService(llm);
+            var service = new PromptService(GetConfigProvider?.Invoke());
 
             var context = service.CreateContext();
-            if (model.Blocks.Count > 0)
+            var varBlocks = model.Blocks;
+            if (varBlocks.Count > 0)
             {
-                var variables = this.model.Blocks.Select(_ => new Variable()
+                var variables = varBlocks.Select(_ => new Variable()
                 {
                     Name = _.TrimStart('$')
                 }).Distinct().ToList();
