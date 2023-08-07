@@ -19,6 +19,10 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.VectorDB
     public class QdrantConfigViewModel : ConfigViewModelBase, IVectorDbConfigViewModel
     {
         private QdrantMemoryStore? _store;
+        private int limit = 2;
+        private string collection = string.Empty;
+        private float relevance = 0.7f;
+
         public override string Name => "Qdrant";
 
         public QdrantConfigViewModel(IConfigAttributesProvider provider) : base(provider)
@@ -60,8 +64,21 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.VectorDB
             return _store;
         }
 
-        public int Limit { get; set; } = 3;
-        public string Collection { get; set; }
+        public int Limit
+        {
+            get => limit;
+            set => SetProperty(ref limit, value);
+        }
+        public string Collection
+        {
+            get => collection;
+            set => SetProperty(ref collection, value);
+        }
 
+        public float Relevance
+        {
+            get => relevance;
+            set => SetProperty(ref relevance, value);
+        }
     }
 }

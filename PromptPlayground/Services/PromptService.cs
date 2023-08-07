@@ -58,6 +58,7 @@ namespace PromptPlayground.Services
             {
                 context[TextMemorySkill.CollectionParam] = vectorDb.Collection;
                 context[TextMemorySkill.LimitParam] = vectorDb.Limit.ToString();
+                context[TextMemorySkill.RelevanceParam] = vectorDb.Relevance.ToString();
             }
 
             var result = await func.InvokeAsync(context);

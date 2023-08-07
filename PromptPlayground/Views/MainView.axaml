@@ -55,10 +55,13 @@
 				</MenuItem>
 
 			</Menu>
-			<WrapPanel Margin="10,0" IsVisible="{Binding Config.EnableVectorDB}">
-				<i:Icon Value="mdi-database-outline"/>
-				<TextBox ToolTip.Tip="Collection" Text="{Binding Config.SelectedVectorDb.Collection}" Watermark="Collection" MinWidth="120" Margin="8,2,8,0" Height="25"/>
-				<NumericUpDown ToolTip.Tip="Limit" Value="{Binding Config.SelectedVectorDb.Limit}" FormatString="0" Minimum="1" Maximum="100" Watermark="Limit" MinWidth="80" Margin="8,2,0,0" Height="25"/>
+			<WrapPanel IsVisible="{Binding Config.EnableVectorDB}">
+				<WrapPanel Margin="10,0"  DataContext="{Binding Config.SelectedVectorDb}" >
+					<i:Icon Value="mdi-database-outline" ToolTip.Tip="{Binding Name}"/>
+					<TextBox ToolTip.Tip="Collection" Text="{Binding Collection}" Watermark="Collection" MinWidth="120" Margin="8,2,8,0" Height="25"/>
+					<NumericUpDown ToolTip.Tip="Limit" Value="{Binding Limit}" FormatString="0" Minimum="1" Maximum="100" Watermark="Limit" MinWidth="80" Margin="8,2,0,0" Height="25"/>
+					<NumericUpDown ToolTip.Tip="Relevance" Value="{Binding Relevance}" FormatString="0.00" Increment="0.1" Minimum="0.01" Maximum="1.00" Watermark="Relevance" MinWidth="80" Margin="8,2,0,0" Height="25"/>
+				</WrapPanel>
 			</WrapPanel>
 		</WrapPanel>
 		<StackPanel DockPanel.Dock="Bottom">

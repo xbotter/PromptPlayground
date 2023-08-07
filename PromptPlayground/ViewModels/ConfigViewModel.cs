@@ -62,12 +62,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     [JsonIgnore]
     public ILLMConfigViewModel SelectedModel => LLMs[ModelSelectedIndex];
     [JsonIgnore]
-    public List<ILLMConfigViewModel> LLMs => new()
-    {
-        new AzureOpenAIConfigViewModel(this),
-        new BaiduTurboConfigViewModel(this),
-        new BaiduConfigViewModel(this)
-    };
+    private readonly List<ILLMConfigViewModel> LLMs = new();
     #endregion
 
     #region vector DB
@@ -95,11 +90,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     [JsonIgnore]
     public IVectorDbConfigViewModel SelectedVectorDb => VectorDbs[VectorDbSelectedIndex];
 
-    [JsonIgnore]
-    public List<IVectorDbConfigViewModel> VectorDbs => new()
-    {
-        new QdrantConfigViewModel(this)
-    };
+    private List<IVectorDbConfigViewModel> VectorDbs = new();
 
     [JsonIgnore]
     public ObservableCollection<ConfigAttribute> VectorDbAttributes => SelectedVectorDb.SelectAttributes(this.AllAttributes);
@@ -130,11 +121,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     [JsonIgnore]
     public IEmbeddingConfigViewModel SelectedEmbedding => Embeddings[VectorDbSelectedIndex];
 
-    [JsonIgnore]
-    public List<IEmbeddingConfigViewModel> Embeddings => new()
-    {
-        new AzureOpenAIEmbeddingConfigViewModel(this)
-    };
+    private readonly List<IEmbeddingConfigViewModel> Embeddings = new();
 
     [JsonIgnore]
     public ObservableCollection<ConfigAttribute> EmbeddingAttributes => SelectedEmbedding.SelectAttributes(this.AllAttributes);
@@ -168,6 +155,16 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
     public ConfigViewModel()
     {
         this.AllAttributes = CheckAttributes(this.AllAttributes);
+
+        LLMs.Add(new AzureOpenAIConfigViewModel(this));
+        LLMs.Add(new BaiduTurboConfigViewModel(this));
+        LLMs.Add(new BaiduConfigViewModel(this));
+
+        Embeddings.Add(new AzureOpenAIEmbeddingConfigViewModel(this));
+
+        VectorDbs.Add(new QdrantConfigViewModel(this));
+
+
     }
 
     private void LoadConfigFromUserProfile()

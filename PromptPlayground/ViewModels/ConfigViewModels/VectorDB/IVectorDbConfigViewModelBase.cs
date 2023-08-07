@@ -11,5 +11,6 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.VectorDB
         void RegisterMemory(KernelBuilder kernel);
         string Collection { get; set; }
         int Limit { get; set; }
+        float Relevance { get; set; }
     }
 }

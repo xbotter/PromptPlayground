@@ -63,9 +63,10 @@ public partial class EditorView : UserControl
             var service = new PromptService(GetConfigProvider?.Invoke());
 
             var context = service.CreateContext();
-            if (model.Blocks.Count > 0)
+            var varBlocks = model.Blocks;
+            if (varBlocks.Count > 0)
             {
-                var variables = this.model.Blocks.Select(_ => new Variable()
+                var variables = varBlocks.Select(_ => new Variable()
                 {
                     Name = _.TrimStart('$')
                 }).Distinct().ToList();
