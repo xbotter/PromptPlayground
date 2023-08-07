@@ -18,13 +18,13 @@
 		</Style>
 	</UserControl.Styles>
 	<StackPanel>
-		<WrapPanel HorizontalAlignment="Left">
+		<!--<WrapPanel HorizontalAlignment="Left">
 			<Button Classes="skillBtn" i:Attached.Icon="mdi-folder-outline" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
 			
-			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
-			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-right"/>-->
-			<!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-left"/>-->
-		</WrapPanel>
+			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>--><!--
+			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-right"/>--><!--
+			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-left"/>--><!--
+		</WrapPanel>-->
 		<ListBox
 					IsVisible="{Binding OpenSkillFolder}"
 					ItemsSource="{Binding Functions}"

@@ -20,7 +20,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
         }
         public KernelBuilder CreateKernelBuilder()
         {
-            
+
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
             Requires.NotNullOrWhiteSpace(ClientId, nameof(ClientId));
 

@@ -36,8 +36,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
 
     public List<ConfigAttribute> AllAttributes { get; set; } = new();
 
-
-    public int MaxCount { get; set; } = 3;
+    public int MaxCount { get => maxCount; set => SetProperty(ref maxCount, value); }
     #region Model
     private int modelSelectedIndex = 0;
 
@@ -51,6 +50,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
                 OnPropertyChanged(nameof(ModelSelectedIndex));
                 OnPropertyChanged(nameof(SelectedModel));
                 OnPropertyChanged(nameof(ModelAttributes));
+                OnPropertyChanged(nameof(SelectedModel.Name));
             }
         }
     }
@@ -108,6 +108,8 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
 
     #region Embedding 
     private int embeddingSelectedIndex = 0;
+    private int maxCount = 3;
+
     public int EmbeddingSelectedIndex
     {
         get => embeddingSelectedIndex; set

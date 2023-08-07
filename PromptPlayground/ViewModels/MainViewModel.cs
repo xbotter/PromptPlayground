@@ -12,9 +12,7 @@ public partial class MainViewModel : ViewModelBase
         get => loading; set => SetProperty(ref loading, value);
     }
 
-
-    public ConfigViewModel Config = new(true);
-
+    public ConfigViewModel Config { get; set; } = new(true);
 
     private bool loading = false;
     private string statusBar = string.Empty;

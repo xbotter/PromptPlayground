@@ -6,7 +6,7 @@ using PromptPlayground.Services;
 
 namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    public class AzureOpenAIConfigViewModel : ConfigViewModelBase,ILLMConfigViewModel
+    public class AzureOpenAIConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
     {
         public AzureOpenAIConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {

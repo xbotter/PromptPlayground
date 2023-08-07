@@ -53,6 +53,13 @@ namespace PromptPlayground.Services
         {
             var sw = Stopwatch.StartNew();
             var func = _kernel.CreateSemanticFunction(prompt, config);
+
+            if (provider.GetVectorDb() is IVectorDbConfigViewModel vectorDb)
+            {
+                context[TextMemorySkill.CollectionParam] = vectorDb.Collection;
+                context[TextMemorySkill.LimitParam] = vectorDb.Limit.ToString();
+            }
+
             var result = await func.InvokeAsync(context);
             sw.Stop();
             if (!result.ErrorOccurred)
