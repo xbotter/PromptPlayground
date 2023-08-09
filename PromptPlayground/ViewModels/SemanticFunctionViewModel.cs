@@ -43,6 +43,7 @@ namespace PromptPlayground.ViewModels
             else
             {
                 this.Folder = "";
+                this.Name = folder;
                 this.Prompt = new TextDocument(new StringTextSource(""));
                 this.Config = new TextDocument(new StringTextSource(DefaultConfig()));
             }

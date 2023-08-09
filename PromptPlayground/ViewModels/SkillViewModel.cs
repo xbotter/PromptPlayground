@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -6,6 +7,17 @@ namespace PromptPlayground.ViewModels
 {
     public class SkillViewModel : ViewModelBase
     {
+        public SkillViewModel()
+        {
+            Plugins.Add(new PluginViewModel()
+            {
+                Title = "unsaved"
+            });
+            Plugins.Add(new PluginViewModel()
+            {
+                Title = "test"
+            });
+        }
         private string folder = string.Empty;
         private SemanticFunctionViewModel? selectedFunction;
         public SemanticFunctionViewModel? SelectedFunction
@@ -24,10 +36,9 @@ namespace PromptPlayground.ViewModels
 
         public int SelectedIndex
         {
-
             get => SelectedFunction != null ? Functions.IndexOf(SelectedFunction) : -1;
         }
-
+        public ObservableCollection<PluginViewModel> Plugins { get; set; } = new ObservableCollection<PluginViewModel>();
         public string FolderName => Directory.Exists(Folder) ? Path.GetFileName(Folder) : string.Empty;
         public string Folder
         {
@@ -55,5 +66,13 @@ namespace PromptPlayground.ViewModels
         private bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
 
         public bool OpenSkillFolder => Directory.Exists(folder);
+    }
+    public class PluginViewModel : ViewModelBase
+    {
+        public string? Title { get; set; }
+        public List<SemanticFunctionViewModel> Functions { get; set; } = new List<SemanticFunctionViewModel>()
+        {
+            new SemanticFunctionViewModel("Test")
+        };
     }
 }

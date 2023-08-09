@@ -7,39 +7,80 @@
 			 xmlns:i="https://github.com/projektanker/icons.avalonia"
 			 x:Class="PromptPlayground.Views.SkillView"
 			 x:DataType="vm:SkillViewModel">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <FontWeight x:Key="ExpanderHeaderFontWeight">500</FontWeight>
+      <x:Double x:Key="ExpanderIconSize">0</x:Double>
 
-	<UserControl.Styles>
-		<Style Selector="Button.skillBtn">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="Margin" Value="2"/>
-			<Setter Property="Padding" Value="0"/>
-			<Setter Property="MinWidth" Value="30"/>
-			<Setter Property="MinHeight" Value="30"/>
-		</Style>
-	</UserControl.Styles>
-	<StackPanel>
-		<!--<WrapPanel HorizontalAlignment="Left">
+      <CornerRadius x:Key="ExpanderHeaderCornerRadius">3</CornerRadius>
+      <Thickness x:Key="ExpanderHeaderMargin">0</Thickness>
+      <Thickness x:Key="ExpanderHeaderPadding">4</Thickness>
+      <Thickness x:Key="ExpanderEndIconMargin">0 0 8 0</Thickness>
+      <Thickness x:Key="ExpanderContentMargin">0</Thickness>
+      <Thickness x:Key="ExpanderFrontIconMargin">8 0 0 0</Thickness>
+      <Thickness x:Key="ExpanderDownContentBorderThickness">0 0 0 1</Thickness>
+      <Thickness x:Key="ExpanderUpContentBorderThickness">0 1 0 0</Thickness>
+      <Thickness x:Key="ExpanderLeftContentBorderThickness">1 0 0 0</Thickness>
+      <Thickness x:Key="ExpanderRightContentBorderThickness">0 0 1 0</Thickness>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Styles>
+    <Style Selector="Button.skillBtn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="MinWidth" Value="30"/>
+      <Setter Property="MinHeight" Value="30"/>
+    </Style>
+  </UserControl.Styles>
+  <StackPanel MinWidth="200">
+    <!--<WrapPanel HorizontalAlignment="Left">
 			<Button Classes="skillBtn" i:Attached.Icon="mdi-folder-outline" ToolTip.Tip="Open Skill Folder" Click="OnOpenFolder"/>
 			
-			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>--><!--
-			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-right"/>--><!--
-			--><!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-left"/>--><!--
+			-->
+    <!--<Button Classes="skillBtn" i:Attached.Icon="mdi-file-plus-outline" ToolTip.Tip="Add New Function" IsVisible="{Binding OpenSkillFolder}"/>-->
+    <!--
+			-->
+    <!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-right"/>-->
+    <!--
+			-->
+    <!--<Button Classes="skillBtn" i:Attached.Icon="mdi-arrow-expand-left"/>-->
+    <!--
 		</WrapPanel>-->
-		<ListBox
-					IsVisible="{Binding OpenSkillFolder}"
-					ItemsSource="{Binding Functions}"
-					SelectedIndex="{Binding SelectedIndex}"
-					SelectionChanged ="OnSelectedFunctionChangedAsync">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<WrapPanel Margin="5">
-						<TextBlock Text="{Binding Name}"/>
-						<TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
-					</WrapPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-
-	</StackPanel>
+    <ItemsControl ItemsSource="{Binding Plugins}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <Expander HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <Expander.Header>
+              <Grid>
+                <TextBlock Text="{Binding Title}"/>
+                <WrapPanel HorizontalAlignment="Right">
+                  <Button i:Attached.Icon="mdi-plus" Margin="0" Padding="0" Background="Transparent"/>
+                </WrapPanel>
+              </Grid>
+            </Expander.Header>
+            <Expander.Content>
+              <StackPanel>
+                
+                <ListBox
+                  ItemsSource="{Binding Functions}"
+                  SelectionChanged="OnSelectedFunctionChangedAsync"
+                > 
+                  <ListBox.ItemTemplate>
+                    <DataTemplate>
+                      <WrapPanel>
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
+                      </WrapPanel>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </StackPanel>
+            </Expander.Content>
+          </Expander>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </StackPanel>
 
 </UserControl>
