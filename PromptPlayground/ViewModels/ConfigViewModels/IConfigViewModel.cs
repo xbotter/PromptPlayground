@@ -54,8 +54,8 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
     {
         IList<ConfigAttribute> AllAttributes { get; }
         ILLMConfigViewModel GetLLM();
-        IVectorDbConfigViewModel GetVectorDb();
-        IEmbeddingConfigViewModel GetEmbedding();
+        IVectorDbConfigViewModel? GetVectorDb();
+        IEmbeddingConfigViewModel? GetEmbedding();
     }
 
     public class ConfigAttribute : ObservableObject
