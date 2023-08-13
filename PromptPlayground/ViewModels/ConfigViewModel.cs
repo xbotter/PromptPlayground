@@ -134,14 +134,14 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider
         return this.SelectedModel;
     }
 
-    public IVectorDbConfigViewModel GetVectorDb()
+    public IVectorDbConfigViewModel? GetVectorDb()
     {
-        return this.SelectedVectorDb;
+        return this.EnableVectorDB ? this.SelectedVectorDb : null;
     }
 
-    public IEmbeddingConfigViewModel GetEmbedding()
+    public IEmbeddingConfigViewModel? GetEmbedding()
     {
-        return this.SelectedEmbedding;
+        return this.EnableVectorDB ? this.SelectedEmbedding : null;
     }
 
     public ConfigViewModel(bool requireLoadConfig = false) : this()
