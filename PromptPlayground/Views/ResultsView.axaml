@@ -47,11 +47,11 @@
 													<Label.Content>
 														<WrapPanel>
 															<i:Icon Value="mdi-clock-time-four-outline"/>
-															<TextBlock Text="{Binding ElapsedText}"/>
+															<TextBlock Text="{Binding Elapsed.TotalSeconds,StringFormat={}{0:0.000}s}"/>
 														</WrapPanel>
 													</Label.Content>
 												</Label>
-												<Button Background="Transparent"  DataContext="{Binding}" i:Attached.Icon="mdi-content-paste" Click="OnCopyClick" />
+												<Button Background="Transparent" Command="{Binding CopyTextCommand}" i:Attached.Icon="mdi-content-paste"/>
 											</WrapPanel>
 											<SelectableTextBlock Padding="12" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
 													   TextWrapping="WrapWithOverflow"

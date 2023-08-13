@@ -9,72 +9,72 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PromptPlayground.Views.MainView"
              x:DataType="vm:MainViewModel">
-	<Design.DataContext>
-		<!-- This only sets the DataContext for the previewer in an IDE,
+  <Design.DataContext>
+    <!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-		<vm:MainViewModel />
-	</Design.DataContext>
+    <vm:MainViewModel />
+  </Design.DataContext>
 
-	<DockPanel >
-		<DockPanel.Styles>
-			<Style Selector="MenuItem">
-				<Setter Property="Padding" Value="12,4"/>
-			</Style>
-		</DockPanel.Styles>
-		<WrapPanel DockPanel.Dock="Top">
+  <DockPanel >
+    <DockPanel.Styles>
+      <Style Selector="MenuItem">
+        <Setter Property="Padding" Value="12,4"/>
+      </Style>
+    </DockPanel.Styles>
+    <WrapPanel DockPanel.Dock="Top">
 
-			<Menu >
-				<MenuItem>
-					<MenuItem.Header>
-						<i:Icon Value="mdi-menu"/>
-					</MenuItem.Header>
-					<MenuItem Header="新建" Click="OnNewFile" i:MenuItem.Icon="mdi-file-plus-outline"/>
-					<!--<Separator/>
+      <Menu >
+        <MenuItem>
+          <MenuItem.Header>
+            <i:Icon Value="mdi-menu"/>
+          </MenuItem.Header>
+          <MenuItem Header="新建" Command="{Binding NewFileCommand}" i:MenuItem.Icon="mdi-file-plus-outline"/>
+          <!--<Separator/>
 				<MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline"/>-->
-				</MenuItem>
-				<MenuItem ToolTip.Tip="打开文件"  Click="OnImportFile">
-					<MenuItem.Header>
-						<i:Icon Value="mdi-file-document-outline"/>
-					</MenuItem.Header>
-				</MenuItem>
-				<MenuItem ToolTip.Tip="打开文件夹" Click="OnSkillDirOpen">
-					<MenuItem.Header>
-						<i:Icon Value="mdi-folder-outline"/>
-					</MenuItem.Header>
-				</MenuItem>
+        </MenuItem>
+        <MenuItem ToolTip.Tip="打开文件"  Command="{Binding OpenFileCommand}">
+          <MenuItem.Header>
+            <i:Icon Value="mdi-file-document-outline"/>
+          </MenuItem.Header>
+        </MenuItem>
+        <MenuItem ToolTip.Tip="打开文件夹"  Command="{Binding OpenFolderCommand}">
+          <MenuItem.Header>
+            <i:Icon Value="mdi-folder-outline"/>
+          </MenuItem.Header>
+        </MenuItem>
 
-				<MenuItem Click="OnConfigClick">
-					<MenuItem.Header>
-						<WrapPanel>
-							<i:Icon Value="mdi-robot-outline"/>
-							<TextBlock Text="{Binding Config.SelectedModel.Name}" Margin="10,0"/>
-							<i:Icon Value="mdi-counter"/>
-							<TextBlock Text="{Binding Config.MaxCount}" Margin="10,0"/>
-						</WrapPanel>
-					</MenuItem.Header>
-				</MenuItem>
+        <MenuItem Click="OnConfigClick">
+          <MenuItem.Header>
+            <WrapPanel>
+              <i:Icon Value="mdi-robot-outline"/>
+              <TextBlock Text="{Binding Config.SelectedModel.Name}" Margin="10,0"/>
+              <i:Icon Value="mdi-counter"/>
+              <TextBlock Text="{Binding Config.MaxCount}" Margin="10,0"/>
+            </WrapPanel>
+          </MenuItem.Header>
+        </MenuItem>
 
-			</Menu>
-			<WrapPanel IsVisible="{Binding Config.EnableVectorDB}">
-				<WrapPanel Margin="10,0"  DataContext="{Binding Config.SelectedVectorDb}" >
-					<i:Icon Value="mdi-database-outline" ToolTip.Tip="{Binding Name}"/>
-					<TextBox ToolTip.Tip="Collection" Text="{Binding Collection}" Watermark="Collection" MinWidth="120" Margin="8,2,8,0" Height="25"/>
-					<NumericUpDown ToolTip.Tip="Limit" Value="{Binding Limit}" FormatString="0" Minimum="1" Maximum="100" Watermark="Limit" MinWidth="80" Margin="8,2,0,0" Height="25"/>
-					<NumericUpDown ToolTip.Tip="Relevance" Value="{Binding Relevance}" FormatString="0.00" Increment="0.1" Minimum="0.01" Maximum="1.00" Watermark="Relevance" MinWidth="80" Margin="8,2,0,0" Height="25"/>
-				</WrapPanel>
-			</WrapPanel>
-		</WrapPanel>
-		<StackPanel DockPanel.Dock="Bottom">
-			<TextBlock Text="{Binding StatusBar}" Background="LightGray" Padding="10,0"></TextBlock>
-			<ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Loading}" IsIndeterminate="{Binding Loading}"/>
-		</StackPanel>
-		<StackPanel DockPanel.Dock="Left">
-			<views:SkillView Name="SkillView"/>
-		</StackPanel>
-		<Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
-			<views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
-			<GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
-			<views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
-		</Grid>
-	</DockPanel>
+      </Menu>
+      <WrapPanel IsVisible="{Binding Config.EnableVectorDB}">
+        <WrapPanel Margin="10,0"  DataContext="{Binding Config.SelectedVectorDb}" >
+          <i:Icon Value="mdi-database-outline" ToolTip.Tip="{Binding Name}"/>
+          <TextBox ToolTip.Tip="Collection" Text="{Binding Collection}" Watermark="Collection" MinWidth="120" Margin="8,2,8,0" Height="25"/>
+          <NumericUpDown ToolTip.Tip="Limit" Value="{Binding Limit}" FormatString="0" Minimum="1" Maximum="100" Watermark="Limit" MinWidth="80" Margin="8,2,0,0" Height="25"/>
+          <NumericUpDown ToolTip.Tip="Relevance" Value="{Binding Relevance}" FormatString="0.00" Increment="0.1" Minimum="0.01" Maximum="1.00" Watermark="Relevance" MinWidth="80" Margin="8,2,0,0" Height="25"/>
+        </WrapPanel>
+      </WrapPanel>
+    </WrapPanel>
+    <StackPanel DockPanel.Dock="Bottom">
+      <TextBlock Text="{Binding Status.Text}" Background="LightGray" Padding="10,0"></TextBlock>
+      <ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
+    </StackPanel>
+    <StackPanel DockPanel.Dock="Left">
+      <views:SkillsView Name="SkillsView"/>
+    </StackPanel>
+    <Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
+      <views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
+      <GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
+      <views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
+    </Grid>
+  </DockPanel>
 </UserControl>

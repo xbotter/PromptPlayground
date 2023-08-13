@@ -7,51 +7,59 @@
 			 xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
 			 xmlns:views="clr-namespace:PromptPlayground.Views"
 			 xmlns:i="https://github.com/projektanker/icons.avalonia"
-			 x:Class="PromptPlayground.Views.EditorView"
+       xmlns:it="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+			 xmlns:behaviors="clr-namespace:PromptPlayground.Behaviors;assembly=PromptPlayground"
+             x:Class="PromptPlayground.Views.EditorView"
 			 x:DataType="vm:SemanticFunctionViewModel">
-	<UserControl.Styles>
-		<Style Selector="Button.MainBtn">
-			<Setter Property="Background" Value="Transparent"/>
-			<Setter Property="Margin" Value="2"/>
-			<Setter Property="Padding" Value="0"/>
-			<Setter Property="MinWidth" Value="30"/>
-			<Setter Property="MinHeight" Value="30"/>
-		</Style>
-		<Style Selector="ae|TextEditor.editor">
-			<Setter Property="BorderBrush" Value="LightGray"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="ShowLineNumbers" Value="True"/>
-			<Setter Property="WordWrap" Value="True"/>
-			<Setter Property="FontFamily" Value="Cascadia Code,Consolas,Menlo,Monospace"/>
-		</Style>
-	</UserControl.Styles>
-	<Grid ColumnDefinitions="*" RowDefinitions="60,*" DockPanel.Dock="Bottom" >
-		<TabControl TabStripPlacement="Top" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
-			<TabItem>
-				<TabItem.Header>
-					<i:Icon Value="mdi-file-edit-outline"/>
-				</TabItem.Header>
-				<ae:TextEditor
-			Classes="editor"
-			Document="{Binding Prompt}"
-				/>
-			</TabItem>
-			<TabItem>
-				<TabItem.Header>
-					<i:Icon Value="mdi-cogs"/>
-				</TabItem.Header>
-				<ae:TextEditor
-			Classes="editor"
-			Document="{Binding Config}"
-			SyntaxHighlighting="Json"
-				/>
-			</TabItem>
-		</TabControl>
-		<WrapPanel HorizontalAlignment="Right">
-			<Button IsVisible="False" Click="OnGenerateButtonClick" HotKey="Ctrl+Enter"/>
-			<Button Classes="MainBtn" Click="OnGenerateButtonClick" i:Attached.Icon="mdi-play" HotKey="Ctrl+G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsVisible="{Binding !IsGenerating}"/>
-			<Button Classes="MainBtn" Click="OnCancelButtonClick" i:Attached.Icon="mdi-cancel" HotKey="Ctrl+C" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"  IsVisible="{Binding IsGenerating}"/>
-			<Button Classes="MainBtn" Click="OnSaveButtonClick" i:Attached.Icon="mdi-content-save-outline"  HotKey="Ctrl+S" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" IsEnabled="{Binding IsChanged}"/>
-		</WrapPanel>
-	</Grid>
+  <UserControl.Styles>
+    <Style Selector="Button.MainBtn">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="MinWidth" Value="30"/>
+      <Setter Property="MinHeight" Value="30"/>
+      <Setter Property="VerticalAlignment" Value="Top"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Style Selector="^.DisableHidden:disabled">
+        <Setter Property="IsVisible" Value="False"/>
+      </Style>
+    </Style>
+    <Style Selector="ae|TextEditor.editor">
+      <Setter Property="BorderBrush" Value="LightGray"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="ShowLineNumbers" Value="True"/>
+      <Setter Property="WordWrap" Value="True"/>
+      <Setter Property="FontFamily" Value="Cascadia Code,Consolas,Menlo,Monospace"/>
+    </Style>
+  </UserControl.Styles>
+  <Grid ColumnDefinitions="*" RowDefinitions="60,*" DockPanel.Dock="Bottom" >
+    <TabControl TabStripPlacement="Top" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+      <TabItem>
+        <TabItem.Header>
+          <i:Icon Value="mdi-file-edit-outline"/>
+        </TabItem.Header>
+        <ae:TextEditor Classes="editor">
+          <it:Interaction.Behaviors>
+            <behaviors:DocumentTextBindingBehavior Text="{Binding Prompt, Mode=TwoWay}"/>
+          </it:Interaction.Behaviors>
+        </ae:TextEditor>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <i:Icon Value="mdi-cogs"/>
+        </TabItem.Header>
+        <ae:TextEditor Classes="editor"	SyntaxHighlighting="Json">
+          <it:Interaction.Behaviors>
+            <behaviors:DocumentTextBindingBehavior Text="{Binding Config, Mode=TwoWay}"/>
+          </it:Interaction.Behaviors>
+        </ae:TextEditor>
+      </TabItem>
+    </TabControl>
+    <WrapPanel HorizontalAlignment="Right">
+      <Button IsVisible="False" Command="{Binding GenerateResultCommand}" HotKey="Ctrl+Enter"/>
+      <Button Classes="MainBtn DisableHidden" Command="{Binding GenerateResultCommand}" i:Attached.Icon="mdi-play" HotKey="Ctrl+G" Grid.Column="1"/>
+      <Button Classes="MainBtn DisableHidden" Command="{Binding GenerateResultCancelCommand}" i:Attached.Icon="mdi-cancel" HotKey="Ctrl+C" Grid.Column="1"/>
+      <Button Classes="MainBtn" Command="{Binding SaveCommand}"  i:Attached.Icon="mdi-content-save-outline"  HotKey="Ctrl+S" Grid.Column="1"/>
+    </WrapPanel>
+  </Grid>
 </UserControl>
