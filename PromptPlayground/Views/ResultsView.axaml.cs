@@ -9,22 +9,10 @@ using System;
 
 namespace PromptPlayground.Views;
 
-public partial class ResultsView : UserControl, IRecipient<FunctionChangedMessage>
+public partial class ResultsView : UserControl
 {
-    private ResultsViewModel model => (this.DataContext as ResultsViewModel)!;
     public ResultsView()
     {
         InitializeComponent();
-        WeakReferenceMessenger.Default.RegisterAll(this);
-    }
-
-    public int GetCount()
-    {
-        return this.model.Results.Count;
-    }
-
-    public void Receive(FunctionChangedMessage message)
-    {
-        this.model.Results = message.Function.Results;
     }
 }

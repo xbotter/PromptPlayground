@@ -1,19 +1,25 @@
-﻿using PromptPlayground.Services;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using PromptPlayground.Messages;
+using PromptPlayground.Services;
 using System.Collections.ObjectModel;
 
 namespace PromptPlayground.ViewModels
 {
-    public class ResultsViewModel : ViewModelBase
+    public class ResultsViewModel : ObservableRecipient, IRecipient<FunctionSelectedMessage>
     {
-
-        public ResultsViewModel()
+        private SemanticFunctionViewModel function;
+        public ObservableCollection<GenerateResult> Results => function.Results;
+        public ResultsViewModel(SemanticFunctionViewModel function)
         {
-            Results = new ObservableCollection<GenerateResult>();
-            Results.CollectionChanged += (sender, e) =>
-            {
-                OnPropertyChanged(nameof(Results));
-            };
+            this.function = function;
+            IsActive = true;
         }
-        public ObservableCollection<GenerateResult> Results { get; set; }
+
+        public void Receive(FunctionSelectedMessage message)
+        {
+            this.function = message.Function;
+            OnPropertyChanged(nameof(Results));
+        }
     }
 }

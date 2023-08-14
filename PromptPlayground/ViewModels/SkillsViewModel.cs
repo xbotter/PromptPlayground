@@ -14,16 +14,15 @@ namespace PromptPlayground.ViewModels
 {
     public partial class SkillsViewModel : ObservableRecipient, IRecipient<SkillOpenMessage>,
         IRecipient<FunctionOpenMessage>,
-        IRecipient<FunctionCreateMessage>,
-        IRecipient<FunctionChangedMessage>
+        IRecipient<FunctionCreateMessage>
     {
         public SkillsViewModel()
         {
 
-            UnsavedFunctions = new SkillViewModel("opened");
+            OpenedFunctions = new SkillViewModel("opened");
             Skills = new ObservableCollection<SkillViewModel>
             {
-                UnsavedFunctions
+                OpenedFunctions
             };
             IsActive = true;
         }
@@ -63,30 +62,22 @@ namespace PromptPlayground.ViewModels
             }
 
             var function = new SemanticFunctionViewModel(message.FilePath);
-            if (!UnsavedFunctions.Functions.Contains(function))
+            if (!OpenedFunctions.Functions.Contains(function))
             {
-                UnsavedFunctions.Functions.Add(function);
+                OpenedFunctions.Functions.Add(function);
                 FunctionSelected(function);
             }
         }
 
         public void Receive(FunctionCreateMessage message)
         {
-            var function = new SemanticFunctionViewModel("[New Function]");
-            this.UnsavedFunctions.Functions.Add(function);
+            var function = message.Function ?? new SemanticFunctionViewModel("");
+            this.OpenedFunctions.AddNewFunction(function);
 
             FunctionSelected(function);
         }
 
-        public void Receive(FunctionChangedMessage message)
-        {
-            if (!UnsavedFunctions.Functions.Contains(message.Function))
-            {
-                UnsavedFunctions.Functions.Add(message.Function);
-            }
-        }
-
-        public SkillViewModel UnsavedFunctions { get; set; }
+        public SkillViewModel OpenedFunctions { get; set; }
 
         public ObservableCollection<SkillViewModel> Skills { get; set; }
 

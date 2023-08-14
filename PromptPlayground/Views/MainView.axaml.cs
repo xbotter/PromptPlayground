@@ -32,13 +32,6 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
     public MainView()
     {
         InitializeComponent();
-        var defaultFunction = new SemanticFunctionViewModel("");
-        this.EditorView.DataContext = defaultFunction;
-        this.ResultsView.DataContext = new ResultsViewModel()
-        {
-            Results = defaultFunction.Results
-        };
-        this.EditorView.GetConfigProvider = () => this.model.Config;
 
         WeakReferenceMessenger.Default.RegisterAll(this);
     }
@@ -47,7 +40,14 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
         base.OnAttachedToVisualTree(e);
         var topLevel = TopLevel.GetTopLevel(this);
         _manager = new WindowNotificationManager(topLevel) { MaxItems = 3 };
+
+        var defaultFunction = new SemanticFunctionViewModel("[New Function]");
+        this.EditorView.DataContext = defaultFunction;
+        this.ResultsView.DataContext = new ResultsViewModel(defaultFunction);
+
+        WeakReferenceMessenger.Default.Send(new FunctionCreateMessage(defaultFunction));
     }
+
     private void OnConfigClick(object sender, RoutedEventArgs e)
     {
         var configWindow = new ConfigWindow()

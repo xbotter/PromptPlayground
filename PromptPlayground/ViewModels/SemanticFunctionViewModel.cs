@@ -129,6 +129,22 @@ namespace PromptPlayground.ViewModels
                                         .Where(HasVariable)
                                         .Select(GetBlockContent)
                                         .ToList();
+        [RelayCommand]
+        public async Task CloseAsync()
+        {
+            if (this.IsChanged)
+            {
+                var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("File unsaved", "the prompt file is unsaved, do you want to close it?"));
+                if (!confirm)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                WeakReferenceMessenger.Default.Send(new CloseFunctionMessage(this));
+            }
+        }
 
         [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(IsChanged))]
         public async Task SaveAsync()

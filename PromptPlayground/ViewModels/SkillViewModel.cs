@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace PromptPlayground.ViewModels
 {
-    public partial class SkillViewModel : ObservableRecipient, IEquatable<SkillViewModel>, IRecipient<FunctionSelectedMessage>
+    public partial class SkillViewModel : ObservableRecipient, IEquatable<SkillViewModel>, IRecipient<FunctionSelectedMessage>, IRecipient<CloseFunctionMessage>
     {
         private static bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
 
@@ -60,12 +61,31 @@ namespace PromptPlayground.ViewModels
         [RelayCommand(CanExecute = nameof(CanAddNewFunction))]
         public void AddNewFunction()
         {
-            this.Functions.Add(new SemanticFunctionViewModel("New Function"));
+            AddNewFunction(new SemanticFunctionViewModel(""));
         }
 
         private bool CanAddNewFunction()
         {
             return !Directory.Exists(this.Folder);
+        }
+
+        public void AddNewFunction(SemanticFunctionViewModel function)
+        {
+            if (string.IsNullOrWhiteSpace(function.Name))
+            {
+                function.Name = $"[{DefaultName} {FindLastFunctionIndex() + 1}]";
+            }
+            this.Functions.Add(function);
+        }
+        const string DefaultName = "New Function";
+        readonly Regex DefaultNamePattern = new(@"\[New Function (?<index>\d+)\]", RegexOptions.Compiled);
+        private int FindLastFunctionIndex()
+        {
+            return this.Functions.Where(_ => DefaultNamePattern.IsMatch(_.Name))
+                 .Select(_ => DefaultNamePattern.Match(_.Name).Groups["index"])
+                 .Select(_ => int.Parse(_.Value))
+                 .Order()
+                 .LastOrDefault();
         }
 
         public void Receive(FunctionSelectedMessage message)
@@ -83,6 +103,14 @@ namespace PromptPlayground.ViewModels
                         this.Selected = null;
                     }
                 }
+            }
+        }
+
+        public void Receive(CloseFunctionMessage message)
+        {
+            if (this.Functions.Contains(message.Function) && message.Function != this.Selected)
+            {
+                this.Functions.Remove(message.Function);
             }
         }
     }

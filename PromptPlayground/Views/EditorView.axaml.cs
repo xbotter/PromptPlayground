@@ -23,10 +23,6 @@ namespace PromptPlayground.Views;
 
 public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessage>
 {
-    private SemanticFunctionViewModel model => (this.DataContext as SemanticFunctionViewModel)!;
-
-    public Func<IConfigAttributesProvider>? GetConfigProvider { get; set; }
-
     public EditorView()
     {
         InitializeComponent();
