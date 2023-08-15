@@ -1,7 +1,9 @@
-﻿namespace PromptPlayground.ViewModels
+﻿using PromptPlayground.Messages;
+
+namespace PromptPlayground.ViewModels
 {
-    public class SkillOpenMessage : FolderOpenMessage
+    public class SkillOpenMessage : FileOrFolderOpenMessage
     {
-        public SkillOpenMessage(string folder) : base(folder) { }
+        public SkillOpenMessage(string path) : base(path) { }
     }
 }

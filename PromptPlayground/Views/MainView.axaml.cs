@@ -5,24 +5,26 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using ERNIE_Bot.SDK.Models;
 using Microsoft.Extensions.Logging;
 using MsBox.Avalonia;
 using PromptPlayground.Messages;
 using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
-using PromptPlayground.Views.Args;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 
-public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<FolderOpenMessage>>,
-                                             IRecipient<AsyncRequestMessage<FileOpenMessage>>,
+public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
+                                             IRecipient<RequestFileOpen>,
                                              IRecipient<ConfirmRequestMessage>,
                                              IRecipient<NotificationMessage>,
-                                             IRecipient<CopyTextMessage>
+                                             IRecipient<CopyTextMessage>,
+                                             IRecipient<RequestVariablesMessage>
 {
     private WindowNotificationManager _manager;
 
@@ -60,16 +62,16 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
         configWindow.ShowDialog(mainWindow);
     }
 
-    private async Task<FolderOpenMessage> FolderOpenAsync()
+    private async Task<string?> FolderOpenAsync()
     {
         var folders = await TopLevel.GetTopLevel(this)!.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
         {
             AllowMultiple = false
         });
         var folder = folders.FirstOrDefault()?.TryGetLocalPath();
-        return new FolderOpenMessage(folder);
+        return folder;
     }
-    private async Task<FileOpenMessage> FileOpenAsync()
+    private async Task<string?> FileOpenAsync()
     {
         var file = await TopLevel.GetTopLevel(this)!.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
@@ -83,7 +85,7 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
             }
         });
         var filePath = file.FirstOrDefault()?.TryGetLocalPath();
-        return new FileOpenMessage(filePath);
+        return filePath;
     }
 
     private async Task<bool> ConfirmRequestMessageAsync(ConfirmRequestMessage message)
@@ -94,12 +96,12 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
         return result == MsBox.Avalonia.Enums.ButtonResult.Ok;
     }
 
-    public void Receive(AsyncRequestMessage<FolderOpenMessage> message)
+    public void Receive(RequestFolderOpen message)
     {
         message.Reply(FolderOpenAsync());
     }
 
-    public void Receive(AsyncRequestMessage<FileOpenMessage> message)
+    public void Receive(RequestFileOpen message)
     {
         message.Reply(FileOpenAsync());
     }
@@ -123,5 +125,22 @@ public partial class MainView : UserControl, IRecipient<AsyncRequestMessage<Fold
         await topLevel.Clipboard.SetTextAsync(message.Text);
 
         _manager?.Show(new Notification("Copied", "", NotificationType.Success, TimeSpan.FromSeconds(1)));
+    }
+
+    public void Receive(RequestVariablesMessage message)
+    {
+        message.Reply(ShowVariablesWindows(message.Variables));
+    }
+    private async Task<VariablesViewModel> ShowVariablesWindows(List<Variable> variables)
+    {
+        var variablesVm = new VariablesViewModel(variables);
+        var variableWindows = new VariablesWindows()
+        {
+            DataContext = variablesVm,
+            ShowInTaskbar = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
+        };
+        await variableWindows.ShowDialog(mainWindow);
+        return variablesVm;
     }
 }

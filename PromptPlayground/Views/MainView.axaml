@@ -68,9 +68,9 @@
       <TextBlock Text="{Binding Status.Text}" Background="LightGray" Padding="10,0"></TextBlock>
       <ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
     </StackPanel>
-    <StackPanel DockPanel.Dock="Left">
+    <ScrollViewer DockPanel.Dock="Left">
       <views:SkillsView Name="SkillsView"/>
-    </StackPanel>
+    </ScrollViewer>
     <Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
       <views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
       <GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>

@@ -44,9 +44,9 @@ namespace PromptPlayground.ViewModels
 
         public void Receive(SkillOpenMessage message)
         {
-            if (Directory.Exists(message.Folder))
+            if (Directory.Exists(message.Path))
             {
-                var skill = new SkillViewModel(message.Folder);
+                var skill = new SkillViewModel(message.Path);
                 if (!Skills.Contains(skill))
                 {
                     Skills.Add(skill);
@@ -56,12 +56,12 @@ namespace PromptPlayground.ViewModels
 
         public void Receive(FunctionOpenMessage message)
         {
-            if (string.IsNullOrWhiteSpace(message.FilePath) || !Directory.Exists(message.FilePath))
+            if (string.IsNullOrWhiteSpace(message.Path) || !Directory.Exists(message.Path))
             {
                 return;
             }
 
-            var function = new SemanticFunctionViewModel(message.FilePath);
+            var function = new SemanticFunctionViewModel(message.Path);
             if (!OpenedFunctions.Functions.Contains(function))
             {
                 OpenedFunctions.Functions.Add(function);

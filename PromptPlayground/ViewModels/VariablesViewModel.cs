@@ -20,7 +20,7 @@ namespace PromptPlayground.ViewModels
                 }
             }
         }
-
+        public bool IsCanceled { get; set; }
         public ObservableCollection<Variable> Variables { get; set; }
 
         public bool Configured()

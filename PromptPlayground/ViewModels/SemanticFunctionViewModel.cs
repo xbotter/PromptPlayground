@@ -12,6 +12,7 @@ using PromptPlayground.Services;
 using PromptPlayground.Services.TemplateEngine;
 using PromptPlayground.Services.TemplateEngine.Abstractions.Blocks;
 using PromptPlayground.Services.TemplateEngine.Blocks;
+using PromptPlayground.ViewModels.ConfigViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -81,7 +82,6 @@ namespace PromptPlayground.ViewModels
                 var configPath = Path.Combine(folderOrName, Constants.SkConfig);
                 this.Prompt = File.ReadAllText(promptPath);
                 this.Config = File.ReadAllText(configPath);
-                this.IsChanged = false;
             }
             else
             {
@@ -89,9 +89,8 @@ namespace PromptPlayground.ViewModels
                 this.Name = folderOrName;
                 this.Prompt = "";
                 this.Config = DefaultConfig();
-                this.IsChanged = true;
             }
-
+            this.IsChanged = false;
         }
 
         [ObservableProperty]
@@ -134,7 +133,7 @@ namespace PromptPlayground.ViewModels
         {
             if (this.IsChanged)
             {
-                var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("File unsaved", "the prompt file is unsaved, do you want to close it?"));
+                var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("File unsaved", $"the {Name} is unsaved, do you want to close it?"));
                 if (!confirm)
                 {
                     return;
@@ -151,13 +150,13 @@ namespace PromptPlayground.ViewModels
         {
             if (string.IsNullOrWhiteSpace(this.Folder) || !Directory.Exists(this.Folder))
             {
-                var response = await WeakReferenceMessenger.Default.Send(new AsyncRequestMessage<FolderOpenMessage>());
-                if (response == null || string.IsNullOrWhiteSpace(response.Folder))
+                var response = await WeakReferenceMessenger.Default.Send(new RequestFolderOpen());
+                if (string.IsNullOrWhiteSpace(response))
                 {
                     return;
                 }
 
-                var _promptPath = Path.Combine(response.Folder, Constants.SkPrompt);
+                var _promptPath = Path.Combine(response, Constants.SkPrompt);
 
                 if (File.Exists(_promptPath))
                 {
@@ -168,8 +167,8 @@ namespace PromptPlayground.ViewModels
                     }
                 }
 
-                this.Folder = response.Folder;
-                this.Name = Path.GetFileName(response.Folder);
+                this.Folder = response;
+                this.Name = Path.GetFileName(response);
             }
 
             var promptPath = Path.Combine(this.Folder, Constants.SkPrompt);
@@ -190,20 +189,54 @@ namespace PromptPlayground.ViewModels
             {
                 this.IsGenerating = true;
                 Results.Clear();
-                await Task.Delay(2, cancellationToken);
-                for (int i = 0; i < GetMaxCount(); i++)
+                var configProvider = WeakReferenceMessenger.Default.Send(new RequestMessage<IConfigAttributesProvider>());
+                var service = new PromptService(configProvider.Response);
+
+                var context = service.CreateContext();
+                var varBlocks = this.Blocks;
+                if (varBlocks.Count > 0)
                 {
-                    Results.Add(new GenerateResult()
+                    var variables = varBlocks.Select(_ => new Variable()
                     {
-                        Text = "Text",
-                        Elapsed = new TimeSpan(0, 0, 1, 10, 99),
-                        TokenUsage = new ResultTokenUsage(10, 1, 1)
-                    });
+                        Name = _.TrimStart('$')
+                    }).Distinct().ToList();
+
+                    var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
+
+                    if (result.IsCanceled)
+                    {
+                        throw new Exception("生成已取消");
+                    }
+                    if (!result.Configured())
+                    {
+                        throw new Exception("变量未配置");
+                    }
+
+                    foreach (var variable in result.Variables)
+                    {
+                        context[variable.Name] = variable.Value;
+                    }
+                }
+
+                var maxCount = GetMaxCount();
+                for (int i = 0; i < maxCount; i++)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    var result = await service.RunAsync(Prompt, PromptConfig, context.Clone(), cancellationToken);
+
+                    Results.Add(result);
                 }
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Canceled", ex.Message, NotificationMessage.NotificationType.Warning));
+            }
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Error", ex.Message, NotificationMessage.NotificationType.Warning));
             }
             finally
             {

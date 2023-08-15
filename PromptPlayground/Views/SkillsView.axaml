@@ -9,7 +9,7 @@
 			       x:DataType="vm:SkillsViewModel">
   <UserControl.Resources>
     <ResourceDictionary>
-      <FontWeight x:Key="ExpanderHeaderFontWeight">500</FontWeight>
+      <FontWeight x:Key="ExpanderHeaderFontWeight">800</FontWeight>
       <x:Double x:Key="ExpanderIconSize">0</x:Double>
 
       <CornerRadius x:Key="ExpanderHeaderCornerRadius">3</CornerRadius>
@@ -18,10 +18,6 @@
       <Thickness x:Key="ExpanderEndIconMargin">0 0 8 0</Thickness>
       <Thickness x:Key="ExpanderContentMargin">0</Thickness>
       <Thickness x:Key="ExpanderFrontIconMargin">8 0 0 0</Thickness>
-      <Thickness x:Key="ExpanderDownContentBorderThickness">0 0 0 1</Thickness>
-      <Thickness x:Key="ExpanderUpContentBorderThickness">0 1 0 0</Thickness>
-      <Thickness x:Key="ExpanderLeftContentBorderThickness">1 0 0 0</Thickness>
-      <Thickness x:Key="ExpanderRightContentBorderThickness">0 0 1 0</Thickness>
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Styles>
@@ -33,7 +29,6 @@
       <Setter Property="MinHeight" Value="30"/>
     </Style>
   </UserControl.Styles>
-
   <StackPanel MinWidth="200">
     <ItemsControl ItemsSource="{Binding Skills}">
       <ItemsControl.ItemTemplate>
@@ -41,7 +36,7 @@
           <Expander HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsExpanded="True">
             <Expander.Header>
               <Grid>
-                <TextBlock Text="{Binding Title}"/>
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Title}"/>
                 <WrapPanel HorizontalAlignment="Right">
                   <Button i:Attached.Icon="mdi-plus" Margin="0" Padding="0" Background="Transparent" Command="{Binding AddNewFunctionCommand}" >
                     <Button.Styles>
@@ -56,19 +51,14 @@
             <Expander.Content>
               <ListBox
                  ItemsSource="{Binding Functions}"
-                 SelectedItem="{Binding Selected,Mode=TwoWay
-                 }"
+                 SelectedItem="{Binding Selected,Mode=TwoWay}"
                 >
                 <ListBox.ItemTemplate>
                   <DataTemplate>
-                    <ListBoxItem>
-                      <ListBoxItem.Content>
-                        <WrapPanel>
-                          <TextBlock Text="{Binding Name}"/>
-                          <TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
-                        </WrapPanel>
-                      </ListBoxItem.Content>
-                    </ListBoxItem>
+                    <WrapPanel>
+                      <TextBlock Text="{Binding Name}"/>
+                      <TextBlock Text="*" IsVisible="{Binding IsChanged}"/>
+                    </WrapPanel>
                   </DataTemplate>
                 </ListBox.ItemTemplate>
               </ListBox>

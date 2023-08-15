@@ -2,7 +2,7 @@
 
 namespace PromptPlayground.ViewModels
 {
-    public class FunctionOpenMessage : FileOpenMessage
+    public class FunctionOpenMessage : FileOrFolderOpenMessage
     {
         public FunctionOpenMessage(string folder) : base(folder)
         {

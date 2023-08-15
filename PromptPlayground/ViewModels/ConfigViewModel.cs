@@ -1,6 +1,7 @@
 ﻿using Azure.AI.OpenAI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using PromptPlayground.Messages;
 using PromptPlayground.ViewModels.ConfigViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels.Embedding;
@@ -16,7 +17,9 @@ using System.Text.Json.Serialization;
 
 namespace PromptPlayground.ViewModels;
 
-public partial class ConfigViewModel : ObservableRecipient, IConfigAttributesProvider, IRecipient<ResultCountRequestMessage>
+public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
+                                        IRecipient<ResultCountRequestMessage>,
+                                        IRecipient<RequestMessage<IConfigAttributesProvider>>
 {
     private string[] RequiredAttributes = new string[]
    {
@@ -151,7 +154,7 @@ public partial class ConfigViewModel : ObservableRecipient, IConfigAttributesPro
     {
         if (requireLoadConfig)
         {
-            IsActive = true;
+            WeakReferenceMessenger.Default.RegisterAll(this);
             LoadConfigFromUserProfile();
         }
     }
@@ -226,5 +229,10 @@ public partial class ConfigViewModel : ObservableRecipient, IConfigAttributesPro
     public void Receive(ResultCountRequestMessage message)
     {
         message.Reply(this.MaxCount);
+    }
+
+    public void Receive(RequestMessage<IConfigAttributesProvider> message)
+    {
+        message.Reply(this);
     }
 }

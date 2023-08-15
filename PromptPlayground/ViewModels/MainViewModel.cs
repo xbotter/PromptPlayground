@@ -32,22 +32,22 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task OpenFileAsync()
     {
-        var response = await this.Messenger.Send<AsyncRequestMessage<FileOpenMessage>>();
+        var response = await this.Messenger.Send<RequestFileOpen>();
 
-        if (response.FilePath != null)
+        if (!string.IsNullOrWhiteSpace(response))
         {
-            WeakReferenceMessenger.Default.Send(new FunctionOpenMessage(response.FilePath));
+            WeakReferenceMessenger.Default.Send(new FunctionOpenMessage(response));
         }
     }
 
     [RelayCommand]
     public async Task OpenFolderAsync()
     {
-        var response = await this.Messenger.Send<AsyncRequestMessage<FolderOpenMessage>>();
+        var response = await this.Messenger.Send<RequestFolderOpen>();
 
-        if (response.Folder != null)
+        if (!string.IsNullOrWhiteSpace(response))
         {
-            WeakReferenceMessenger.Default.Send(new SkillOpenMessage(response.Folder));
+            WeakReferenceMessenger.Default.Send(new SkillOpenMessage(response!));
         }
     }
 }
