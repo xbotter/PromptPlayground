@@ -9,26 +9,11 @@
 			       x:DataType="vm:SkillsViewModel">
   <UserControl.Resources>
     <ResourceDictionary>
-      <FontWeight x:Key="ExpanderHeaderFontWeight">800</FontWeight>
       <x:Double x:Key="ExpanderIconSize">0</x:Double>
-
-      <CornerRadius x:Key="ExpanderHeaderCornerRadius">3</CornerRadius>
       <Thickness x:Key="ExpanderHeaderMargin">0</Thickness>
-      <Thickness x:Key="ExpanderHeaderPadding">4</Thickness>
-      <Thickness x:Key="ExpanderEndIconMargin">0 0 8 0</Thickness>
       <Thickness x:Key="ExpanderContentMargin">0</Thickness>
-      <Thickness x:Key="ExpanderFrontIconMargin">8 0 0 0</Thickness>
     </ResourceDictionary>
   </UserControl.Resources>
-  <UserControl.Styles>
-    <Style Selector="Button.skillBtn">
-      <Setter Property="Background" Value="Transparent"/>
-      <Setter Property="Margin" Value="2"/>
-      <Setter Property="Padding" Value="0"/>
-      <Setter Property="MinWidth" Value="30"/>
-      <Setter Property="MinHeight" Value="30"/>
-    </Style>
-  </UserControl.Styles>
   <StackPanel MinWidth="200">
     <ItemsControl ItemsSource="{Binding Skills}">
       <ItemsControl.ItemTemplate>

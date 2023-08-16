@@ -65,7 +65,6 @@
       </WrapPanel>
     </WrapPanel>
     <StackPanel DockPanel.Dock="Bottom">
-      <TextBlock Text="{Binding Status.Text}" Background="LightGray" Padding="10,0"></TextBlock>
       <ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
     </StackPanel>
     <ScrollViewer DockPanel.Dock="Left">
