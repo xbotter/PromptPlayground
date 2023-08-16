@@ -1,49 +1,53 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Notifications;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using ERNIE_Bot.SDK.Models;
+using Microsoft.Extensions.Logging;
+using MsBox.Avalonia;
+using PromptPlayground.Messages;
+using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
-using PromptPlayground.Views.Args;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 
-public partial class MainView : UserControl
+public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
+                                             IRecipient<RequestFileOpen>,
+                                             IRecipient<ConfirmRequestMessage>,
+                                             IRecipient<NotificationMessage>,
+                                             IRecipient<CopyTextMessage>,
+                                             IRecipient<RequestVariablesMessage>
 {
+    private WindowNotificationManager _manager;
+
     private MainViewModel model => (this.DataContext as MainViewModel)!;
     private Window mainWindow => (this.Parent as Window)!;
 
     public MainView()
     {
         InitializeComponent();
-        this.SkillView.FunctionSelected += SkillView_FunctionSelected;
-        this.EditorView.DataContext = new SemanticFunctionViewModel("");
-        this.ResultsView.DataContext ??= new ResultsViewModel();
-        this.EditorView.OnGenerating += (sender, e) =>
-        {
-            this.model.Loading = true;
-            this.ResultsView.Clear();
-            this.model.StatusBar = $"(0/{model.Config.MaxCount}) 生成中...";
 
-        };
-        this.EditorView.OnGenerated += (sender, e) =>
-        {
-            this.model.Loading = false;
-            this.model.StatusBar = string.Empty;
-        };
-        this.EditorView.OnGeneratedResult += (sender, result) =>
-        {
-            this.ResultsView.AddResult(result.Result);
-            this.model.StatusBar = $"({this.ResultsView.GetCount()}/{model.Config.MaxCount}) 生成中...";
-        };
-        this.EditorView.GetConfigProvider = () => this.model.Config;
-        this.EditorView.GetMaxCount = () => this.model.Config.MaxCount;
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
-
-    private void SkillView_FunctionSelected(object? sender, FunctionSelectedArgs e)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        var folder = e.SelectedFunction.Folder;
-        var filePath = Path.Combine(folder, Constants.SkPrompt);
-        OpenFile(filePath);
+        base.OnAttachedToVisualTree(e);
+        var topLevel = TopLevel.GetTopLevel(this);
+        _manager = new WindowNotificationManager(topLevel) { MaxItems = 3 };
+
+        var defaultFunction = new SemanticFunctionViewModel("[New Function]");
+        this.EditorView.DataContext = defaultFunction;
+        this.ResultsView.DataContext = new ResultsViewModel(defaultFunction);
+
+        WeakReferenceMessenger.Default.Send(new FunctionCreateMessage(defaultFunction));
     }
 
     private void OnConfigClick(object sender, RoutedEventArgs e)
@@ -57,14 +61,19 @@ public partial class MainView : UserControl
 
         configWindow.ShowDialog(mainWindow);
     }
-    private async void OnImportFile(object sender, RoutedEventArgs e)
+
+    private async Task<string?> FolderOpenAsync()
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel is null)
+        var folders = await TopLevel.GetTopLevel(this)!.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
         {
-            return;
-        }
-        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
+            AllowMultiple = false
+        });
+        var folder = folders.FirstOrDefault()?.TryGetLocalPath();
+        return folder;
+    }
+    private async Task<string?> FileOpenAsync()
+    {
+        var file = await TopLevel.GetTopLevel(this)!.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = false,
             FileTypeFilter = new FilePickerFileType[]
@@ -75,33 +84,63 @@ public partial class MainView : UserControl
                 }
             }
         });
-        if (file.Count > 0)
-        {
-            var filePath = file[0].TryGetLocalPath()!;
-            OpenFile(filePath);
-        }
-    }
-    private void OpenFile(string filePath)
-    {
-        if (this.SkillView.TrySelectFunction(filePath, out var func))
-        {
-            this.EditorView.DataContext = func;
-        }
-        else if (File.Exists(filePath) && Path.GetFileName(filePath) == Constants.SkPrompt)
-        {
-            this.EditorView.DataContext = new SemanticFunctionViewModel(Path.GetDirectoryName(filePath)!);
-        }
+        var filePath = file.FirstOrDefault()?.TryGetLocalPath();
+        return filePath;
     }
 
-
-    private async void OnSkillDirOpen(object sender, RoutedEventArgs e)
+    private async Task<bool> ConfirmRequestMessageAsync(ConfirmRequestMessage message)
     {
-        await this.SkillView.OpenFolderAsync();
+        var result = await MessageBoxManager.GetMessageBoxStandard(message.Title, message.Message, MsBox.Avalonia.Enums.ButtonEnum.OkCancel)
+            .ShowAsPopupAsync(this);
+
+        return result == MsBox.Avalonia.Enums.ButtonResult.Ok;
     }
 
-    private void OnNewFile(object sender, RoutedEventArgs e)
+    public void Receive(RequestFolderOpen message)
     {
-        this.SkillView.NoFunctionSelected();
-        this.EditorView.DataContext = new SemanticFunctionViewModel("");
+        message.Reply(FolderOpenAsync());
+    }
+
+    public void Receive(RequestFileOpen message)
+    {
+        message.Reply(FileOpenAsync());
+    }
+
+    public void Receive(ConfirmRequestMessage message)
+    {
+        message.Reply(ConfirmRequestMessageAsync(message));
+    }
+
+    public void Receive(NotificationMessage message)
+    {
+        _manager?.Show(new Notification(message.Title, message.Message, (NotificationType)message.Level, TimeSpan.FromSeconds(1.5)));
+    }
+
+    public async void Receive(CopyTextMessage message)
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null || topLevel.Clipboard is null)
+            return;
+
+        await topLevel.Clipboard.SetTextAsync(message.Text);
+
+        _manager?.Show(new Notification("Copied", "", NotificationType.Success, TimeSpan.FromSeconds(1)));
+    }
+
+    public void Receive(RequestVariablesMessage message)
+    {
+        message.Reply(ShowVariablesWindows(message.Variables));
+    }
+    private async Task<VariablesViewModel> ShowVariablesWindows(List<Variable> variables)
+    {
+        var variablesVm = new VariablesViewModel(variables);
+        var variableWindows = new VariablesWindows()
+        {
+            DataContext = variablesVm,
+            ShowInTaskbar = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
+        };
+        await variableWindows.ShowDialog(mainWindow);
+        return variablesVm;
     }
 }

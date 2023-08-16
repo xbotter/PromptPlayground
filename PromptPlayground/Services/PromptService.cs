@@ -88,22 +88,6 @@ namespace PromptPlayground.Services
 
         public SKContext CreateContext() => _kernel.CreateNewContext();
     }
-    public class GenerateResult
-    {
-        public string Text { get; set; } = string.Empty;
-        public TimeSpan Elapsed { get; set; }
-        public string ElapsedText => $"{Elapsed.TotalSeconds:0.000} s";
-        public string Error { get; set; } = string.Empty;
-        public ResultTokenUsage? TokenUsage { get; set; }
-        public string TokenUsageText => TokenUsage != null ? $"{TokenUsage.Total}({TokenUsage.Prompt}|{TokenUsage.Completion})" : string.Empty;
 
-        public bool HasError => !string.IsNullOrWhiteSpace(Error);
-    }
-    public class ResultTokenUsage
-    {
-        public int Total { get; set; }
-        public int Prompt { get; set; }
-        public int Completion { get; set; }
-    }
 
 }

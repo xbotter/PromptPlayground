@@ -1,59 +1,117 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using PromptPlayground.Messages;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace PromptPlayground.ViewModels
 {
-    public class SkillViewModel : ViewModelBase
+    public partial class SkillViewModel : ObservableRecipient, IEquatable<SkillViewModel>, IRecipient<FunctionSelectedMessage>, IRecipient<CloseFunctionMessage>
     {
-        private string folder = string.Empty;
-        private SemanticFunctionViewModel? selectedFunction;
-        public SemanticFunctionViewModel? SelectedFunction
+        private static bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
+
+        public bool Equals(SkillViewModel? other)
         {
-            get => selectedFunction;
-            set
+            return other?.Folder == this.Folder;
+        }
+
+        public SkillViewModel(string folder)
+        {
+            if (Directory.Exists(folder))
             {
-                if (value != selectedFunction)
-                {
-                    selectedFunction = value;
-                    OnPropertyChanged(nameof(SelectedFunction));
-                    OnPropertyChanged(nameof(SelectedIndex));
-                }
+                this.Folder = folder;
+                this.Title = Path.GetFileName(folder);
+                var functions = Directory.GetDirectories(Folder)
+                             .Where(IsFunctionDir)
+                             .Select(SemanticFunctionViewModel.Create)
+                             .ToList();
+
+                Functions = new ObservableCollection<SemanticFunctionViewModel>(functions);
+            }
+            else
+            {
+                this.Title = folder;
+                Functions = new ObservableCollection<SemanticFunctionViewModel>();
+            }
+            IsActive = true;
+        }
+        public string? Folder { get; set; }
+        public string Title { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<SemanticFunctionViewModel> functions;
+
+        [ObservableProperty]
+        private SemanticFunctionViewModel? selected;
+
+
+        partial void OnSelectedChanged(SemanticFunctionViewModel? oldValue, SemanticFunctionViewModel? newValue)
+        {
+            if (newValue != null && oldValue != newValue)
+            {
+                WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(newValue));
             }
         }
 
-        public int SelectedIndex
+        [RelayCommand(CanExecute = nameof(CanAddNewFunction))]
+        public void AddNewFunction()
         {
-
-            get => SelectedFunction != null ? Functions.IndexOf(SelectedFunction) : -1;
+            AddNewFunction(new SemanticFunctionViewModel(""));
         }
 
-        public string FolderName => Directory.Exists(Folder) ? Path.GetFileName(Folder) : string.Empty;
-        public string Folder
+        private bool CanAddNewFunction()
         {
-            get => folder; set
+            return !Directory.Exists(this.Folder);
+        }
+
+        public void AddNewFunction(SemanticFunctionViewModel function)
+        {
+            if (string.IsNullOrWhiteSpace(function.Name))
             {
-                if (value != folder)
+                function.Name = $"[{DefaultName} {FindLastFunctionIndex() + 1}]";
+            }
+            this.Functions.Add(function);
+        }
+        const string DefaultName = "New Function";
+        readonly Regex DefaultNamePattern = new(@"\[New Function (?<index>\d+)\]", RegexOptions.Compiled);
+        private int FindLastFunctionIndex()
+        {
+            return this.Functions.Where(_ => DefaultNamePattern.IsMatch(_.Name))
+                 .Select(_ => DefaultNamePattern.Match(_.Name).Groups["index"])
+                 .Select(_ => int.Parse(_.Value))
+                 .Order()
+                 .LastOrDefault();
+        }
+
+        public void Receive(FunctionSelectedMessage message)
+        {
+            if (message.Function != null)
+            {
+                if (message.Function != this.Selected)
                 {
-                    folder = value;
-                    if (Path.Exists(Folder))
+                    if (Functions.Contains(message.Function))
                     {
-                        Functions = Directory.GetDirectories(Folder)
-                                     .Where(IsFunctionDir)
-                                     .Select(SemanticFunctionViewModel.Create)
-                                     .ToList();
+                        this.Selected = message.Function;
                     }
-                    OnPropertyChanged(nameof(Folder));
-                    OnPropertyChanged(nameof(FolderName));
-                    OnPropertyChanged(nameof(Functions));
-                    OnPropertyChanged(nameof(OpenSkillFolder));
+                    else
+                    {
+                        this.Selected = null;
+                    }
                 }
             }
         }
 
-        public List<SemanticFunctionViewModel> Functions { get; set; } = new List<SemanticFunctionViewModel>();
-        private bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
-
-        public bool OpenSkillFolder => Directory.Exists(folder);
+        public void Receive(CloseFunctionMessage message)
+        {
+            if (this.Functions.Contains(message.Function) && message.Function != this.Selected)
+            {
+                this.Functions.Remove(message.Function);
+            }
+        }
     }
 }

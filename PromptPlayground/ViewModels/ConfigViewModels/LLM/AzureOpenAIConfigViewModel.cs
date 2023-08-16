@@ -30,12 +30,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
         public ResultTokenUsage? GetUsage(ModelResult result)
         {
             var completions = result.GetResult<ChatCompletions>();
-            return new ResultTokenUsage()
-            {
-                Total = completions.Usage.TotalTokens,
-                Prompt = completions.Usage.PromptTokens,
-                Completion = completions.Usage.CompletionTokens
-            };
+            return new ResultTokenUsage(completions.Usage.TotalTokens, completions.Usage.PromptTokens, completions.Usage.CompletionTokens);
         }
     }
 

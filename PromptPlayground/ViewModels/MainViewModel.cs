@@ -1,21 +1,53 @@
-﻿namespace PromptPlayground.ViewModels;
+﻿using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using PromptPlayground.Messages;
+using System;
+using System.Threading.Tasks;
+
+namespace PromptPlayground.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    public MainViewModel()
-    {
-    }
-
-    public string StatusBar { get => statusBar; set => SetProperty(ref statusBar, value); }
-    public bool Loading
-    {
-        get => loading; set => SetProperty(ref loading, value);
-    }
+    IMessenger Messenger => WeakReferenceMessenger.Default;
 
     public ConfigViewModel Config { get; set; } = new(true);
 
-    private bool loading = false;
-    private string statusBar = string.Empty;
+    public StatusViewModel Status { get; set; } = new();
+
+
+    public MainViewModel()
+    {
+        WeakReferenceMessenger.Default.RegisterAll(this);
+    }
+
+    [RelayCommand]
+    public void NewFile()
+    {
+        WeakReferenceMessenger.Default.Send(new FunctionCreateMessage());
+    }
+
+    [RelayCommand]
+    public async Task OpenFileAsync()
+    {
+        var response = await this.Messenger.Send<RequestFileOpen>();
+
+        if (!string.IsNullOrWhiteSpace(response))
+        {
+            WeakReferenceMessenger.Default.Send(new FunctionOpenMessage(response));
+        }
+    }
+
+    [RelayCommand]
+    public async Task OpenFolderAsync()
+    {
+        var response = await this.Messenger.Send<RequestFolderOpen>();
+
+        if (!string.IsNullOrWhiteSpace(response))
+        {
+            WeakReferenceMessenger.Default.Send(new SkillOpenMessage(response!));
+        }
+    }
 }
-
-
