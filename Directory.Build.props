@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<AvaloniaVersion>11.0.0</AvaloniaVersion>
-		<Version>0.3.1</Version>
+		<Version>0.4.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
