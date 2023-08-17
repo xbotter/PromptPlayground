@@ -10,6 +10,7 @@
 		<UseAppHost>true</UseAppHost>
 		<AssemblyName>prompt-playground</AssemblyName>
 		<ApplicationIcon>logo.ico</ApplicationIcon>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Content Include="logo.ico" />

@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        mc:Ignorable="d" 
+        x:Class="PromptPlayground.Views.AboutView"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="BorderOnly"
+        Title="About">
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+  <StackPanel>
+    <Button HorizontalAlignment="Right" Click="CloseClick" FontSize="18" Background="Transparent" Foreground="Gray">
+      <i:Icon Value="mdi-close"/>
+    </Button>
+    <TextBlock Margin="120 10" FontSize="23">About</TextBlock>
+    <TextBlock>Prompt Playground</TextBlock>
+    <Button Margin="120 30">check update</Button>
+    
+  </StackPanel>
+</Window>
