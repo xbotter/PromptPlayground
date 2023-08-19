@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="https://github.com/projektanker/icons.avalonia"
+        xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
+        mc:Ignorable="d"
+        x:Class="PromptPlayground.Views.AboutView"
+        x:DataType="vm:AboutViewModel"
+        SizeToContent="WidthAndHeight"
+        SystemDecorations="BorderOnly"
+        Title="About">
+  <Design.DataContext>
+    <vm:AboutViewModel/>
+  </Design.DataContext>
+  <Window.Styles>
+    <Style Selector="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+  <StackPanel>
+    <Button HorizontalAlignment="Right" Click="CloseClick" FontSize="18" Background="Transparent" Foreground="Gray">
+      <i:Icon Value="mdi-close"/>
+    </Button>
+    <TextBlock Margin="120 20" FontSize="23">Prompt Playground</TextBlock>
+    <TextBlock Text="{Binding CurrentVersion}" />
+    <Button i:Attached.Icon="mdi-github" Margin="200 20" Background="White" FontSize="30" Foreground="Black" Command="{Binding OpenGitHubCommand}"/>
+    <Button Margin="120 0 120 30" Command="{Binding CheckVersionCommand}">检查更新</Button>
+  </StackPanel>
+</Window>

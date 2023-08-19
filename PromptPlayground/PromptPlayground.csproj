@@ -6,7 +6,11 @@
 		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 		<ApplicationIcon>Assets\logo.ico</ApplicationIcon>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+  </PropertyGroup>
 
 
 	<ItemGroup>

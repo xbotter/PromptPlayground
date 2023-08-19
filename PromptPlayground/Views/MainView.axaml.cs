@@ -50,6 +50,17 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
         WeakReferenceMessenger.Default.Send(new FunctionCreateMessage(defaultFunction));
     }
 
+    private void AboutClick(object sender, RoutedEventArgs e)
+    {
+        var aboutWindow = new AboutView()
+        {
+            DataContext = model.About,
+            ShowInTaskbar = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        aboutWindow.Show(mainWindow);
+    }
+
     private void OnConfigClick(object sender, RoutedEventArgs e)
     {
         var configWindow = new ConfigWindow()

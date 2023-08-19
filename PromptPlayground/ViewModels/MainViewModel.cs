@@ -17,6 +17,8 @@ public partial class MainViewModel : ViewModelBase
 
     public StatusViewModel Status { get; set; } = new();
 
+    public AboutViewModel About { get; set; } = new();
+
 
     public MainViewModel()
     {

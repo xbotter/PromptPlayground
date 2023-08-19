@@ -29,8 +29,8 @@
             <i:Icon Value="mdi-menu"/>
           </MenuItem.Header>
           <MenuItem Header="新建" Command="{Binding NewFileCommand}" i:MenuItem.Icon="mdi-file-plus-outline"/>
-          <!--<Separator/>
-				<MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline"/>-->
+          <Separator/>
+				  <MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline" Click="AboutClick"/>
         </MenuItem>
         <MenuItem ToolTip.Tip="打开文件"  Command="{Binding OpenFileCommand}">
           <MenuItem.Header>
