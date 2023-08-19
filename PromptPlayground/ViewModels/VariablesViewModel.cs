@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Bogus;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +9,14 @@ namespace PromptPlayground.ViewModels
     public class VariablesViewModel : ViewModelBase
     {
         static Dictionary<string, string> VariablesCache = new Dictionary<string, string>();
+
+        public VariablesViewModel()
+        {
+            Variables = new ObservableCollection<Variable>(new Faker<Variable>()
+                .RuleFor(x => x.Name, f => f.Lorem.Word())
+                .Generate(5).ToList());
+        }
+
         public VariablesViewModel(List<Variable> variables)
         {
             Variables = new ObservableCollection<Variable>(variables);
