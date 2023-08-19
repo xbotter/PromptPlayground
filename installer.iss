@@ -7,7 +7,7 @@
 #define MyAppURL "https://github.com/xbotter/PromptPlayground"
 #define MyAppExeName "prompt-playground.exe"
 #define MyAppVersion  GetVersionNumbersString(PublishDir + MyAppExeName)
-#define IconFile AddBackSlash(Source) + "PromprPlayground\Assets\logo.ico"
+#define IconFile AddBackSlash(SourcePath) + "PromptPlayground\Assets\logo.ico"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -31,6 +31,14 @@ Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 OutputBaseFilename=win-x64-setup
+
+; "ArchitecturesAllowed=x64" specifies that Setup cannot run on
+; anything but x64.
+ArchitecturesAllowed=x64
+; "ArchitecturesInstallIn64BitMode=x64" requests that the install be
+; done in "64-bit mode" on x64, meaning it should use the native
+; 64-bit Program Files directory and the 64-bit view of the registry.
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

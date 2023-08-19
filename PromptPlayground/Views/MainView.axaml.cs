@@ -54,6 +54,7 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
     {
         var aboutWindow = new AboutView()
         {
+            DataContext = model.About,
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
