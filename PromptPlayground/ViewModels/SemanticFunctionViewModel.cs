@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SemanticFunctions;
 using Microsoft.SemanticKernel.SkillDefinition;
-using Moq;
 using PromptPlayground.Messages;
 using PromptPlayground.Services;
 using PromptPlayground.Services.TemplateEngine;
@@ -214,7 +213,7 @@ namespace PromptPlayground.ViewModels
 
                     foreach (var variable in result.Variables)
                     {
-                        context[variable.Name] = variable.Value;
+                        context.Variables[variable.Name] = variable.Value;
                     }
                 }
 

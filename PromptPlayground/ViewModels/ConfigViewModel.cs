@@ -24,11 +24,12 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
     private string[] RequiredAttributes = new string[]
    {
 #region LLM Config
-       ConfigAttribute.AzureDeployment,
+        ConfigAttribute.AzureDeployment,
         ConfigAttribute.AzureEndpoint,
         ConfigAttribute.AzureSecret,
         ConfigAttribute.BaiduClientId,
         ConfigAttribute.BaiduSecret,
+        ConfigAttribute.BaiduModel,
 #endregion
 #region Vector DB
         ConfigAttribute.VectorSize,
@@ -164,7 +165,6 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         this.AllAttributes = CheckAttributes(this.AllAttributes);
 
         LLMs.Add(new AzureOpenAIConfigViewModel(this));
-        LLMs.Add(new BaiduTurboConfigViewModel(this));
         LLMs.Add(new BaiduConfigViewModel(this));
 
         Embeddings.Add(new AzureOpenAIEmbeddingConfigViewModel(this));

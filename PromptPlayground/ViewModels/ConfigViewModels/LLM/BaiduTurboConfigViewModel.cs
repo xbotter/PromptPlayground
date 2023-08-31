@@ -3,9 +3,11 @@ using Microsoft;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
+using System;
 
 namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
+    [Obsolete("Use BaiduConfigViewModel with model")]
     public class BaiduTurboConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
     {
         const string ClientId = ConfigAttribute.BaiduClientId;

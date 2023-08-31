@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SkillDefinition;
 using PromptPlayground.Services.TemplateEngine;
@@ -127,9 +128,7 @@ internal sealed class CodeBlock : Block, ICodeRendering
     {
         if (context.Skills == null)
         {
-            throw new KernelException(
-                KernelException.ErrorCodes.SkillCollectionNotSet,
-                "Skill collection not found in the context");
+            throw new SKException("Skill collection not found in the context");
         }
 
         if (!GetFunctionFromSkillCollection(context.Skills!, fBlock, out ISKFunction? function))

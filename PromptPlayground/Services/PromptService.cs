@@ -56,9 +56,9 @@ namespace PromptPlayground.Services
 
             if (provider.GetVectorDb() is IVectorDbConfigViewModel vectorDb)
             {
-                context[TextMemorySkill.CollectionParam] = vectorDb.Collection;
-                context[TextMemorySkill.LimitParam] = vectorDb.Limit.ToString();
-                context[TextMemorySkill.RelevanceParam] = vectorDb.Relevance.ToString();
+                context.Variables[TextMemorySkill.CollectionParam] = vectorDb.Collection;
+                context.Variables[TextMemorySkill.LimitParam] = vectorDb.Limit.ToString();
+                context.Variables[TextMemorySkill.RelevanceParam] = vectorDb.Relevance.ToString();
             }
 
             var result = await func.InvokeAsync(context);
@@ -71,7 +71,7 @@ namespace PromptPlayground.Services
                 {
                     Text = result.Result,
                     Elapsed = sw.Elapsed,
-                    Error = result.LastErrorDescription,
+                    Error = result.LastException!.Message,
                     TokenUsage = usage
                 };
             }
@@ -81,7 +81,7 @@ namespace PromptPlayground.Services
                 {
                     Text = result.Result,
                     Elapsed = sw.Elapsed,
-                    Error = result.LastErrorDescription,
+                    Error = result.LastException!.Message,
                 };
             }
         }
