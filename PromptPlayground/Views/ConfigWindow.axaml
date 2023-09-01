@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
+		xmlns:local="clr-namespace:PromptPlayground.Converters"
 		xmlns:i="https://github.com/projektanker/icons.avalonia"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="NaN"
 		 SizeToContent="WidthAndHeight"
@@ -13,6 +14,11 @@
 	<Design.DataContext>
 		<vm:ConfigViewModel />
 	</Design.DataContext>
+	<Window.Resources>
+		<ResourceDictionary>
+			<local:StringToBooleanConverter x:Key="StringToBooleanConverter" />
+		</ResourceDictionary>
+	</Window.Resources>
 	<ScrollViewer>
 		<StackPanel Margin="10" ScrollViewer.VerticalScrollBarVisibility="Auto">
 			<StackPanel.Styles>
@@ -23,7 +29,7 @@
 					<Setter Property="MinWidth" Value="200"/>
 				</Style>
 			</StackPanel.Styles>
-			<Grid ColumnDefinitions="80,4*" Margin="10,3">
+			<Grid ColumnDefinitions="80,4*" Margin="10,3" MinWidth="420">
 				<TextBlock Text="生成数量" Grid.Column="0"/>
 				<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" Grid.Column="1" />
 			</Grid>
@@ -46,7 +52,27 @@
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<Grid ColumnDefinitions="80,4*" Margin="12">
-								<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
+							
+								<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1"
+										 IsVisible="{Binding Type,
+										 Converter={StaticResource StringToBooleanConverter}
+										 ConverterParameter='string'
+										 }"/>
+
+								<ComboBox
+									Grid.Column="1"
+									ItemsSource="{Binding SelectValues}"
+									SelectedValue="{Binding Value}"
+									IsVisible="{Binding Type,
+										 Converter={StaticResource StringToBooleanConverter}
+										 ConverterParameter='select'
+										 }">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<ComboBoxItem Content="{Binding}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
 							</Grid>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
