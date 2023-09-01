@@ -9,7 +9,7 @@ namespace PromptPlayground.Services
     {
         public string Text { get; set; } = string.Empty;
         public TimeSpan Elapsed { get; set; }
-        public string Error { get; set; } = string.Empty;
+        public string? Error { get; set; } = string.Empty;
         public ResultTokenUsage? TokenUsage { get; set; }
 
         public bool HasError => !string.IsNullOrWhiteSpace(Error);

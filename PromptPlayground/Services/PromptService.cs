@@ -71,7 +71,7 @@ namespace PromptPlayground.Services
                 {
                     Text = result.Result,
                     Elapsed = sw.Elapsed,
-                    Error = result.LastException!.Message,
+                    Error = result.LastException?.Message,
                     TokenUsage = usage
                 };
             }

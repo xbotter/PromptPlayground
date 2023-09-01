@@ -1,4 +1,7 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Azure.AI.OpenAI;
+using DashScope;
+using DashScope.Models;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
 using System;
@@ -15,17 +18,22 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 
         public DashScopeConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
-
+            RequireAttribute(ConfigAttribute.DashScopeApiKey);
+            RequireAttribute(ConfigAttribute.DashScopeModel);
         }
 
         public KernelBuilder CreateKernelBuilder()
         {
-            throw new NotImplementedException();
+            var apiKey = GetAttribute(ConfigAttribute.DashScopeApiKey);
+            var model = GetAttribute(ConfigAttribute.DashScopeModel);
+
+            return Kernel.Builder.WithDashScopeCompletionService(apiKey, model);
         }
 
         public ResultTokenUsage? GetUsage(ModelResult resultModel)
         {
-            throw new NotImplementedException();
+            var usage = resultModel.GetResult<CompletionResponse>().Usage;
+            return new ResultTokenUsage(usage.InputTokens + usage.OutputTokens, usage.InputTokens, usage.OutputTokens);
         }
     }
 }

@@ -32,6 +32,8 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         ConfigAttribute.BaiduModel,
         ConfigAttribute.OpenAIApiKey,
         ConfigAttribute.OpenAIModel,
+        ConfigAttribute.DashScopeApiKey,
+        ConfigAttribute.DashScopeModel,
 #endregion
 #region Vector DB
         ConfigAttribute.VectorSize,
@@ -169,6 +171,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         LLMs.Add(new AzureOpenAIConfigViewModel(this));
         LLMs.Add(new BaiduConfigViewModel(this));
         LLMs.Add(new OpenAIConfigViewModel(this));
+        LLMs.Add(new DashScopeConfigViewModel(this));
 
         Embeddings.Add(new AzureOpenAIEmbeddingConfigViewModel(this));
 

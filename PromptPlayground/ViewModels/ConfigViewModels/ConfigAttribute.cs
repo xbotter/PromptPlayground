@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using DashScope;
 using Humanizer;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,10 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
 
         public const string OpenAIApiKey = nameof(OpenAIApiKey);
         public const string OpenAIModel = nameof(OpenAIModel);
+
+        public const string DashScopeApiKey = nameof(DashScopeApiKey);
+        [ConfigType("select", DashScopeModels.QWenV1, DashScopeModels.QWenPlusV1)]
+        public const string DashScopeModel = nameof(DashScopeModel);
 
         public const string QdrantEndpoint = nameof(QdrantEndpoint);
         public const string QdrantApiKey = nameof(QdrantApiKey);
