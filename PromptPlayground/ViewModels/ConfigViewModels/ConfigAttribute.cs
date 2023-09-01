@@ -54,6 +54,9 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
         [ConfigType("select", "Ernie-Bot", "Ernie-Bot-turbo", "BLOOMZ_7B")]
         public const string BaiduModel = nameof(BaiduModel);
 
+        public const string OpenAIApiKey = nameof(OpenAIApiKey);
+        public const string OpenAIModel = nameof(OpenAIModel);
+
         public const string QdrantEndpoint = nameof(QdrantEndpoint);
         public const string QdrantApiKey = nameof(QdrantApiKey);
 

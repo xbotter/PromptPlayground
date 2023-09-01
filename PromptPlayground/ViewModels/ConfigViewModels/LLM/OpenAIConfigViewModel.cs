@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Azure.AI.OpenAI;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using PromptPlayground.Services;
 using System;
@@ -13,18 +14,25 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
     {
         public OpenAIConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
+            RequireAttribute(ConfigAttribute.OpenAIModel);
+            RequireAttribute(ConfigAttribute.OpenAIApiKey);
         }
 
-        public override string Name => throw new NotImplementedException();
+        public override string Name => "OpenAI";
 
         public KernelBuilder CreateKernelBuilder()
         {
-            throw new NotImplementedException();
+            var model = GetAttribute(ConfigAttribute.OpenAIModel);
+            var apiKey = GetAttribute(ConfigAttribute.OpenAIApiKey);
+
+            return Kernel.Builder
+                         .WithOpenAIChatCompletionService(model, apiKey);
         }
 
-        public ResultTokenUsage? GetUsage(ModelResult resultModel)
+        public ResultTokenUsage? GetUsage(ModelResult result)
         {
-            throw new NotImplementedException();
+            var completions = result.GetResult<ChatCompletions>();
+            return new ResultTokenUsage(completions.Usage.TotalTokens, completions.Usage.PromptTokens, completions.Usage.CompletionTokens);
         }
     }
 }
