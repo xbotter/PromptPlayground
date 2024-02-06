@@ -1,11 +1,7 @@
 ﻿using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
-using Microsoft.SemanticKernel.SemanticFunctions;
-using Microsoft.SemanticKernel.Skills.Core;
+using Microsoft.SemanticKernel.Plugins.Core;
 using PromptPlayground.ViewModels.ConfigViewModels;
-using PromptPlayground.ViewModels.ConfigViewModels.Embedding;
 using PromptPlayground.ViewModels.ConfigViewModels.LLM;
-using PromptPlayground.ViewModels.ConfigViewModels.VectorDB;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -14,80 +10,56 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.Services
 {
-    public class PromptService
-    {
-        private readonly IKernel _kernel;
-        private readonly ILLMConfigViewModel model;
-        private readonly IConfigAttributesProvider provider;
+	public class PromptService
+	{
+		private readonly Kernel _kernel;
+		private readonly ILLMConfigViewModel model;
 
-        public PromptService(IConfigAttributesProvider provider)
-        {
-            this.provider = provider;
+		public PromptService(IConfigAttributesProvider provider)
+		{
+			this.model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
 
-            this.model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
+			var builder = model.CreateKernelBuilder();
 
-            var builder = model.CreateKernelBuilder();
 
-            if (provider.GetEmbedding() is IEmbeddingConfigViewModel embedding)
-            {
-                embedding.RegisterEmbedding(builder);
+			_kernel = builder.Build();
 
-                if (provider.GetVectorDb() is IVectorDbConfigViewModel vectorDb)
-                {
-                    vectorDb.RegisterMemory(builder);
-                }
-            }
+			_kernel.ImportPluginFromType<TimePlugin>();
 
-            _kernel = builder.Build();
+		}
 
-            if (_kernel.Memory is not null)
-            {
-                _kernel.ImportSkill(new TextMemorySkill(_kernel.Memory));
-            }
+		public async Task<GenerateResult> RunAsync(string prompt, PromptExecutionSettings? config, KernelArguments arguments, CancellationToken cancellationToken = default)
+		{
+			var sw = Stopwatch.StartNew();
+			var func = _kernel.CreateFunctionFromPrompt(prompt, config);
 
-            _kernel.ImportSkill(new TimeSkill());
+			var result = await func.InvokeAsync(_kernel, arguments);
+			sw.Stop();
+			try
+			{
+				var usage = model.GetUsage(result);
+				return new GenerateResult()
+				{
+					Text = result.GetValue<string>() ?? "",
+					TokenUsage = usage,
+					Elapsed = sw.Elapsed,
 
-        }
+				};
 
-        public async Task<GenerateResult> RunAsync(string prompt, PromptTemplateConfig config, SKContext context, CancellationToken cancellationToken = default)
-        {
-            var sw = Stopwatch.StartNew();
-            var func = _kernel.CreateSemanticFunction(prompt, config);
+			}
+			catch (KernelException ex)
+			{
+				return new GenerateResult()
+				{
+					Text = ex.Message,
+					Elapsed = sw.Elapsed,
+					Error = ex.Message,
+				};
+			}
+		}
 
-            if (provider.GetVectorDb() is IVectorDbConfigViewModel vectorDb)
-            {
-                context.Variables[TextMemorySkill.CollectionParam] = vectorDb.Collection;
-                context.Variables[TextMemorySkill.LimitParam] = vectorDb.Limit.ToString();
-                context.Variables[TextMemorySkill.RelevanceParam] = vectorDb.Relevance.ToString();
-            }
-
-            var result = await func.InvokeAsync(context);
-            sw.Stop();
-            if (!result.ErrorOccurred)
-            {
-                var usage = model.GetUsage(result.ModelResults.Last());
-
-                return new GenerateResult()
-                {
-                    Text = result.Result,
-                    Elapsed = sw.Elapsed,
-                    Error = result.LastException?.Message,
-                    TokenUsage = usage
-                };
-            }
-            else
-            {
-                return new GenerateResult()
-                {
-                    Text = result.Result,
-                    Elapsed = sw.Elapsed,
-                    Error = result.LastException!.Message,
-                };
-            }
-        }
-
-        public SKContext CreateContext() => _kernel.CreateNewContext();
-    }
+		public KernelArguments CreateArguments() => new KernelArguments();
+	}
 
 
 }

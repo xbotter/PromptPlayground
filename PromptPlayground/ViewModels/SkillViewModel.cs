@@ -28,15 +28,15 @@ namespace PromptPlayground.ViewModels
                 this.Title = Path.GetFileName(folder);
                 var functions = Directory.GetDirectories(Folder)
                              .Where(IsFunctionDir)
-                             .Select(SemanticFunctionViewModel.Create)
+                             .Select(SemanticPluginViewModel.Create)
                              .ToList();
 
-                Functions = new ObservableCollection<SemanticFunctionViewModel>(functions);
+                Functions = new ObservableCollection<SemanticPluginViewModel>(functions);
             }
             else
             {
                 this.Title = folder;
-                Functions = new ObservableCollection<SemanticFunctionViewModel>();
+                Functions = new ObservableCollection<SemanticPluginViewModel>();
             }
             IsActive = true;
         }
@@ -44,13 +44,13 @@ namespace PromptPlayground.ViewModels
         public string Title { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<SemanticFunctionViewModel> functions;
+        private ObservableCollection<SemanticPluginViewModel> functions;
 
         [ObservableProperty]
-        private SemanticFunctionViewModel? selected;
+        private SemanticPluginViewModel? selected;
 
 
-        partial void OnSelectedChanged(SemanticFunctionViewModel? oldValue, SemanticFunctionViewModel? newValue)
+        partial void OnSelectedChanged(SemanticPluginViewModel? oldValue, SemanticPluginViewModel? newValue)
         {
             if (newValue != null && oldValue != newValue)
             {
@@ -61,7 +61,7 @@ namespace PromptPlayground.ViewModels
         [RelayCommand(CanExecute = nameof(CanAddNewFunction))]
         public void AddNewFunction()
         {
-            AddNewFunction(new SemanticFunctionViewModel(""));
+            AddNewFunction(new SemanticPluginViewModel(""));
         }
 
         private bool CanAddNewFunction()
@@ -69,7 +69,7 @@ namespace PromptPlayground.ViewModels
             return !Directory.Exists(this.Folder);
         }
 
-        public void AddNewFunction(SemanticFunctionViewModel function)
+        public void AddNewFunction(SemanticPluginViewModel function)
         {
             if (string.IsNullOrWhiteSpace(function.Name))
             {

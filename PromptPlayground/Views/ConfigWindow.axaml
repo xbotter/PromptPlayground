@@ -52,8 +52,8 @@
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<Grid ColumnDefinitions="80,4*" Margin="12">
-							
-								<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1"
+
+								<TextBox Text="{Binding Value}"  Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1"
 										 IsVisible="{Binding Type,
 										 Converter={StaticResource StringToBooleanConverter}
 										 ConverterParameter='string'
@@ -80,60 +80,7 @@
 			</StackPanel>
 
 			<Separator/>
-			<ToggleSwitch OffContent="不使用向量数据库" OnContent="使用向量数据库" IsChecked="{Binding EnableVectorDB}"></ToggleSwitch>
 
-			<StackPanel IsVisible="{Binding EnableVectorDB}">
-				<Grid ColumnDefinitions="80,3*" Margin="10,3">
-					<TextBlock Text="向量数据库" Grid.Column="0" />
-					<ComboBox
-						Grid.Column="1"
-						ItemsSource="{Binding VectorDbLists}" SelectedIndex="{Binding VectorDbSelectedIndex}">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<ComboBoxItem Content="{Binding}"/>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</Grid>
-
-
-				<StackPanel>
-					<ItemsControl ItemsSource="{Binding VectorDbAttributes}">
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Grid ColumnDefinitions="80,4*" Margin="12">
-									<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
-								</Grid>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</StackPanel>
-				<Grid ColumnDefinitions="80,3*" Margin="10,3">
-					<TextBlock Text="Embedding" Grid.Column="0" />
-					<ComboBox
-						Grid.Column="1"
-						ItemsSource="{Binding EmbeddingLists}" SelectedIndex="{Binding EmbeddingSelectedIndex}">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<ComboBoxItem Content="{Binding}"/>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</Grid>
-
-
-				<StackPanel>
-					<ItemsControl ItemsSource="{Binding EmbeddingAttributes}">
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Grid ColumnDefinitions="80,4*" Margin="12">
-									<TextBox Text="{Binding Value}" Watermark="{Binding HumanizeName}" ToolTip.Tip="{Binding HumanizeName}" Grid.Column="1" />
-								</Grid>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</StackPanel>
-			</StackPanel>
 			<WrapPanel HorizontalAlignment="Right">
 				<Button i:Attached.Icon="mdi-content-save-cog-outline" Click="SaveConfig" Margin="20,0"/>
 				<Button i:Attached.Icon="mdi-close-circle-outline" Click="ResetConfig"/>

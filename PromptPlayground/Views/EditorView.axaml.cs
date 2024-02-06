@@ -11,7 +11,6 @@ using PromptPlayground.Services;
 using PromptPlayground.ViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels.LLM;
-using PromptPlayground.ViewModels.ConfigViewModels.VectorDB;
 using System;
 using System.IO;
 using System.Linq;

@@ -9,21 +9,21 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PromptPlayground.Views.MainView"
              x:DataType="vm:MainViewModel">
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
          to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
+		<vm:MainViewModel />
+	</Design.DataContext>
 
-  <DockPanel >
-    <DockPanel.Styles>
-      <Style Selector="MenuItem">
-        <Setter Property="Padding" Value="12,4"/>
-      </Style>
-    </DockPanel.Styles>
-    <WrapPanel DockPanel.Dock="Top">
+	<DockPanel >
+		<DockPanel.Styles>
+			<Style Selector="MenuItem">
+				<Setter Property="Padding" Value="12,4"/>
+			</Style>
+		</DockPanel.Styles>
+		<WrapPanel DockPanel.Dock="Top">
 
-      <Menu >
+			<Menu >
         <MenuItem>
           <MenuItem.Header>
             <i:Icon Value="mdi-menu"/>
@@ -55,16 +55,9 @@
         </MenuItem>
 
       </Menu>
-      <WrapPanel IsVisible="{Binding Config.EnableVectorDB}">
-        <WrapPanel Margin="10,0"  DataContext="{Binding Config.SelectedVectorDb}" >
-          <i:Icon Value="mdi-database-outline" ToolTip.Tip="{Binding Name}"/>
-          <TextBox ToolTip.Tip="Collection" Text="{Binding Collection}" Watermark="Collection" MinWidth="120" Margin="8,2,8,0" Height="25"/>
-          <NumericUpDown ToolTip.Tip="Limit" Value="{Binding Limit}" FormatString="0" Minimum="1" Maximum="100" Watermark="Limit" MinWidth="80" Margin="8,2,0,0" Height="25"/>
-          <NumericUpDown ToolTip.Tip="Relevance" Value="{Binding Relevance}" FormatString="0.00" Increment="0.1" Minimum="0.01" Maximum="1.00" Watermark="Relevance" MinWidth="80" Margin="8,2,0,0" Height="25"/>
-        </WrapPanel>
-      </WrapPanel>
-    </WrapPanel>
-    <StackPanel DockPanel.Dock="Bottom">
+
+		</WrapPanel>
+		<StackPanel DockPanel.Dock="Bottom">
       <ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
     </StackPanel>
     <ScrollViewer DockPanel.Dock="Left">
@@ -75,5 +68,5 @@
       <GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
       <views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
     </Grid>
-  </DockPanel>
+	</DockPanel>
 </UserControl>

@@ -4,9 +4,9 @@ namespace PromptPlayground.Messages
 {
     public class FunctionSelectedMessage
     {
-        public SemanticFunctionViewModel Function { get; set; }
+        public SemanticPluginViewModel Function { get; set; }
 
-        public FunctionSelectedMessage(SemanticFunctionViewModel viewModel)
+        public FunctionSelectedMessage(SemanticPluginViewModel viewModel)
         {
             this.Function = viewModel;
         }

@@ -2,11 +2,11 @@
 {
     public class FunctionCreateMessage
     {
-        public FunctionCreateMessage(SemanticFunctionViewModel? function = null)
+        public FunctionCreateMessage(SemanticPluginViewModel? function = null)
         {
             Function = function;
         }
 
-        public SemanticFunctionViewModel? Function { get; }
+        public SemanticPluginViewModel? Function { get; }
     }
 }

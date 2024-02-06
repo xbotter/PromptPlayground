@@ -37,7 +37,7 @@ namespace PromptPlayground.ViewModels
         }
 
         [RelayCommand]
-        public void FunctionSelected(SemanticFunctionViewModel viewModel)
+        public void FunctionSelected(SemanticPluginViewModel viewModel)
         {
             WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(viewModel));
         }
@@ -61,7 +61,7 @@ namespace PromptPlayground.ViewModels
                 return;
             }
 
-            var function = new SemanticFunctionViewModel(message.Path);
+            var function = new SemanticPluginViewModel(message.Path);
             if (!OpenedFunctions.Functions.Contains(function))
             {
                 OpenedFunctions.Functions.Add(function);
@@ -71,7 +71,7 @@ namespace PromptPlayground.ViewModels
 
         public void Receive(FunctionCreateMessage message)
         {
-            var function = message.Function ?? new SemanticFunctionViewModel("");
+            var function = message.Function ?? new SemanticPluginViewModel("");
             this.OpenedFunctions.AddNewFunction(function);
 
             FunctionSelected(function);
