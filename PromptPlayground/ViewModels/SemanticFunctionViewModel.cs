@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels
 {
-	public partial class SemanticPluginViewModel : ViewModelBase, IEquatable<SemanticPluginViewModel>
+	public partial class SemanticFunctionViewModel : ViewModelBase, IEquatable<SemanticFunctionViewModel>
 	{
 		#region static
 		static string DefaultConfig()
@@ -31,7 +31,7 @@ namespace PromptPlayground.ViewModels
 			});
 		}
 
-		public static SemanticPluginViewModel Create(string folder) => new(folder);
+		public static SemanticFunctionViewModel Create(string folder) => new(folder);
 
 		#endregion
 
@@ -43,7 +43,7 @@ namespace PromptPlayground.ViewModels
 		[ObservableProperty]
 		private bool isGenerating;
 
-		public SemanticPluginViewModel(string folderOrName)
+		public SemanticFunctionViewModel(string folderOrName)
 		{
 			if (Path.GetFileName(folderOrName) == Constants.SkPrompt)
 			{
@@ -92,7 +92,7 @@ namespace PromptPlayground.ViewModels
 			WeakReferenceMessenger.Default.Send(new LoadingStatus(value));
 		}
 
-		public bool Equals(SemanticPluginViewModel? other)
+		public bool Equals(SemanticFunctionViewModel? other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			return other?.Folder == this.Folder && Directory.Exists(this.Folder);

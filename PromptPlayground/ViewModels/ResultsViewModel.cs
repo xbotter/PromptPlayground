@@ -8,9 +8,9 @@ namespace PromptPlayground.ViewModels
 {
     public class ResultsViewModel : ObservableRecipient, IRecipient<FunctionSelectedMessage>
     {
-        private SemanticPluginViewModel function;
+        private SemanticFunctionViewModel function;
         public ObservableCollection<GenerateResult> Results => function.Results;
-        public ResultsViewModel(SemanticPluginViewModel function)
+        public ResultsViewModel(SemanticFunctionViewModel function)
         {
             this.function = function;
             IsActive = true;

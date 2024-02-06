@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.Views;
 
-public partial class SkillsView : UserControl
+public partial class PluginsView : UserControl
 {
-    public SkillsViewModel Model => (this.DataContext as SkillsViewModel)!;
+    public PluginsViewModel Model => (this.DataContext as PluginsViewModel)!;
 
-    public SkillsView()
+    public PluginsView()
     {
         InitializeComponent();
-        this.DataContext = new SkillsViewModel();
+        this.DataContext = new PluginsViewModel();
     }
 }

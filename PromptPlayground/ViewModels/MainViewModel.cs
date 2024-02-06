@@ -49,7 +49,7 @@ public partial class MainViewModel : ViewModelBase
 
         if (!string.IsNullOrWhiteSpace(response))
         {
-            WeakReferenceMessenger.Default.Send(new SkillOpenMessage(response!));
+            WeakReferenceMessenger.Default.Send(new PluginOpenMessage(response!));
         }
     }
 }

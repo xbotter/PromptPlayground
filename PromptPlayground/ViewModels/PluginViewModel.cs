@@ -11,16 +11,16 @@ using System.Text.RegularExpressions;
 
 namespace PromptPlayground.ViewModels
 {
-    public partial class SkillViewModel : ObservableRecipient, IEquatable<SkillViewModel>, IRecipient<FunctionSelectedMessage>, IRecipient<CloseFunctionMessage>
+    public partial class PluginViewModel : ObservableRecipient, IEquatable<PluginViewModel>, IRecipient<FunctionSelectedMessage>, IRecipient<CloseFunctionMessage>
     {
         private static bool IsFunctionDir(string folder) => File.Exists(Path.Combine(folder, Constants.SkPrompt));
 
-        public bool Equals(SkillViewModel? other)
+        public bool Equals(PluginViewModel? other)
         {
             return other?.Folder == this.Folder;
         }
 
-        public SkillViewModel(string folder)
+        public PluginViewModel(string folder)
         {
             if (Directory.Exists(folder))
             {
@@ -28,15 +28,15 @@ namespace PromptPlayground.ViewModels
                 this.Title = Path.GetFileName(folder);
                 var functions = Directory.GetDirectories(Folder)
                              .Where(IsFunctionDir)
-                             .Select(SemanticPluginViewModel.Create)
+                             .Select(SemanticFunctionViewModel.Create)
                              .ToList();
 
-                Functions = new ObservableCollection<SemanticPluginViewModel>(functions);
+                Functions = new ObservableCollection<SemanticFunctionViewModel>(functions);
             }
             else
             {
                 this.Title = folder;
-                Functions = new ObservableCollection<SemanticPluginViewModel>();
+                Functions = new ObservableCollection<SemanticFunctionViewModel>();
             }
             IsActive = true;
         }
@@ -44,13 +44,13 @@ namespace PromptPlayground.ViewModels
         public string Title { get; set; }
 
         [ObservableProperty]
-        private ObservableCollection<SemanticPluginViewModel> functions;
+        private ObservableCollection<SemanticFunctionViewModel> functions;
 
         [ObservableProperty]
-        private SemanticPluginViewModel? selected;
+        private SemanticFunctionViewModel? selected;
 
 
-        partial void OnSelectedChanged(SemanticPluginViewModel? oldValue, SemanticPluginViewModel? newValue)
+        partial void OnSelectedChanged(SemanticFunctionViewModel? oldValue, SemanticFunctionViewModel? newValue)
         {
             if (newValue != null && oldValue != newValue)
             {
@@ -61,7 +61,7 @@ namespace PromptPlayground.ViewModels
         [RelayCommand(CanExecute = nameof(CanAddNewFunction))]
         public void AddNewFunction()
         {
-            AddNewFunction(new SemanticPluginViewModel(""));
+            AddNewFunction(new SemanticFunctionViewModel(""));
         }
 
         private bool CanAddNewFunction()
@@ -69,7 +69,7 @@ namespace PromptPlayground.ViewModels
             return !Directory.Exists(this.Folder);
         }
 
-        public void AddNewFunction(SemanticPluginViewModel function)
+        public void AddNewFunction(SemanticFunctionViewModel function)
         {
             if (string.IsNullOrWhiteSpace(function.Name))
             {

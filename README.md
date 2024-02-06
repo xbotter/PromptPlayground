@@ -19,8 +19,9 @@
 目前模型的选择支持:
 
 1. Azure OpenAI ChatCompletion (gpt-35/gpt-4)
-1. Baidu ERNIE-Bot Turbo
+1. OpenAI ChatCompletion
 1. Baidu ERNIE-Bot
+1. Aliyun DashScope
 
 `生成数量`指最大生成结果数量，默认为3。
 
@@ -42,31 +43,11 @@
 
 对于skprompt.txt或者config.json文件修改后，点击保存(Ctrl+S)按钮，即可保存到对应的文件。
 
-## 导入Semantic Skill
+## 导入Semantic Plugin
 
 1. 点击菜单栏，选择[打开文件夹]，选择包含Semantic Functions的文件夹
 1. 展开侧边栏，即可看到当前文件夹下的所有Semantic Functions
 1. 选择对应的 Function ，即可进行编辑运行
-
-### 连接向量数据库
-
-在配置菜单中启用向量数据库即可。
-
-目前支持的向量数据库有：
-
-- Qdrant
-
-在配置向量数据库的同时需要配置Embedding：
-目前支持的Embedding有：
-
-- Azure OpenAI Embedding
-
-配置完成之后，即可在菜单栏看到Memory的相关参数。
-![Memory Collection Params](assets/README/image-6.png)
-
-分别对应： Collection name, Limit ,Relevance
-
-配置完成之后，即可在 skprompt中使用 `TextMemorySkill` 相关的Function了。
 
 ## 截图
 
@@ -74,7 +55,7 @@
 
 ## 构建 🛠
 
-1. 安装 .NET 7 SDK
+1. 安装 .NET 8 SDK
 2. 下载源码
 3. 运行 `dotnet build` 即可
 
