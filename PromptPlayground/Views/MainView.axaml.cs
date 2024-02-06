@@ -43,7 +43,7 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
         var topLevel = TopLevel.GetTopLevel(this);
         _manager = new WindowNotificationManager(topLevel) { MaxItems = 3 };
 
-        var defaultFunction = new SemanticPluginViewModel("[New Function]");
+        var defaultFunction = new SemanticFunctionViewModel("[New Function]");
         this.EditorView.DataContext = defaultFunction;
         this.ResultsView.DataContext = new ResultsViewModel(defaultFunction);
 

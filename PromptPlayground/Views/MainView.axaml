@@ -24,49 +24,49 @@
 		<WrapPanel DockPanel.Dock="Top">
 
 			<Menu >
-        <MenuItem>
-          <MenuItem.Header>
-            <i:Icon Value="mdi-menu"/>
-          </MenuItem.Header>
-          <MenuItem Header="新建" Command="{Binding NewFileCommand}" i:MenuItem.Icon="mdi-file-plus-outline"/>
-          <Separator/>
-				  <MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline" Click="AboutClick"/>
-        </MenuItem>
-        <MenuItem ToolTip.Tip="打开文件"  Command="{Binding OpenFileCommand}">
-          <MenuItem.Header>
-            <i:Icon Value="mdi-file-document-outline"/>
-          </MenuItem.Header>
-        </MenuItem>
-        <MenuItem ToolTip.Tip="打开文件夹"  Command="{Binding OpenFolderCommand}">
-          <MenuItem.Header>
-            <i:Icon Value="mdi-folder-outline"/>
-          </MenuItem.Header>
-        </MenuItem>
+				<MenuItem>
+					<MenuItem.Header>
+						<i:Icon Value="mdi-menu"/>
+					</MenuItem.Header>
+					<MenuItem Header="新建" Command="{Binding NewFileCommand}" i:MenuItem.Icon="mdi-file-plus-outline"/>
+					<Separator/>
+					<MenuItem Header="关于" i:MenuItem.Icon="mdi-information-outline" Click="AboutClick"/>
+				</MenuItem>
+				<MenuItem ToolTip.Tip="打开文件"  Command="{Binding OpenFileCommand}">
+					<MenuItem.Header>
+						<i:Icon Value="mdi-file-document-outline"/>
+					</MenuItem.Header>
+				</MenuItem>
+				<MenuItem ToolTip.Tip="打开文件夹"  Command="{Binding OpenFolderCommand}">
+					<MenuItem.Header>
+						<i:Icon Value="mdi-folder-outline"/>
+					</MenuItem.Header>
+				</MenuItem>
 
-        <MenuItem Click="OnConfigClick">
-          <MenuItem.Header>
-            <WrapPanel>
-              <i:Icon Value="mdi-robot-outline"/>
-              <TextBlock Text="{Binding Config.SelectedModel.Name}" Margin="10,0"/>
-              <i:Icon Value="mdi-counter"/>
-              <TextBlock Text="{Binding Config.MaxCount}" Margin="10,0"/>
-            </WrapPanel>
-          </MenuItem.Header>
-        </MenuItem>
+				<MenuItem Click="OnConfigClick">
+					<MenuItem.Header>
+						<WrapPanel>
+							<i:Icon Value="mdi-robot-outline"/>
+							<TextBlock Text="{Binding Config.SelectedModel.Name}" Margin="10,0"/>
+							<i:Icon Value="mdi-counter"/>
+							<TextBlock Text="{Binding Config.MaxCount}" Margin="10,0"/>
+						</WrapPanel>
+					</MenuItem.Header>
+				</MenuItem>
 
-      </Menu>
+			</Menu>
 
 		</WrapPanel>
 		<StackPanel DockPanel.Dock="Bottom">
-      <ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
-    </StackPanel>
-    <ScrollViewer DockPanel.Dock="Left">
-      <views:SkillsView Name="SkillsView"/>
-    </ScrollViewer>
-    <Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
-      <views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
-      <GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
-      <views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
-    </Grid>
+			<ProgressBar  VerticalAlignment="Center" HorizontalAlignment="Stretch" IsVisible="{Binding Status.Loading}" IsIndeterminate="{Binding Status.Loading}"/>
+		</StackPanel>
+		<ScrollViewer DockPanel.Dock="Left">
+			<views:PluginsView Name="PluginsView"/>
+		</ScrollViewer>
+		<Grid DockPanel.Dock="Bottom" RowDefinitions="240,1,*">
+			<views:EditorView Name="EditorView" Grid.Row="0" Margin="0,0,10,0"/>
+			<GridSplitter Grid.Row="1" Background="Transparent"  ResizeDirection="Rows"/>
+			<views:ResultsView Name="ResultsView" Grid.Row="2"  Margin="0,0,10,0"/>
+		</Grid>
 	</DockPanel>
 </UserControl>

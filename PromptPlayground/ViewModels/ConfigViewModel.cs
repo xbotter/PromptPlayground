@@ -37,8 +37,9 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 
 	public List<ConfigAttribute> AllAttributes { get; set; } = [];
 
-	public int MaxCount { get => maxCount; set => SetProperty(ref maxCount, value); }
+	[ObservableProperty]
 	private int maxCount = 3;
+
 	#region Model
 	private int modelSelectedIndex = 0;
 
@@ -67,11 +68,13 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 	private readonly List<ILLMConfigViewModel> LLMs = [];
 	#endregion
 
+	#region IConfigAttributesProvider
 	IList<ConfigAttribute> IConfigAttributesProvider.AllAttributes => this.AllAttributes;
 	public ILLMConfigViewModel GetLLM()
 	{
 		return this.SelectedModel;
 	}
+	#endregion
 
 	public ConfigViewModel(bool requireLoadConfig = false) : this()
 	{
@@ -120,17 +123,21 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 		return list;
 	}
 
-
 	private void SaveConfigToUserProfile()
 	{
 		var profile = GetConfigFilePath();
 		File.WriteAllText(profile, JsonSerializer.Serialize(this));
 	}
 
-	private string GetConfigFilePath()
+	private string GetConfigFilePath(string configFile = "user.config")
 	{
 		var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-		return Path.Combine(profile, "PromptPlayground.config");
+		var folder = Path.Combine(profile, ".prompt_playground");
+		if (!Directory.Exists(folder))
+		{
+			Directory.CreateDirectory(folder);
+		}
+		return Path.Combine(folder, configFile);
 	}
 
 	public void SaveConfig()

@@ -45,8 +45,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\SkillsView.axaml.cs">
-	    <DependentUpon>SkillsView.axaml</DependentUpon>
+	  <Compile Update="Views\PluginsView.axaml.cs">
+	    <DependentUpon>PluginsView.axaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 </Project>

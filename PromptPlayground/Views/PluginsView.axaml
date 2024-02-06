@@ -5,8 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
 			       xmlns:i="https://github.com/projektanker/icons.avalonia"
-			       x:Class="PromptPlayground.Views.SkillsView"
-			       x:DataType="vm:SkillsViewModel">
+			       x:Class="PromptPlayground.Views.PluginsView"
+			       x:DataType="vm:PluginsViewModel">
   <UserControl.Resources>
     <ResourceDictionary>
       <x:Double x:Key="ExpanderIconSize">0</x:Double>
@@ -15,7 +15,7 @@
     </ResourceDictionary>
   </UserControl.Resources>
   <StackPanel MinWidth="200">
-    <ItemsControl ItemsSource="{Binding Skills}">
+    <ItemsControl ItemsSource="{Binding Plugins}">
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <Expander HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsExpanded="True">

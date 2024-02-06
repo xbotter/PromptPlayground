@@ -12,44 +12,44 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels
 {
-    public partial class SkillsViewModel : ObservableRecipient, IRecipient<SkillOpenMessage>,
+    public partial class PluginsViewModel : ObservableRecipient, IRecipient<PluginOpenMessage>,
         IRecipient<FunctionOpenMessage>,
         IRecipient<FunctionCreateMessage>
     {
-        public SkillsViewModel()
+        public PluginsViewModel()
         {
 
-            OpenedFunctions = new SkillViewModel("opened");
-            Skills = new ObservableCollection<SkillViewModel>
+            OpenedPlugin = new PluginViewModel("opened");
+            Plugins = new ObservableCollection<PluginViewModel>
             {
-                OpenedFunctions
+                OpenedPlugin
             };
             IsActive = true;
         }
 
         [RelayCommand]
-        public void CloseSkillFolder(SkillViewModel model)
+        public void ClosePluginFolder(PluginViewModel model)
         {
-            if (this.Skills.Contains(model))
+            if (this.Plugins.Contains(model))
             {
-                this.Skills.Remove(model);
+                this.Plugins.Remove(model);
             }
         }
 
         [RelayCommand]
-        public void FunctionSelected(SemanticPluginViewModel viewModel)
+        public void FunctionSelected(SemanticFunctionViewModel viewModel)
         {
             WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(viewModel));
         }
 
-        public void Receive(SkillOpenMessage message)
+        public void Receive(PluginOpenMessage message)
         {
             if (Directory.Exists(message.Path))
             {
-                var skill = new SkillViewModel(message.Path);
-                if (!Skills.Contains(skill))
+                var plugin = new PluginViewModel(message.Path);
+                if (!Plugins.Contains(plugin))
                 {
-                    Skills.Add(skill);
+                    Plugins.Add(plugin);
                 }
             }
         }
@@ -61,25 +61,25 @@ namespace PromptPlayground.ViewModels
                 return;
             }
 
-            var function = new SemanticPluginViewModel(message.Path);
-            if (!OpenedFunctions.Functions.Contains(function))
+            var function = new SemanticFunctionViewModel(message.Path);
+            if (!OpenedPlugin.Functions.Contains(function))
             {
-                OpenedFunctions.Functions.Add(function);
+                OpenedPlugin.Functions.Add(function);
                 FunctionSelected(function);
             }
         }
 
         public void Receive(FunctionCreateMessage message)
         {
-            var function = message.Function ?? new SemanticPluginViewModel("");
-            this.OpenedFunctions.AddNewFunction(function);
+            var function = message.Function ?? new SemanticFunctionViewModel("");
+            this.OpenedPlugin.AddNewFunction(function);
 
             FunctionSelected(function);
         }
 
-        public SkillViewModel OpenedFunctions { get; set; }
+        public PluginViewModel OpenedPlugin { get; set; }
 
-        public ObservableCollection<SkillViewModel> Skills { get; set; }
+        public ObservableCollection<PluginViewModel> Plugins { get; set; }
 
     }
 }

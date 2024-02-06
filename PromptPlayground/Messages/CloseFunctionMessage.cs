@@ -9,11 +9,11 @@ namespace PromptPlayground.Messages
 {
     public class CloseFunctionMessage
     {
-        public CloseFunctionMessage(SemanticPluginViewModel function)
+        public CloseFunctionMessage(SemanticFunctionViewModel function)
         {
             Function = function;
         }
 
-        public SemanticPluginViewModel Function { get; }
+        public SemanticFunctionViewModel Function { get; }
     }
 }
