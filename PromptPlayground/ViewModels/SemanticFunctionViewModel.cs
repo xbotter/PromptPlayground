@@ -1,4 +1,5 @@
-﻿using AvaloniaEdit.Document;
+﻿using Avalonia;
+using AvaloniaEdit.Document;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -25,9 +26,27 @@ namespace PromptPlayground.ViewModels
 		#region static
 		static string DefaultConfig()
 		{
-			return JsonSerializer.Serialize(new PromptTemplateConfig(), new JsonSerializerOptions()
+			return JsonSerializer.Serialize(new
 			{
-				WriteIndented = true
+				schema = 1,
+				description = "",
+				input_variables = new List<InputVariable>()
+				{
+					new InputVariable()
+					{
+						Name = "input",
+						Default = "",
+						Description = "",
+					}
+				},
+				execution_settings = new
+				{
+					@default = new { }
+				}
+			}, new JsonSerializerOptions()
+			{
+				WriteIndented = true,
+				DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
 			});
 		}
 
@@ -100,7 +119,22 @@ namespace PromptPlayground.ViewModels
 
 		private PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config);
 
+		public List<InputVariable> InputVariables
+		{
+			get => PromptConfig.InputVariables;
+			set => PromptConfig.InputVariables = value;
+		}
+
 		public IList<string> Blocks => PromptConfig.InputVariables.Select(_ => _.Name).ToList();
+
+		[RelayCommand]
+		public async Task AddInputVariableAsync()
+		{
+			this.InputVariables.Add(new InputVariable()
+			{
+				Name = "newVariable",
+			});
+		}
 
 		[RelayCommand]
 		public async Task CloseAsync()
@@ -167,12 +201,13 @@ namespace PromptPlayground.ViewModels
 				var service = new PromptService(configProvider.Response);
 
 				var arguments = service.CreateArguments();
-				var varBlocks = this.Blocks;
+				var varBlocks = this.InputVariables;
 				if (varBlocks.Count > 0)
 				{
 					var variables = varBlocks.Select(_ => new Variable()
 					{
-						Name = _.TrimStart('$')
+						Name = _.Name.TrimStart('$'),
+					    DefaultValue = _.Default?.ToString()
 					}).Distinct().ToList();
 
 					var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
