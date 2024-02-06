@@ -8,7 +8,7 @@
         x:Class="PromptPlayground.Views.AboutView"
         x:DataType="vm:AboutViewModel"
         SizeToContent="WidthAndHeight"
-        SystemDecorations="BorderOnly"
+        SystemDecorations="None"
         Title="About">
   <Design.DataContext>
     <vm:AboutViewModel/>
@@ -18,6 +18,11 @@
       <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
   </Window.Styles>
+	<Border
+		BorderBrush="Gray"
+		BorderThickness="1"
+		CornerRadius="2"
+		>
   <StackPanel>
     <Button HorizontalAlignment="Right" Click="CloseClick" FontSize="18" Background="Transparent" Foreground="Gray">
       <i:Icon Value="mdi-close"/>
@@ -27,4 +32,5 @@
     <Button i:Attached.Icon="mdi-github" Margin="200 20" Background="White" FontSize="30" Foreground="Black" Command="{Binding OpenGitHubCommand}"/>
     <Button Margin="120 0 120 30" Command="{Binding CheckVersionCommand}">检查更新</Button>
   </StackPanel>
+	</Border>
 </Window>

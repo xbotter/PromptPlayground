@@ -27,7 +27,8 @@
 									<TextBlock Text="{Binding Error}"
 											   Padding="12" Foreground="Red"
 											   FontWeight="Bold"
-											   IsVisible="{Binding HasError}" TextWrapping="WrapWithOverflow"/>
+											   IsVisible="{Binding HasError}" 
+											   TextWrapping="WrapWithOverflow"/>
 
 									<ScrollViewer IsVisible="{Binding !HasError}">
 										<Grid>
