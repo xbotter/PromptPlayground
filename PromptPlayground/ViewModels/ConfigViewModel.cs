@@ -75,7 +75,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 		return this.SelectedModel;
 	}
 	#endregion
-	
+
 	public ConfigViewModel(bool requireLoadConfig = false) : this()
 	{
 		if (requireLoadConfig)
@@ -132,7 +132,12 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 	private string GetConfigFilePath(string configFile = "user.config")
 	{
 		var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-		return Path.Combine(profile, ".prompt_playground", "user.config");
+		var folder = Path.Combine(profile, ".prompt_playground");
+		if (!Directory.Exists(folder))
+		{
+			Directory.CreateDirectory(folder);
+		}
+		return Path.Combine(folder, configFile);
 	}
 
 	public void SaveConfig()

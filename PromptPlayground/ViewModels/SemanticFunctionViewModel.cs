@@ -37,6 +37,7 @@ namespace PromptPlayground.ViewModels
 						Name = "input",
 						Default = "",
 						Description = "",
+						IsRequired = false
 					}
 				},
 				execution_settings = new
@@ -207,7 +208,7 @@ namespace PromptPlayground.ViewModels
 					var variables = varBlocks.Select(_ => new Variable()
 					{
 						Name = _.Name.TrimStart('$'),
-					    DefaultValue = _.Default?.ToString()
+						DefaultValue = _.Default?.ToString()
 					}).Distinct().ToList();
 
 					var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
