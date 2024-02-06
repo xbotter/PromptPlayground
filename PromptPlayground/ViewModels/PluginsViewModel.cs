@@ -56,7 +56,7 @@ namespace PromptPlayground.ViewModels
 
         public void Receive(FunctionOpenMessage message)
         {
-            if (string.IsNullOrWhiteSpace(message.Path) || !Directory.Exists(message.Path))
+            if (string.IsNullOrWhiteSpace(message.Path) || (!Directory.Exists(message.Path) && !File.Exists(message.Path)))
             {
                 return;
             }

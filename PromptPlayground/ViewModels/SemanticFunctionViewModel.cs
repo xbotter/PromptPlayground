@@ -21,246 +21,246 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels
 {
-	public partial class SemanticFunctionViewModel : ViewModelBase, IEquatable<SemanticFunctionViewModel>
-	{
-		#region static
-		static string DefaultConfig()
-		{
-			return JsonSerializer.Serialize(new
-			{
-				schema = 1,
-				description = "",
-				input_variables = new List<InputVariable>()
-				{
-					new InputVariable()
-					{
-						Name = "input",
-						Default = "",
-						Description = "",
-						IsRequired = false
-					}
-				},
-				execution_settings = new
-				{
-					@default = new { }
-				}
-			}, new JsonSerializerOptions()
-			{
-				WriteIndented = true,
-				DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-			});
-		}
+    public partial class SemanticFunctionViewModel : ViewModelBase, IEquatable<SemanticFunctionViewModel>
+    {
+        #region static
+        static string DefaultConfig()
+        {
+            return JsonSerializer.Serialize(new
+            {
+                schema = 1,
+                description = "",
+                input_variables = new List<InputVariable>()
+                {
+                    new InputVariable()
+                    {
+                        Name = "input",
+                        Default = "",
+                        Description = "",
+                        IsRequired = false
+                    }
+                },
+                execution_settings = new
+                {
+                    @default = new { }
+                }
+            }, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            });
+        }
 
-		public static SemanticFunctionViewModel Create(string folder) => new(folder);
+        public static SemanticFunctionViewModel Create(string folder) => new(folder);
 
-		#endregion
-
-
-		[ObservableProperty]
-		[NotifyCanExecuteChangedFor(nameof(SaveCommand))]
-		private bool isChanged;
-
-		[ObservableProperty]
-		private bool isGenerating;
-
-		public SemanticFunctionViewModel(string folderOrName)
-		{
-			if (Path.GetFileName(folderOrName) == Constants.SkPrompt)
-			{
-				folderOrName = Path.GetDirectoryName(folderOrName)!;
-			}
-
-			if (Directory.Exists(folderOrName))
-			{
-				this.Folder = folderOrName;
-				Name = Path.GetFileName(folderOrName);
-				var promptPath = Path.Combine(folderOrName, Constants.SkPrompt);
-				var configPath = Path.Combine(folderOrName, Constants.SkConfig);
-				this.Prompt = File.ReadAllText(promptPath);
-				this.Config = File.ReadAllText(configPath);
-			}
-			else
-			{
-				this.Folder = "";
-				this.Name = folderOrName;
-				this.Prompt = "";
-				this.Config = DefaultConfig();
-			}
-			this.IsChanged = false;
-		}
-
-		[ObservableProperty]
-		public string prompt;
-		[ObservableProperty]
-		public string config;
-		[ObservableProperty]
-		private string folder = string.Empty;
-		[ObservableProperty]
-		private string name = string.Empty;
-
-		partial void OnPromptChanged(string value)
-		{
-			IsChanged = true;
-		}
-
-		partial void OnConfigChanged(string value)
-		{
-			IsChanged = true;
-		}
-		partial void OnIsGeneratingChanged(bool value)
-		{
-			WeakReferenceMessenger.Default.Send(new LoadingStatus(value));
-		}
-
-		public bool Equals(SemanticFunctionViewModel? other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			return other?.Folder == this.Folder && Directory.Exists(this.Folder);
-		}
-
-		private PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config);
-
-		public List<InputVariable> InputVariables
-		{
-			get => PromptConfig.InputVariables;
-			set => PromptConfig.InputVariables = value;
-		}
-
-		public IList<string> Blocks => PromptConfig.InputVariables.Select(_ => _.Name).ToList();
-
-		[RelayCommand]
-		public async Task AddInputVariableAsync()
-		{
-			this.InputVariables.Add(new InputVariable()
-			{
-				Name = "newVariable",
-			});
-		}
-
-		[RelayCommand]
-		public async Task CloseAsync()
-		{
-			if (this.IsChanged)
-			{
-				var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("File unsaved", $"the {Name} is unsaved, do you want to close it?"));
-				if (!confirm)
-				{
-					return;
-				}
-			}
-			else
-			{
-				WeakReferenceMessenger.Default.Send(new CloseFunctionMessage(this));
-			}
-		}
-
-		[RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(IsChanged))]
-		public async Task SaveAsync()
-		{
-			if (string.IsNullOrWhiteSpace(this.Folder) || !Directory.Exists(this.Folder))
-			{
-				var response = await WeakReferenceMessenger.Default.Send(new RequestFolderOpen());
-				if (string.IsNullOrWhiteSpace(response))
-				{
-					return;
-				}
-
-				var _promptPath = Path.Combine(response, Constants.SkPrompt);
-
-				if (File.Exists(_promptPath))
-				{
-					var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("file overwrite", "The prompt file already exists, do you want to overwrite it?"));
-					if (!confirm)
-					{
-						return;
-					}
-				}
-
-				this.Folder = response;
-				this.Name = Path.GetFileName(response);
-			}
-
-			var promptPath = Path.Combine(this.Folder, Constants.SkPrompt);
-			var configPath = Path.Combine(this.Folder, Constants.SkConfig);
-			await File.WriteAllTextAsync(promptPath, this.Prompt);
-			await File.WriteAllTextAsync(configPath, this.Config);
-
-			this.IsChanged = false;
-
-			WeakReferenceMessenger.Default.Send(new NotificationMessage("Saved!", this.Folder, NotificationMessage.NotificationType.Success));
-		}
+        #endregion
 
 
-		[RelayCommand(AllowConcurrentExecutions = false, IncludeCancelCommand = true)]
-		public async Task GenerateResultAsync(CancellationToken cancellationToken)
-		{
-			try
-			{
-				this.IsGenerating = true;
-				Results.Clear();
-				var configProvider = WeakReferenceMessenger.Default.Send(new RequestMessage<IConfigAttributesProvider>());
-				var service = new PromptService(configProvider.Response);
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+        private bool isChanged;
 
-				var arguments = service.CreateArguments();
-				var varBlocks = this.InputVariables;
-				if (varBlocks.Count > 0)
-				{
-					var variables = varBlocks.Select(_ => new Variable()
-					{
-						Name = _.Name.TrimStart('$'),
-						DefaultValue = _.Default?.ToString()
-					}).Distinct().ToList();
+        [ObservableProperty]
+        private bool isGenerating;
 
-					var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
+        public SemanticFunctionViewModel(string folderOrName)
+        {
+            if (Path.GetFileName(folderOrName) == Constants.SkPrompt)
+            {
+                folderOrName = Path.GetDirectoryName(folderOrName)!;
+            }
 
-					if (result.IsCanceled)
-					{
-						throw new Exception("生成已取消");
-					}
-					if (!result.Configured())
-					{
-						throw new Exception("变量未配置");
-					}
+            if (Directory.Exists(folderOrName))
+            {
+                this.Folder = folderOrName;
+                Name = Path.GetFileName(folderOrName);
+                var promptPath = Path.Combine(folderOrName, Constants.SkPrompt);
+                var configPath = Path.Combine(folderOrName, Constants.SkConfig);
+                this.Prompt = File.ReadAllText(promptPath);
+                this.Config = File.ReadAllText(configPath);
+            }
+            else
+            {
+                this.Folder = "";
+                this.Name = folderOrName;
+                this.Prompt = "";
+                this.Config = DefaultConfig();
+            }
+            this.IsChanged = false;
+        }
 
-					foreach (var variable in result.Variables)
-					{
-						arguments[variable.Name] = variable.Value;
-					}
-				}
+        [ObservableProperty]
+        public string prompt;
+        [ObservableProperty]
+        public string config;
+        [ObservableProperty]
+        private string folder = string.Empty;
+        [ObservableProperty]
+        private string name = string.Empty;
 
-				var maxCount = GetMaxCount();
-				for (int i = 0; i < maxCount; i++)
-				{
-					if (cancellationToken.IsCancellationRequested)
-					{
-						break;
-					}
-					var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+        partial void OnPromptChanged(string value)
+        {
+            IsChanged = true;
+        }
 
-					Results.Add(result);
-				}
-			}
-			catch (OperationCanceledException ex)
-			{
-				WeakReferenceMessenger.Default.Send(new NotificationMessage("Canceled", ex.Message, NotificationMessage.NotificationType.Warning));
-			}
-			catch (Exception ex)
-			{
-				WeakReferenceMessenger.Default.Send(new NotificationMessage("Error", ex.Message, NotificationMessage.NotificationType.Warning));
-			}
-			finally
-			{
-				this.IsGenerating = false;
-			}
-		}
+        partial void OnConfigChanged(string value)
+        {
+            IsChanged = true;
+        }
+        partial void OnIsGeneratingChanged(bool value)
+        {
+            WeakReferenceMessenger.Default.Send(new LoadingStatus(value));
+        }
 
-		private int GetMaxCount()
-		{
-			var result = WeakReferenceMessenger.Default.Send(new ResultCountRequestMessage());
-			return result.Response;
-		}
+        public bool Equals(SemanticFunctionViewModel? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            return other?.Folder == this.Folder && Directory.Exists(this.Folder);
+        }
 
-		public ObservableCollection<GenerateResult> Results { get; set; } = new();
+        private PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config);
 
-	}
+        public List<InputVariable> InputVariables
+        {
+            get => PromptConfig.InputVariables;
+            set => PromptConfig.InputVariables = value;
+        }
+
+        public IList<string> Blocks => PromptConfig.InputVariables.Select(_ => _.Name).ToList();
+
+        [RelayCommand]
+        public async Task AddInputVariableAsync()
+        {
+            this.InputVariables.Add(new InputVariable()
+            {
+                Name = "newVariable",
+            });
+        }
+
+        [RelayCommand]
+        public async Task CloseAsync()
+        {
+            if (this.IsChanged)
+            {
+                var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("File unsaved", $"the {Name} is unsaved, do you want to close it?"));
+                if (!confirm)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                WeakReferenceMessenger.Default.Send(new CloseFunctionMessage(this));
+            }
+        }
+
+        [RelayCommand(AllowConcurrentExecutions = false, CanExecute = nameof(IsChanged))]
+        public async Task SaveAsync()
+        {
+            if (string.IsNullOrWhiteSpace(this.Folder) || !Directory.Exists(this.Folder))
+            {
+                var response = await WeakReferenceMessenger.Default.Send(new RequestFolderOpen());
+                if (string.IsNullOrWhiteSpace(response))
+                {
+                    return;
+                }
+
+                var _promptPath = Path.Combine(response, Constants.SkPrompt);
+
+                if (File.Exists(_promptPath))
+                {
+                    var confirm = await WeakReferenceMessenger.Default.Send(new ConfirmRequestMessage("file overwrite", "The prompt file already exists, do you want to overwrite it?"));
+                    if (!confirm)
+                    {
+                        return;
+                    }
+                }
+
+                this.Folder = response;
+                this.Name = Path.GetFileName(response);
+            }
+
+            var promptPath = Path.Combine(this.Folder, Constants.SkPrompt);
+            var configPath = Path.Combine(this.Folder, Constants.SkConfig);
+            await File.WriteAllTextAsync(promptPath, this.Prompt);
+            await File.WriteAllTextAsync(configPath, this.Config);
+
+            this.IsChanged = false;
+
+            WeakReferenceMessenger.Default.Send(new NotificationMessage("Saved!", this.Folder, NotificationMessage.NotificationType.Success));
+        }
+
+
+        [RelayCommand(AllowConcurrentExecutions = false, IncludeCancelCommand = true)]
+        public async Task GenerateResultAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                this.IsGenerating = true;
+                Results.Clear();
+                var configProvider = WeakReferenceMessenger.Default.Send(new RequestMessage<IConfigAttributesProvider>());
+                var service = new PromptService(configProvider.Response);
+
+                var arguments = service.CreateArguments();
+                var varBlocks = this.InputVariables;
+                if (varBlocks.Count > 0)
+                {
+                    var variables = varBlocks.Select(_ => new Variable()
+                    {
+                        Name = _.Name.TrimStart('$'),
+                        DefaultValue = _.Default?.ToString()
+                    }).Distinct().ToList();
+
+                    var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
+
+                    if (result.IsCanceled)
+                    {
+                        throw new Exception("生成已取消");
+                    }
+                    if (!result.Configured())
+                    {
+                        throw new Exception("变量未配置");
+                    }
+
+                    foreach (var variable in result.Variables)
+                    {
+                        arguments[variable.Name] = variable.Value;
+                    }
+                }
+
+                var maxCount = GetMaxCount();
+                for (int i = 0; i < maxCount; i++)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+
+                    Results.Add(result);
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Canceled", ex.Message, NotificationMessage.NotificationType.Warning));
+            }
+            catch (Exception ex)
+            {
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Error", ex.Message, NotificationMessage.NotificationType.Warning));
+            }
+            finally
+            {
+                this.IsGenerating = false;
+            }
+        }
+
+        private int GetMaxCount()
+        {
+            var result = WeakReferenceMessenger.Default.Send(new ResultCountRequestMessage());
+            return result.Response;
+        }
+
+        public ObservableCollection<GenerateResult> Results { get; set; } = new();
+
+    }
 }
