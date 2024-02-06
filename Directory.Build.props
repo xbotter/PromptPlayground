@@ -1,7 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<Version>0.5.0</Version>
+		<Version>0.5.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
