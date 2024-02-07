@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft;
 using PromptPlayground.Messages;
+using PromptPlayground.Services;
+using PromptPlayground.Views;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,28 +14,34 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels
 {
-    public partial class PluginsViewModel : ObservableRecipient, IRecipient<PluginOpenMessage>,
+    public partial class PluginsViewModel : ObservableRecipient,
+        IRecipient<PluginOpenMessage>,
+        IRecipient<PluginCloseMessage>,
         IRecipient<FunctionOpenMessage>,
         IRecipient<FunctionCreateMessage>
     {
+        private readonly ProfileService<List<string>> profile;
+        const string DefaultPlugin = "·______·";
+
         public PluginsViewModel()
         {
+            this.profile = new ProfileService<List<string>>("openedPlugins");
+            Plugins = new ObservableCollection<PluginViewModel>();
+            OpenedPlugin = new PluginViewModel(DefaultPlugin);
+            Plugins.Add(OpenedPlugin);
 
-            OpenedPlugin = new PluginViewModel("opened");
-            Plugins = new ObservableCollection<PluginViewModel>
+            var plugins = profile.Get();
+            if (plugins != null)
             {
-                OpenedPlugin
-            };
-            IsActive = true;
-        }
-
-        [RelayCommand]
-        public void ClosePluginFolder(PluginViewModel model)
-        {
-            if (this.Plugins.Contains(model))
-            {
-                this.Plugins.Remove(model);
+                foreach (var plugin in plugins)
+                {
+                    if (Directory.Exists(plugin))
+                    {
+                        Plugins.Add(new PluginViewModel(plugin));
+                    }
+                }
             }
+            IsActive = true;
         }
 
         [RelayCommand]
@@ -41,6 +49,7 @@ namespace PromptPlayground.ViewModels
         {
             WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(viewModel));
         }
+
 
         public void Receive(PluginOpenMessage message)
         {
@@ -50,6 +59,26 @@ namespace PromptPlayground.ViewModels
                 if (!Plugins.Contains(plugin))
                 {
                     Plugins.Add(plugin);
+                    this.profile.Save(Plugins
+                        .Where(_ => _.Folder != DefaultPlugin)
+                        .Select(_ => _.Folder!)
+                        .ToList());
+                }
+            }
+        }
+
+        public void Receive(PluginCloseMessage message)
+        {
+            if (Directory.Exists(message.Path))
+            {
+                var plugin = Plugins.FirstOrDefault(_ => _.Folder == message.Path);
+                if (plugin != null)
+                {
+                    Plugins.Remove(plugin);
+                    this.profile.Save(Plugins
+                        .Where(_ => _.Folder != DefaultPlugin)
+                        .Select(_ => _.Folder!)
+                        .ToList());
                 }
             }
         }

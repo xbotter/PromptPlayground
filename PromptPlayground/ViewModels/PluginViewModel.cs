@@ -69,6 +69,20 @@ namespace PromptPlayground.ViewModels
             return !Directory.Exists(this.Folder);
         }
 
+        [RelayCommand(CanExecute = nameof(CanRemovePlugin))]
+        public void RemovePlugin()
+        {
+            if (this.Folder != null && Directory.Exists(this.Folder))
+            {
+                WeakReferenceMessenger.Default.Send(new PluginCloseMessage(this.Folder));
+            }
+        }
+
+        private bool CanRemovePlugin()
+        {
+            return Directory.Exists(this.Folder);
+        }
+
         public void AddNewFunction(SemanticFunctionViewModel function)
         {
             if (string.IsNullOrWhiteSpace(function.Name))
@@ -77,8 +91,8 @@ namespace PromptPlayground.ViewModels
             }
             this.Functions.Add(function);
         }
-        const string DefaultName = "New Function";
-        readonly Regex DefaultNamePattern = new(@"\[New Function (?<index>\d+)\]", RegexOptions.Compiled);
+        const string DefaultName = "Unsaved";
+        readonly Regex DefaultNamePattern = new(@"\[Unsaved (?<index>\d+)\]", RegexOptions.Compiled);
         private int FindLastFunctionIndex()
         {
             return this.Functions.Where(_ => DefaultNamePattern.IsMatch(_.Name))

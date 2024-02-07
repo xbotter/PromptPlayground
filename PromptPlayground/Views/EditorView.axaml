@@ -40,7 +40,9 @@
 				</TabItem.Header>
 				<ae:TextEditor Classes="editor">
 					<it:Interaction.Behaviors>
-						<behaviors:DocumentTextBindingBehavior Text="{Binding Prompt, Mode=TwoWay}"/>
+						<behaviors:DocumentTextBindingBehavior
+							Text="{Binding Prompt, Mode=TwoWay}"
+							/>
 					</it:Interaction.Behaviors>
 				</ae:TextEditor>
 			</TabItem>
