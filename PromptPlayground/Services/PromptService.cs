@@ -10,88 +10,88 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.Services
 {
-	public class PromptService
-	{
-		private readonly ILLMConfigViewModel model;
+    public class PromptService
+    {
+        private readonly ILLMConfigViewModel model;
 
-		public PromptService(IConfigAttributesProvider provider)
-		{
-			this.model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
-		}
+        public PromptService(IConfigAttributesProvider provider)
+        {
+            this.model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
+        }
 
-		private Kernel Build()
-		{
+        private Kernel Build()
+        {
 
-			var builder = model.CreateKernelBuilder();
+            var builder = model.CreateKernelBuilder();
 
-			var _kernel = builder.Build();
+            var _kernel = builder.Build();
 
-			_kernel.ImportPluginFromType<TimePlugin>();
+            _kernel.ImportPluginFromType<TimePlugin>();
 
 
-			return _kernel;
-		}
+            return _kernel;
+        }
 
-		public async Task<GenerateResult> RunAsync(string prompt, PromptExecutionSettings? config, KernelArguments arguments, CancellationToken cancellationToken = default)
-		{
-			var _kernel = Build();
-			var promptFilter = new KernelFilter();
-			_kernel.PromptFilters.Add(promptFilter);
-			_kernel.FunctionFilters.Add(promptFilter);
+        public async Task<GenerateResult> RunAsync(string prompt, PromptExecutionSettings? config, KernelArguments arguments, CancellationToken cancellationToken = default)
+        {
+            var _kernel = Build();
+            var promptFilter = new KernelFilter();
+            _kernel.PromptFilters.Add(promptFilter);
+            _kernel.FunctionFilters.Add(promptFilter);
 
-			var sw = Stopwatch.StartNew();
-			var func = _kernel.CreateFunctionFromPrompt(prompt, config);
+            var sw = Stopwatch.StartNew();
+            var func = _kernel.CreateFunctionFromPrompt(prompt, config);
 
-			var result = await func.InvokeAsync(_kernel, arguments, cancellationToken);
-			sw.Stop();
-			try
-			{
-				var usage = model.GetUsage(result);
-				return new GenerateResult()
-				{
-					Text = result.GetValue<string>() ?? "",
-					TokenUsage = usage,
-					Elapsed = sw.Elapsed,
-					PromptRendered = promptFilter.PromptRendered
-				};
-			}
-			catch (KernelException ex)
-			{
-				return new GenerateResult()
-				{
-					Text = ex.Message,
-					Elapsed = sw.Elapsed,
-					Error = ex.Message,
-				};
-			}
-		}
+            var result = await func.InvokeAsync(_kernel, arguments, cancellationToken);
+            sw.Stop();
+            try
+            {
+                var usage = model.GetUsage(result);
+                return new GenerateResult()
+                {
+                    Text = result.GetValue<string>() ?? "",
+                    TokenUsage = usage,
+                    Elapsed = sw.Elapsed,
+                    PromptRendered = promptFilter.PromptRendered
+                };
+            }
+            catch (KernelException ex)
+            {
+                return new GenerateResult()
+                {
+                    Text = ex.Message,
+                    Elapsed = sw.Elapsed,
+                    Error = ex.Message,
+                };
+            }
+        }
 
-		public KernelArguments CreateArguments() => new KernelArguments();
-	}
+        public KernelArguments CreateArguments() => new KernelArguments();
+    }
 
-	public class KernelFilter : IPromptFilter, IFunctionFilter
-	{
-		public string? PromptRendered { get; set; }
-		public void OnFunctionInvoked(FunctionInvokedContext context)
-		{
+    public class KernelFilter : IPromptFilter, IFunctionFilter
+    {
+        public string? PromptRendered { get; set; }
+        public void OnFunctionInvoked(FunctionInvokedContext context)
+        {
 
-		}
+        }
 
-		public void OnFunctionInvoking(FunctionInvokingContext context)
-		{
+        public void OnFunctionInvoking(FunctionInvokingContext context)
+        {
 
-		}
+        }
 
-		public void OnPromptRendered(PromptRenderedContext context)
-		{
-			PromptRendered = context.RenderedPrompt;
-		}
+        public void OnPromptRendered(PromptRenderedContext context)
+        {
+            PromptRendered = context.RenderedPrompt;
+        }
 
-		public void OnPromptRendering(PromptRenderingContext context)
-		{
+        public void OnPromptRendering(PromptRenderingContext context)
+        {
 
-		}
-	}
+        }
+    }
 
 
 }

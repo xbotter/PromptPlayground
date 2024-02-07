@@ -22,7 +22,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
     private string[] RequiredAttributes =
    [
        #region LLM Config
-        ConfigAttribute.AzureDeployment,
+       ConfigAttribute.AzureDeployment,
        ConfigAttribute.AzureEndpoint,
        ConfigAttribute.AzureSecret,
        ConfigAttribute.BaiduClientId,

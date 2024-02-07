@@ -6,4 +6,9 @@ namespace PromptPlayground.ViewModels
     {
         public PluginOpenMessage(string path) : base(path) { }
     }
+
+    public class PluginCloseMessage : FileOrFolderOpenMessage
+    {
+        public PluginCloseMessage(string path) : base(path) { }
+    }
 }

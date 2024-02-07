@@ -229,16 +229,16 @@ namespace PromptPlayground.ViewModels
                 }
 
                 var maxCount = GetMaxCount();
-				var tasks = Enumerable.Range(0, maxCount)
-					 .Select(async _ =>
-					 {
-						 var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
-						 Results.Add(result);
-					 })
-					 .ToList();
+                var tasks = Enumerable.Range(0, maxCount)
+                     .Select(async _ =>
+                     {
+                         var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                         Results.Add(result);
+                     })
+                     .ToList();
 
-				await Task.WhenAll(tasks);
-			}
+                await Task.WhenAll(tasks);
+            }
             catch (OperationCanceledException ex)
             {
                 WeakReferenceMessenger.Default.Send(new NotificationMessage("Canceled", ex.Message, NotificationMessage.NotificationType.Warning));

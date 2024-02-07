@@ -30,6 +30,13 @@
                       </Style>
                     </Button.Styles>
                   </Button>
+					<Button i:Attached.Icon="mdi-close" Margin="0" Padding="0" Background="Transparent" Command="{Binding RemovePluginCommand}" >
+						<Button.Styles>
+							<Style Selector="Button:disabled">
+								<Setter Property="IsVisible" Value="False"/>
+							</Style>
+						</Button.Styles>
+					</Button>
                 </WrapPanel>
               </Grid>
             </Expander.Header>
