@@ -1,17 +1,40 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PromptPlayground.ViewModels;
 using System;
 
 namespace PromptPlayground.Services
 {
+    public partial class AverageResult : ViewModelBase
+    {
+        [ObservableProperty]
+        private bool hasResults = false;
+
+        [ObservableProperty]
+        private TimeSpan elapsed;
+
+        [ObservableProperty]
+        private ResultTokenUsage? tokenUsage;
+
+    }
+
     public partial class GenerateResult : ViewModelBase
     {
-        public string Text { get; set; } = string.Empty;
-        public TimeSpan Elapsed { get; set; }
-        public string? Error { get; set; } = string.Empty;
-        public string? PromptRendered { get; set; }
-        public ResultTokenUsage? TokenUsage { get; set; }
+        [ObservableProperty]
+        private string text = string.Empty;
+
+        [ObservableProperty]
+        private TimeSpan elapsed;
+
+        [ObservableProperty]
+        private string? error;
+
+        [ObservableProperty]
+        private string? promptRendered;
+
+        [ObservableProperty]
+        private ResultTokenUsage? tokenUsage;
 
         public bool HasError => !string.IsNullOrWhiteSpace(Error);
 

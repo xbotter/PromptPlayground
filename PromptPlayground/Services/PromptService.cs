@@ -32,7 +32,10 @@ namespace PromptPlayground.Services
             return _kernel;
         }
 
-        public async Task<GenerateResult> RunAsync(string prompt, PromptExecutionSettings? config, KernelArguments arguments, CancellationToken cancellationToken = default)
+        public async Task<GenerateResult> RunAsync(string prompt,
+            PromptExecutionSettings? config,
+            KernelArguments arguments,
+            CancellationToken cancellationToken = default)
         {
             var _kernel = Build();
             var promptFilter = new KernelFilter();
@@ -74,12 +77,10 @@ namespace PromptPlayground.Services
         public string? PromptRendered { get; set; }
         public void OnFunctionInvoked(FunctionInvokedContext context)
         {
-
         }
 
         public void OnFunctionInvoking(FunctionInvokingContext context)
         {
-
         }
 
         public void OnPromptRendered(PromptRenderedContext context)
@@ -89,7 +90,6 @@ namespace PromptPlayground.Services
 
         public void OnPromptRendering(PromptRenderingContext context)
         {
-
         }
     }
 

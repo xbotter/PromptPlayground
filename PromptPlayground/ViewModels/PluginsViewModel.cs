@@ -18,14 +18,15 @@ namespace PromptPlayground.ViewModels
         IRecipient<PluginOpenMessage>,
         IRecipient<PluginCloseMessage>,
         IRecipient<FunctionOpenMessage>,
-        IRecipient<FunctionCreateMessage>
+        IRecipient<FunctionCreateMessage>,
+        IRecipient<FunctionSavedMessage>
     {
         private readonly ProfileService<List<string>> profile;
         const string DefaultPlugin = "·______·";
 
         public PluginsViewModel()
         {
-            this.profile = new ProfileService<List<string>>("openedPlugins");
+            this.profile = new ProfileService<List<string>>("openedPlugins.json");
             Plugins = new ObservableCollection<PluginViewModel>();
             OpenedPlugin = new PluginViewModel(DefaultPlugin);
             Plugins.Add(OpenedPlugin);
@@ -104,6 +105,26 @@ namespace PromptPlayground.ViewModels
             this.OpenedPlugin.AddNewFunction(function);
 
             FunctionSelected(function);
+        }
+
+        public void Receive(FunctionSavedMessage message)
+        {
+            var defaultPlugin = Plugins.FirstOrDefault(_ => _.Folder is null);
+            if (defaultPlugin != null)
+            {
+                var function = defaultPlugin.Functions.FirstOrDefault(_ => _.Folder == message.Path);
+
+                var parent = Path.GetDirectoryName(message.Path);
+
+                var plugin = Plugins.FirstOrDefault(_ => _.Folder == parent);
+
+                if (plugin != null && function != null)
+                {
+                    defaultPlugin.Functions.Remove(function);
+                    plugin.Functions.Add(function);
+                    WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(function));
+                }
+            }
         }
 
         public PluginViewModel OpenedPlugin { get; set; }

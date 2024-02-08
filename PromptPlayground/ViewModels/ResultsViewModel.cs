@@ -10,6 +10,8 @@ namespace PromptPlayground.ViewModels
     {
         private SemanticFunctionViewModel function;
         public ObservableCollection<GenerateResult> Results => function.Results;
+        public AverageResult AverageResult => function.Average;
+
         public ResultsViewModel(SemanticFunctionViewModel function)
         {
             this.function = function;

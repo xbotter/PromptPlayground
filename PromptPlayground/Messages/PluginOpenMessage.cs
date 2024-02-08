@@ -2,12 +2,12 @@
 
 namespace PromptPlayground.ViewModels
 {
-    public class PluginOpenMessage : FileOrFolderOpenMessage
+    public class PluginOpenMessage : FileOrFolderPathMessage
     {
         public PluginOpenMessage(string path) : base(path) { }
     }
 
-    public class PluginCloseMessage : FileOrFolderOpenMessage
+    public class PluginCloseMessage : FileOrFolderPathMessage
     {
         public PluginCloseMessage(string path) : base(path) { }
     }

@@ -11,7 +11,7 @@ namespace PromptPlayground.Services
     {
         private readonly string _profile;
 
-        public ProfileService(string profile = nameof(T))
+        public ProfileService(string profile)
         {
             this._profile = profile;
         }
@@ -24,7 +24,7 @@ namespace PromptPlayground.Services
             {
                 Directory.CreateDirectory(profileFolder);
             }
-            return Path.Combine(profileFolder, $"{_profile}.json");
+            return Path.Combine(profileFolder, $"{_profile}");
         }
 
 

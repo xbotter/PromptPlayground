@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.Messages
 {
-    public abstract class FileOrFolderOpenMessage
+    public abstract class FileOrFolderPathMessage
     {
         public string? Path { get; set; }
-        public FileOrFolderOpenMessage(string? path)
+        public FileOrFolderPathMessage(string? path)
         {
             Path = path;
         }

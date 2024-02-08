@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using PromptPlayground.Messages;
+using PromptPlayground.Services;
 using PromptPlayground.ViewModels.ConfigViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels.LLM;
 using System;
@@ -42,6 +43,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 
     #region Model
     private int modelSelectedIndex = 0;
+    private ProfileService<ConfigViewModel> _profile;
 
     public int ModelSelectedIndex
     {
@@ -93,22 +95,19 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         LLMs.Add(new BaiduConfigViewModel(this));
         LLMs.Add(new OpenAIConfigViewModel(this));
         LLMs.Add(new DashScopeConfigViewModel(this));
+
+        this._profile = new ProfileService<ConfigViewModel>("user.config");
     }
 
     private void LoadConfigFromUserProfile()
     {
-        var profile = GetConfigFilePath();
-        if (File.Exists(profile))
+        var vm = this._profile.Get();
+        if (vm != null)
         {
-            var vm = JsonSerializer.Deserialize<ConfigViewModel>(File.ReadAllText(profile));
-            if (vm != null)
-            {
-                this.AllAttributes = CheckAttributes(vm.AllAttributes);
-                OnPropertyChanged(nameof(AllAttributes));
+            this.AllAttributes = CheckAttributes(vm.AllAttributes);
 
-                this.MaxCount = vm.MaxCount;
-                this.ModelSelectedIndex = vm.ModelSelectedIndex;
-            }
+            this.MaxCount = vm.MaxCount;
+            this.ModelSelectedIndex = vm.ModelSelectedIndex;
         }
     }
     private List<ConfigAttribute> CheckAttributes(List<ConfigAttribute> list)
@@ -125,19 +124,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 
     private void SaveConfigToUserProfile()
     {
-        var profile = GetConfigFilePath();
-        File.WriteAllText(profile, JsonSerializer.Serialize(this));
-    }
-
-    private string GetConfigFilePath(string configFile = "user.config")
-    {
-        var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var folder = Path.Combine(profile, ".prompt_playground");
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-        return Path.Combine(folder, configFile);
+        this._profile.Save(this);
     }
 
     public void SaveConfig()
