@@ -21,6 +21,7 @@
           <Expander HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" IsExpanded="True">
             <Expander.Header>
               <Grid>
+				<i:Icon HorizontalAlignment="Left" Foreground="BlueViolet" Value="mdi-atom"/>
                 <TextBlock HorizontalAlignment="Center" Text="{Binding Title}"/>
                 <WrapPanel HorizontalAlignment="Right">
                   <Button i:Attached.Icon="mdi-plus" Margin="0" Padding="0" Background="Transparent" Command="{Binding AddNewFunctionCommand}" >
@@ -30,7 +31,7 @@
                       </Style>
                     </Button.Styles>
                   </Button>
-					<Button i:Attached.Icon="mdi-close" Margin="0" Padding="0" Background="Transparent" Command="{Binding RemovePluginCommand}" >
+				  <Button i:Attached.Icon="mdi-close" Margin="0" Padding="0" Background="Transparent" Command="{Binding RemovePluginCommand}" >
 						<Button.Styles>
 							<Style Selector="Button:disabled">
 								<Setter Property="IsVisible" Value="False"/>
