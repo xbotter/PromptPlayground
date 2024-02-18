@@ -4,13 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
 		xmlns:local="clr-namespace:PromptPlayground.Converters"
+		xmlns:i18n="clr-namespace:PromptPlayground.i18n"
 		xmlns:i="https://github.com/projektanker/icons.avalonia"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="NaN"
 		 SizeToContent="WidthAndHeight"
 		x:Class="PromptPlayground.Views.ConfigWindow"
 		Icon="/Assets/logo.ico"
 		x:DataType="vm:ConfigViewModel"
-        Title="配置">
+        Title="Configuration">
 	<Design.DataContext>
 		<vm:ConfigViewModel />
 	</Design.DataContext>
@@ -30,16 +31,16 @@
 				</Style>
 			</StackPanel.Styles>
 			<Grid ColumnDefinitions="80,4*" Margin="10,3" MinWidth="420">
-				<TextBlock Text="流式输出" Grid.Column="0"/>
+				<TextBlock Text="{x:Static i18n:Resources.RunStream }" Grid.Column="0"/>
 				<CheckBox IsChecked="{Binding RunStream}" Grid.Column="1"></CheckBox>
 			</Grid>
 			<Grid ColumnDefinitions="80,4*" Margin="10,3" MinWidth="420">
-				<TextBlock Text="生成数量" Grid.Column="0"/>
+				<TextBlock Text="{x:Static i18n:Resources.ResultCount }" Grid.Column="0"/>
 				<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" Grid.Column="1" />
 			</Grid>
 			<Separator/>
 			<Grid ColumnDefinitions="80,4*" Margin="10,3">
-				<TextBlock Text="模型" Grid.Column="0" />
+				<TextBlock Text="{x:Static i18n:Resources.Model }" Grid.Column="0" />
 				<ComboBox
 					Grid.Column="1"
 					ItemsSource="{Binding ModelLists}" SelectedIndex="{Binding ModelSelectedIndex}">

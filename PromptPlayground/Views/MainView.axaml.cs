@@ -26,7 +26,7 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
                                              IRecipient<CopyTextMessage>,
                                              IRecipient<RequestVariablesMessage>
 {
-    private WindowNotificationManager _manager;
+    private WindowNotificationManager? _manager;
 
     private MainViewModel model => (this.DataContext as MainViewModel)!;
     private Window mainWindow => (this.Parent as Window)!;
