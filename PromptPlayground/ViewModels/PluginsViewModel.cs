@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft;
 using PromptPlayground.Messages;
 using PromptPlayground.Services;
@@ -19,7 +20,8 @@ namespace PromptPlayground.ViewModels
         IRecipient<PluginCloseMessage>,
         IRecipient<FunctionOpenMessage>,
         IRecipient<FunctionCreateMessage>,
-        IRecipient<FunctionSavedMessage>
+        IRecipient<FunctionSavedMessage>,
+        IRecipient<RequestMessage<List<PluginViewModel>>>
     {
         private readonly ProfileService<List<string>> profile;
         const string DefaultPlugin = "·______·";
@@ -127,7 +129,12 @@ namespace PromptPlayground.ViewModels
             }
         }
 
-        public PluginViewModel OpenedPlugin { get; set; }
+		public void Receive(RequestMessage<List<PluginViewModel>> message)
+		{
+            message.Reply(Plugins.ToList());
+		}
+
+		public PluginViewModel OpenedPlugin { get; set; }
 
         public ObservableCollection<PluginViewModel> Plugins { get; set; }
 
