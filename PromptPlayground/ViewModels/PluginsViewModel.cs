@@ -129,12 +129,12 @@ namespace PromptPlayground.ViewModels
             }
         }
 
-		public void Receive(RequestMessage<List<PluginViewModel>> message)
-		{
+        public void Receive(RequestMessage<List<PluginViewModel>> message)
+        {
             message.Reply(Plugins.ToList());
-		}
+        }
 
-		public PluginViewModel OpenedPlugin { get; set; }
+        public PluginViewModel OpenedPlugin { get; set; }
 
         public ObservableCollection<PluginViewModel> Plugins { get; set; }
 
