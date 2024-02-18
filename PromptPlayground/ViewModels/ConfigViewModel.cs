@@ -33,6 +33,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
        ConfigAttribute.OpenAIModel,
        ConfigAttribute.DashScopeApiKey,
        ConfigAttribute.DashScopeModel,
+       ConfigAttribute.LlamaModelPath
        #endregion
    ];
 
@@ -95,6 +96,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         LLMs.Add(new BaiduConfigViewModel(this));
         LLMs.Add(new OpenAIConfigViewModel(this));
         LLMs.Add(new DashScopeConfigViewModel(this));
+        LLMs.Add(new LLamaSharpConfigViewModel(this));
 
         this._profile = new ProfileService<ConfigViewModel>("user.config");
     }

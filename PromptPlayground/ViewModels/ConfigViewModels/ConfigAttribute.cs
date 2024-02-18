@@ -74,10 +74,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
         [ConfigType("select", DashScopeModels.QWenTurbo, DashScopeModels.QWenPlus, DashScopeModels.QWenMax, DashScopeModels.QWenLongContext)]
         public const string DashScopeModel = nameof(DashScopeModel);
 
-        public const string QdrantEndpoint = nameof(QdrantEndpoint);
-        public const string QdrantApiKey = nameof(QdrantApiKey);
-
-        public const string VectorSize = nameof(VectorSize);
+        public const string LlamaModelPath = nameof(LlamaModelPath);
         #endregion
     }
 
