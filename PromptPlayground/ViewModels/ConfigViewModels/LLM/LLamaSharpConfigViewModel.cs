@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
 {
-    internal class LLamaSharpConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
+    internal class LlamaSharpConfigViewModel : ConfigViewModelBase, ILLMConfigViewModel
     {
         private string? _modelPath;
         private LLamaWeights? _model;
-        public LLamaSharpConfigViewModel(IConfigAttributesProvider provider) : base(provider)
+        public LlamaSharpConfigViewModel(IConfigAttributesProvider provider) : base(provider)
         {
             RequireAttribute(ConfigAttribute.LlamaModelPath);
         }

@@ -96,7 +96,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         LLMs.Add(new BaiduConfigViewModel(this));
         LLMs.Add(new OpenAIConfigViewModel(this));
         LLMs.Add(new DashScopeConfigViewModel(this));
-        LLMs.Add(new LLamaSharpConfigViewModel(this));
+        LLMs.Add(new LlamaSharpConfigViewModel(this));
 
         this._profile = new ProfileService<ConfigViewModel>("user.config");
     }
