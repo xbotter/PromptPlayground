@@ -23,6 +23,9 @@ namespace PromptPlayground.Services
     public partial class GenerateResult : ViewModelBase
     {
         [ObservableProperty]
+        private string? functionName;
+
+        [ObservableProperty]
         private string text = string.Empty;
 
         [ObservableProperty]

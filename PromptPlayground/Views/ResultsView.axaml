@@ -39,7 +39,15 @@
 									<ScrollViewer IsVisible="{Binding !HasError}">
 										<Grid>
 											<WrapPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-												<Label Classes="Ghost Blue" Theme="{StaticResource TagLabel}"
+												<Label Classes="LightGreen" Theme="{StaticResource TagLabel}"
+													   IsVisible="{Binding FunctionName,Converter={StaticResource NullToVisibilityConverter }}">
+													<Label.Content>
+														<WrapPanel>
+															<TextBlock Text="{Binding FunctionName}"/>
+														</WrapPanel>
+													</Label.Content>
+												</Label>
+												<Label Classes="LightBlue" Theme="{StaticResource TagLabel}"
 													   IsVisible="{Binding TokenUsage,Converter={StaticResource NullToVisibilityConverter }}">
 													<Label.Content>
 														<WrapPanel>
@@ -51,7 +59,7 @@
 														</WrapPanel>
 													</Label.Content>
 												</Label>
-												<Label Classes="Ghost Green" Theme="{StaticResource TagLabel}"
+												<Label Classes="Violet" Theme="{StaticResource TagLabel}"
 													    IsVisible="{Binding Elapsed,Converter={StaticResource NullToVisibilityConverter }}" >
 													<Label.Content>
 														<WrapPanel>
@@ -70,7 +78,7 @@
 												<Button Background="Transparent" Command="{Binding CopyTextCommand}" i:Attached.Icon="mdi-content-paste"/>
 
 											</WrapPanel>
-											<SelectableTextBlock Padding="12,12,12,24" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
+											<SelectableTextBlock Padding="12,12,12,28" Text="{Binding Text}" ScrollViewer.AllowAutoHide="True"
 													   TextWrapping="WrapWithOverflow"
 																 Grid.RowSpan="2"
 																 Grid.Row="1"

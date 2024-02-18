@@ -225,6 +225,7 @@ namespace PromptPlayground.ViewModels
                 var results = Enumerable.Range(0, maxCount)
                     .Select(_ => new GenerateResult()
                     {
+                        FunctionName = this.Name,
                         Text = "🤖"
                     }).ToList();
 

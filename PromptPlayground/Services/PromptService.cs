@@ -112,7 +112,7 @@ namespace PromptPlayground.Services
                     PromptRendered = promptFilter.PromptRendered
                 };
             }
-            catch (KernelException ex)
+            catch (Exception ex)
             {
                 return new GenerateResult()
                 {
@@ -131,6 +131,7 @@ namespace PromptPlayground.Services
         public string? PromptRendered { get; set; }
         public void OnFunctionInvoked(FunctionInvokedContext context)
         {
+
         }
 
         public void OnFunctionInvoking(FunctionInvokingContext context)
