@@ -30,6 +30,10 @@
 				</Style>
 			</StackPanel.Styles>
 			<Grid ColumnDefinitions="80,4*" Margin="10,3" MinWidth="420">
+				<TextBlock Text="流式输出" Grid.Column="0"/>
+				<CheckBox IsChecked="{Binding RunStream}" Grid.Column="1"></CheckBox>
+			</Grid>
+			<Grid ColumnDefinitions="80,4*" Margin="10,3" MinWidth="420">
 				<TextBlock Text="生成数量" Grid.Column="0"/>
 				<NumericUpDown Value="{Binding MaxCount}" FormatString="0" Maximum="100" Minimum="1" Grid.Column="1" />
 			</Grid>

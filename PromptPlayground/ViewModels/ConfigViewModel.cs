@@ -17,7 +17,7 @@ using System.Text.Json.Serialization;
 namespace PromptPlayground.ViewModels;
 
 public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
-                                        IRecipient<ResultCountRequestMessage>,
+                                        IRecipient<ConfigurationRequestMessage>,
                                         IRecipient<RequestMessage<IConfigAttributesProvider>>
 {
     private string[] RequiredAttributes =
@@ -41,6 +41,9 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
 
     [ObservableProperty]
     private int maxCount = 3;
+
+    [ObservableProperty]
+    private bool runStream = false;
 
     #region Model
     private int modelSelectedIndex = 0;
@@ -109,6 +112,7 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
             this.AllAttributes = CheckAttributes(vm.AllAttributes);
 
             this.MaxCount = vm.MaxCount;
+            this.RunStream = vm.RunStream;
             this.ModelSelectedIndex = vm.ModelSelectedIndex;
         }
     }
@@ -139,13 +143,21 @@ public partial class ConfigViewModel : ViewModelBase, IConfigAttributesProvider,
         this.LoadConfigFromUserProfile();
     }
 
-    public void Receive(ResultCountRequestMessage message)
-    {
-        message.Reply(this.MaxCount);
-    }
-
     public void Receive(RequestMessage<IConfigAttributesProvider> message)
     {
         message.Reply(this);
+    }
+
+    public void Receive(ConfigurationRequestMessage request)
+    {
+        switch (request.Config)
+        {
+            case nameof(MaxCount):
+                request.Reply(this.MaxCount.ToString());
+                break;
+            case nameof(RunStream):
+                request.Reply(this.RunStream.ToString());
+                break;
+        }
     }
 }

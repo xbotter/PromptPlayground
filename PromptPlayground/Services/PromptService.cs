@@ -3,8 +3,11 @@ using Microsoft.SemanticKernel.Plugins.Core;
 using PromptPlayground.ViewModels.ConfigViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels.LLM;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +33,35 @@ namespace PromptPlayground.Services
 
 
             return _kernel;
+        }
+
+        public async IAsyncEnumerable<GenerateResult> RunStreamAsync(string prompt, PromptExecutionSettings? config,
+            KernelArguments arguments,
+            [EnumeratorCancellation]
+            CancellationToken cancellationToken = default)
+        {
+            var _kernel = Build();
+            var promptFilter = new KernelFilter();
+            _kernel.PromptFilters.Add(promptFilter);
+            _kernel.FunctionFilters.Add(promptFilter);
+
+            var sw = Stopwatch.StartNew();
+            var func = _kernel.CreateFunctionFromPrompt(prompt, config);
+
+            var results = func.InvokeStreamingAsync(_kernel, arguments, cancellationToken);
+
+            var sb = new StringBuilder();
+            await foreach (var result in results)
+            {
+                sb.Append(result.ToString());
+                yield return new GenerateResult()
+                {
+                    Text = sb.ToString(),
+                    Elapsed = sw.Elapsed,
+                    PromptRendered = promptFilter.PromptRendered
+                };
+            }
+            sw.Stop();
         }
 
         public async Task<GenerateResult> RunAsync(string prompt,

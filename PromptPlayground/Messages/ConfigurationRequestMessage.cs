@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace PromptPlayground.Messages
 {
-    public class ResultCountRequestMessage : RequestMessage<int>
+    public class ConfigurationRequestMessage : RequestMessage<string>
     {
+        public ConfigurationRequestMessage(string config)
+        {
+            Config = config;
+        }
+
+        public string Config { get; }
     }
 }
