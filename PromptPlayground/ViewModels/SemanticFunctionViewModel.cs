@@ -224,26 +224,41 @@ namespace PromptPlayground.ViewModels
                 var results = Enumerable.Range(0, maxCount)
                     .Select(_ => new GenerateResult()
                     {
-                        Text = "......"
+                        Text = "🤖"
                     }).ToList();
 
                 var tasks = results
                      .Select(async r =>
                      {
                          Results.Add(r);
-                         var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
-                         r.PromptRendered = result.PromptRendered;
-                         r.Text = result.Text;
-                         r.Elapsed = result.Elapsed;
-                         r.Error = result.Error;
-                         r.TokenUsage = result.TokenUsage;
+                         if (GetRunStream())
+                         {
+                             var results = service.RunStreamAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                             await foreach (var result in results)
+                             {
+                                 r.PromptRendered = result.PromptRendered;
+                                 r.Text = result.Text;
+                                 r.Elapsed = result.Elapsed;
+                                 r.Error = result.Error;
+                                 r.TokenUsage = result.TokenUsage;
+                             }
+                         }
+                         else
+                         {
+                             var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                             r.PromptRendered = result.PromptRendered;
+                             r.Text = result.Text;
+                             r.Elapsed = result.Elapsed;
+                             r.Error = result.Error;
+                             r.TokenUsage = result.TokenUsage;
+                         }
                      })
                      .ToList();
 
                 await Task.WhenAll(tasks);
 
                 Average.HasResults = true;
-                Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Average(_ => _.Elapsed.TotalMilliseconds));
+                Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Where(_ => _.Elapsed.HasValue).Average(_ => _.Elapsed!.Value.TotalMilliseconds));
                 Average.TokenUsage = new ResultTokenUsage(
                         (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Total ?? 0),
                         (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Prompt ?? 0),
@@ -266,8 +281,16 @@ namespace PromptPlayground.ViewModels
 
         private int GetMaxCount()
         {
-            var result = WeakReferenceMessenger.Default.Send(new ResultCountRequestMessage());
-            return result.Response;
+            var result = WeakReferenceMessenger.Default.Send(new ConfigurationRequestMessage("MaxCount"));
+
+            return int.Parse(result.Response);
+        }
+
+        private bool GetRunStream()
+        {
+            var result = WeakReferenceMessenger.Default.Send(new ConfigurationRequestMessage("RunStream"));
+
+            return bool.Parse(result.Response);
         }
 
         public ObservableCollection<GenerateResult> Results { get; set; } = new();

@@ -39,6 +39,9 @@ namespace PromptPlayground.ViewModels.ConfigViewModels.LLM
             {
                 "BLOOMZ_7B" => ModelEndpoints.BLOOMZ_7B,
                 "Ernie-Bot-turbo" => ModelEndpoints.ERNIE_Bot_Turbo,
+                "Ernie-Bot-4" => ModelEndpoints.ERNIE_Bot_4,
+                "Ernie-Bot 8k" => ModelEndpoints.ERNIE_Bot_8K,
+                "Ernie-Bot-speed" => ModelEndpoints.ERNIE_Bot_Speed,
                 _ => ModelEndpoints.ERNIE_Bot
             };
     }

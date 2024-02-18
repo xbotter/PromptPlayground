@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PromptPlayground.ViewModels;
 using System;
+using System.Collections.Generic;
 
 namespace PromptPlayground.Services
 {
@@ -25,7 +26,7 @@ namespace PromptPlayground.Services
         private string text = string.Empty;
 
         [ObservableProperty]
-        private TimeSpan elapsed;
+        private TimeSpan? elapsed;
 
         [ObservableProperty]
         private string? error;

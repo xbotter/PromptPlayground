@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using DashScope;
+using ERNIE_Bot.SDK;
 using Humanizer;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
 
         public const string BaiduClientId = nameof(BaiduClientId);
         public const string BaiduSecret = nameof(BaiduSecret);
-        [ConfigType("select", "Ernie-Bot", "Ernie-Bot-turbo", "BLOOMZ_7B")]
+        [ConfigType("select", "Ernie-Bot", "Ernie-Bot-turbo", "Ernie-Bot-4", "Ernie-Bot 8k", "Ernie-Bot-speed", "BLOOMZ_7B")]
         public const string BaiduModel = nameof(BaiduModel);
 
         public const string OpenAIApiKey = nameof(OpenAIApiKey);

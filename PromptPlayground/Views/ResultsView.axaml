@@ -39,7 +39,8 @@
 									<ScrollViewer IsVisible="{Binding !HasError}">
 										<Grid>
 											<WrapPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-												<Label Classes="Ghost Blue" Theme="{StaticResource TagLabel}">
+												<Label Classes="Ghost Blue" Theme="{StaticResource TagLabel}"
+													   IsVisible="{Binding TokenUsage,Converter={StaticResource NullToVisibilityConverter }}">
 													<Label.Content>
 														<WrapPanel>
 															<TextBlock Text="{Binding TokenUsage.Total}"/>
@@ -50,11 +51,12 @@
 														</WrapPanel>
 													</Label.Content>
 												</Label>
-												<Label Classes="Ghost Green" Theme="{StaticResource TagLabel}">
+												<Label Classes="Ghost Green" Theme="{StaticResource TagLabel}"
+													    IsVisible="{Binding Elapsed,Converter={StaticResource NullToVisibilityConverter }}" >
 													<Label.Content>
 														<WrapPanel>
 															<i:Icon Value="mdi-clock-time-four-outline"/>
-															<TextBlock Text="{Binding Elapsed.TotalSeconds,StringFormat={}{0:0.000}s}"/>
+															<TextBlock Text="{Binding Elapsed.Value.TotalSeconds,StringFormat={}{0:0.000}s}"/>
 														</WrapPanel>
 													</Label.Content>
 												</Label>
