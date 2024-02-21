@@ -257,6 +257,26 @@ namespace PromptPlayground.ViewModels
 
                 await Task.WhenAll(tasks);
 
+                var db = DbStore.NewScoped;
+
+                foreach (var result in results)
+                {
+                    if (!result.HasError)
+                    {
+                        db.GenerationResultStores
+                            .Add(new Services.Models.GenerationResultStore()
+                            {
+                                FunctionPath = this.Folder,
+                                Text = result.Text,
+                                RenderedPrompt = result.PromptRendered!,
+                                Usage = result.TokenUsage,
+                                CreatedAt = DateTime.Now,
+                                Elapsed = result.Elapsed.Value
+                            });
+                    }
+                }
+                await db.SaveChangesAsync();
+
                 Average.HasResults = true;
                 Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Where(_ => _.Elapsed.HasValue).Average(_ => _.Elapsed!.Value.TotalMilliseconds));
                 Average.TokenUsage = new ResultTokenUsage(
