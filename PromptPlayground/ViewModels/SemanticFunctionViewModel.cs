@@ -318,5 +318,12 @@ namespace PromptPlayground.ViewModels
         [ObservableProperty]
         private AverageResult average = new AverageResult();
 
+
+        [RelayCommand(AllowConcurrentExecutions = false)]
+        public async Task ShowHistoryAsync()
+        {
+
+        }
+
     }
 }

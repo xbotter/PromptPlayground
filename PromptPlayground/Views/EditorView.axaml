@@ -58,6 +58,7 @@
 			</TabItem>
 		</TabControl>
 		<WrapPanel HorizontalAlignment="Right">
+			<Button Classes="MainBtn" Click="ShowHistoryWindow" IsVisible="True" i:Attached.Icon="mdi-history"></Button>
 			<Button IsVisible="False" Command="{Binding GenerateResultCommand}" HotKey="Ctrl+Enter"/>
 			<Button Classes="MainBtn DisableHidden" Command="{Binding GenerateResultCommand}" i:Attached.Icon="mdi-play" HotKey="Ctrl+G" Grid.Column="1"/>
 			<Button Classes="MainBtn DisableHidden" Command="{Binding GenerateResultCancelCommand}" i:Attached.Icon="mdi-cancel" HotKey="Ctrl+C" Grid.Column="1"/>

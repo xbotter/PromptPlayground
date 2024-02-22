@@ -31,4 +31,16 @@ public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessag
     {
         this.DataContext = message.Function;
     }
+
+
+    private void ShowHistoryWindow(object? sender, RoutedEventArgs e)
+    {
+        var window = new HistoryWindow()
+        {
+            ShowInTaskbar = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        window.Show();
+    }
+
 }
