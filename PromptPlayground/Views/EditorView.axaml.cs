@@ -35,7 +35,7 @@ public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessag
 
     private void ShowHistoryWindow(object? sender, RoutedEventArgs e)
     {
-        var window = new HistoryWindow()
+        var window = new HistoryWindow(this.DataContext as SemanticFunctionViewModel)
         {
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
