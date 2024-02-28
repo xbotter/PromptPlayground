@@ -30,9 +30,9 @@ public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessag
         WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
-    public void Receive(FunctionSelectedMessage message)
+    protected override void OnInitialized()
     {
-        this.DataContext = message.Function;
+        base.OnInitialized();
 
         var _editor = this.FindControl<TextEditor>("prompt");
 
@@ -41,6 +41,10 @@ public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessag
         var _textMateInstallation = _editor.InstallTextMate(_registryOptions);
 
         _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".handlebars").Id));
+    }
 
+    public void Receive(FunctionSelectedMessage message)
+    {
+        this.DataContext = message.Function;
     }
 }
