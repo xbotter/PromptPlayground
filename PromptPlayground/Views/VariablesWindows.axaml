@@ -13,38 +13,43 @@
 		WindowStartupLocation="CenterOwner"
         Title="变量"
 		>
-  <Design.DataContext>
-    <vm:VariablesViewModel/>
-  </Design.DataContext>
-  <StackPanel>
-    <StackPanel>
-      <ItemsControl ItemsSource="{Binding Variables}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <Grid ColumnDefinitions="100,*" Margin="10">
-              <Label Padding="0,4" HorizontalAlignment="Left"
-                     ToolTip.Tip="{Binding  Name}" Margin="10,0" FontSize="16" Content="{Binding Name}" MinWidth="50" Grid.Column="0"/>
-              <TextBox AcceptsReturn="True" Text="{Binding Value}" MinWidth="80" Grid.Column="1"/>
-            </Grid>
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </StackPanel>
-    <WrapPanel Margin="10" HorizontalAlignment="Center">
-      <WrapPanel.Styles>
-        <Style Selector="Button">
-          <Setter Property="Padding" Value="30,10"/>
-          <Setter Property="Margin" Value="30,10"/>
-          <Setter Property="FontSize" Value="20"/>
-          <Setter Property="Background" Value="Transparent"/>
-          <Setter Property="BorderBrush" Value="LightGray"/>
-          <Setter Property="BorderThickness" Value="1"/>
-          <Setter Property="CornerRadius" Value="6"/>
-        </Style>
-      </WrapPanel.Styles>
-      <Button  i:Attached.Icon="mdi-run" HotKey="Ctrl+Enter" Foreground="#FF3BB346"  Click="OnContinuedClick" />
-      <Button  i:Attached.Icon="mdi-cancel" Foreground="Red" HotKey="Ctrl+Z"  Click="OnCanceledClick"/>
-    </WrapPanel>
-  </StackPanel>
+	<Design.DataContext>
+		<vm:VariablesViewModel/>
+	</Design.DataContext>
+	<StackPanel>
+		<StackPanel>
+			<ItemsControl ItemsSource="{Binding Variables}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Grid ColumnDefinitions="100,*" Margin="10">
+							<Label Padding="0,4" HorizontalAlignment="Left"
+								   ToolTip.Tip="{Binding  Name}" Margin="10,0" FontSize="16" Content="{Binding Name}" MinWidth="50" Grid.Column="0"/>
+							<Label Padding="0,4" HorizontalAlignment="Left"
+															  Margin="0,0" FontSize="16" Content="*"
+															  IsVisible="{Binding IsRequired}"
+															   MinWidth="50" Grid.Column="0"/>
+							<TextBox AcceptsReturn="True" Text="{Binding Value}" MinWidth="80" Grid.Column="1"/>
+
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</StackPanel>
+		<WrapPanel Margin="10" HorizontalAlignment="Center">
+			<WrapPanel.Styles>
+				<Style Selector="Button">
+					<Setter Property="Padding" Value="30,10"/>
+					<Setter Property="Margin" Value="30,10"/>
+					<Setter Property="FontSize" Value="20"/>
+					<Setter Property="Background" Value="Transparent"/>
+					<Setter Property="BorderBrush" Value="LightGray"/>
+					<Setter Property="BorderThickness" Value="1"/>
+					<Setter Property="CornerRadius" Value="6"/>
+				</Style>
+			</WrapPanel.Styles>
+			<Button  i:Attached.Icon="mdi-run" HotKey="Ctrl+Enter" Foreground="#FF3BB346"  Click="OnContinuedClick" />
+			<Button  i:Attached.Icon="mdi-cancel" Foreground="Red" HotKey="Ctrl+Z"  Click="OnCanceledClick"/>
+		</WrapPanel>
+	</StackPanel>
 
 </Window>

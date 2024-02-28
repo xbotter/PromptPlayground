@@ -43,7 +43,7 @@ namespace PromptPlayground.ViewModels
         {
             foreach (var var in Variables)
             {
-                if (string.IsNullOrWhiteSpace(var.Value))
+                if (var.IsRequired && string.IsNullOrWhiteSpace(var.Value))
                 {
                     return false;
                 }
@@ -60,5 +60,6 @@ namespace PromptPlayground.ViewModels
         public string Name { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;
         public string? DefaultValue { get; set; }
+        public bool IsRequired { get; set; } = false;
     }
 }
