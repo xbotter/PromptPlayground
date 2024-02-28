@@ -38,7 +38,7 @@
 				<TabItem.Header>
 					<i:Icon Value="mdi-file-edit-outline"/>
 				</TabItem.Header>
-				<ae:TextEditor Classes="editor">
+				<ae:TextEditor Classes="editor" Name="prompt">
 					<it:Interaction.Behaviors>
 						<behaviors:DocumentTextBindingBehavior
 							Text="{Binding Prompt, Mode=TwoWay}"

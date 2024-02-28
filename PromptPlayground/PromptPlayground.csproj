@@ -29,6 +29,7 @@
 		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.9" />
 		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.9" />
 		<PackageReference Include="Avalonia.Xaml.Interactions" Version="11.0.6" />
+		<PackageReference Include="AvaloniaEdit.TextMate" Version="11.0.6" />
 		<PackageReference Include="Bogus" Version="35.4.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="DashScope.SemanticKernel" Version="0.8.1" />
@@ -37,14 +38,15 @@
 		<PackageReference Include="LLamaSharp.semantic-kernel" Version="0.10.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2" />
-		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.4.0-alpha" />
+		<PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.5.0-alpha" />
+		<PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.5.0" />
 		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.0.1" />
 		<PackageReference Include="Semi.Avalonia" Version="11.0.7" />
 
 		<!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
 		<PackageReference Include="ERNIE-Bot.SemanticKernel" Version="0.14.1" />
 		<PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
-		<PackageReference Include="Microsoft.SemanticKernel" Version="1.4.0" />
+		<PackageReference Include="Microsoft.SemanticKernel" Version="1.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>

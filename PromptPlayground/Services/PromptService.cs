@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Core;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using PromptPlayground.ViewModels.ConfigViewModels;
 using PromptPlayground.ViewModels.ConfigViewModels.LLM;
 using System;
@@ -35,7 +36,18 @@ namespace PromptPlayground.Services
             return _kernel;
         }
 
-        public async IAsyncEnumerable<GenerateResult> RunStreamAsync(string prompt, PromptExecutionSettings? config,
+        private IPromptTemplateFactory? CreatePromptTemplateFactory(string templateFormat)
+        {
+            return templateFormat switch
+            {
+                "handlebars" => new HandlebarsPromptTemplateFactory(),
+                _ => null
+            };
+        }
+
+        public async IAsyncEnumerable<GenerateResult> RunStreamAsync(string prompt,
+            string templateFormat,
+            PromptExecutionSettings? config,
             KernelArguments arguments,
             [EnumeratorCancellation]
             CancellationToken cancellationToken = default)
@@ -45,8 +57,10 @@ namespace PromptPlayground.Services
             _kernel.PromptFilters.Add(promptFilter);
             _kernel.FunctionFilters.Add(promptFilter);
 
+            var templateFactory = CreatePromptTemplateFactory(templateFormat);
+
             var sw = Stopwatch.StartNew();
-            var func = _kernel.CreateFunctionFromPrompt(prompt, config);
+            var func = _kernel.CreateFunctionFromPrompt(prompt, config, templateFormat: templateFormat, promptTemplateFactory: templateFactory);
 
             var results = func.InvokeStreamingAsync(_kernel, arguments, cancellationToken);
 
@@ -65,6 +79,7 @@ namespace PromptPlayground.Services
         }
 
         public async Task<GenerateResult> RunAsync(string prompt,
+            string templateFormat,
             PromptExecutionSettings? config,
             KernelArguments arguments,
             CancellationToken cancellationToken = default)
@@ -74,8 +89,10 @@ namespace PromptPlayground.Services
             _kernel.PromptFilters.Add(promptFilter);
             _kernel.FunctionFilters.Add(promptFilter);
 
+            var templateFactory = CreatePromptTemplateFactory(templateFormat);
+
             var sw = Stopwatch.StartNew();
-            var func = _kernel.CreateFunctionFromPrompt(prompt, config);
+            var func = _kernel.CreateFunctionFromPrompt(prompt, config, templateFormat: templateFormat, promptTemplateFactory: templateFactory);
 
             var result = await func.InvokeAsync(_kernel, arguments, cancellationToken);
             sw.Stop();

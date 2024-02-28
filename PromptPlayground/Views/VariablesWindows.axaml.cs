@@ -16,7 +16,7 @@ public partial class VariablesWindows : Window
     {
         if (!this.model.IsCanceled)
         {
-            if (!(this.DataContext as VariablesViewModel)!.Configured())
+            if (!e.IsProgrammatic)
             {
                 this.model.IsCanceled = true;
             }

@@ -30,6 +30,7 @@ namespace PromptPlayground.ViewModels
             {
                 schema = 1,
                 description = "",
+                template_format = "semantic_kernel",
                 input_variables = new List<InputVariable>()
                 {
                     new InputVariable()
@@ -118,7 +119,7 @@ namespace PromptPlayground.ViewModels
             return other?.Folder == this.Folder && Directory.Exists(this.Folder);
         }
 
-        private PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config);
+        public PromptTemplateConfig PromptConfig => PromptTemplateConfig.FromJson(Config);
 
         public List<InputVariable> InputVariables
         {
@@ -200,7 +201,8 @@ namespace PromptPlayground.ViewModels
                     var variables = varBlocks.Select(_ => new Variable()
                     {
                         Name = _.Name.TrimStart('$'),
-                        DefaultValue = _.Default?.ToString()
+                        DefaultValue = _.Default?.ToString(),
+                        IsRequired = _.IsRequired
                     }).Distinct().ToList();
 
                     var result = await WeakReferenceMessenger.Default.Send(new RequestVariablesMessage(variables));
@@ -233,7 +235,7 @@ namespace PromptPlayground.ViewModels
                          Results.Add(r);
                          if (GetRunStream())
                          {
-                             var results = service.RunStreamAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                             var results = service.RunStreamAsync(Prompt, PromptConfig.TemplateFormat, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
                              await foreach (var result in results)
                              {
                                  r.PromptRendered = result.PromptRendered;
@@ -245,7 +247,7 @@ namespace PromptPlayground.ViewModels
                          }
                          else
                          {
-                             var result = await service.RunAsync(Prompt, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                             var result = await service.RunAsync(Prompt, PromptConfig.TemplateFormat, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
                              r.PromptRendered = result.PromptRendered;
                              r.Text = result.Text;
                              r.Elapsed = result.Elapsed;
