@@ -34,16 +34,13 @@ public partial class EditorView : UserControl, IRecipient<FunctionSelectedMessag
     {
         this.DataContext = message.Function;
 
-        if (message.Function.PromptConfig.TemplateFormat == "handlebars")
-        {
-            var _editor = this.FindControl<TextEditor>("prompt");
+        var _editor = this.FindControl<TextEditor>("prompt");
 
-            var _registryOptions = new RegistryOptions(ThemeName.LightPlus);
+        var _registryOptions = new RegistryOptions(ThemeName.LightPlus);
 
-            var _textMateInstallation = _editor.InstallTextMate(_registryOptions);
+        var _textMateInstallation = _editor.InstallTextMate(_registryOptions);
 
-            _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".handlebars").Id));
+        _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".handlebars").Id));
 
-        }
     }
 }
