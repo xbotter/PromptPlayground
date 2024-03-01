@@ -30,7 +30,7 @@ namespace PromptPlayground.ViewModels
             {
                 schema = 1,
                 description = "",
-                template_format = "semantic_kernel",
+                template_format = "semantic-kernel",
                 input_variables = new List<InputVariable>()
                 {
                     new InputVariable()
