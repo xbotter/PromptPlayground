@@ -16,6 +16,7 @@ namespace PromptPlayground.Services
 {
     public class PromptService
     {
+        private readonly TimeProvider _timeProvider = TimeProvider.System;
         private readonly ILLMConfigViewModel model;
 
         public PromptService(IConfigAttributesProvider provider)
@@ -59,7 +60,7 @@ namespace PromptPlayground.Services
 
             var templateFactory = CreatePromptTemplateFactory(templateFormat);
 
-            var sw = Stopwatch.StartNew();
+            var startTimestamp = _timeProvider.GetTimestamp();
             var func = _kernel.CreateFunctionFromPrompt(prompt, config, templateFormat: templateFormat, promptTemplateFactory: templateFactory);
 
             var results = func.InvokeStreamingAsync(_kernel, arguments, cancellationToken);
@@ -71,11 +72,10 @@ namespace PromptPlayground.Services
                 yield return new GenerateResult()
                 {
                     Text = sb.ToString(),
-                    Elapsed = sw.Elapsed,
+                    Elapsed = _timeProvider.GetElapsedTime(startTimestamp),
                     PromptRendered = promptFilter.PromptRendered
                 };
             }
-            sw.Stop();
         }
 
         public async Task<GenerateResult> RunAsync(string prompt,
@@ -91,11 +91,11 @@ namespace PromptPlayground.Services
 
             var templateFactory = CreatePromptTemplateFactory(templateFormat);
 
-            var sw = Stopwatch.StartNew();
+            var startTimestamp = _timeProvider.GetTimestamp();
             var func = _kernel.CreateFunctionFromPrompt(prompt, config, templateFormat: templateFormat, promptTemplateFactory: templateFactory);
 
             var result = await func.InvokeAsync(_kernel, arguments, cancellationToken);
-            sw.Stop();
+            var elapsed = _timeProvider.GetElapsedTime(startTimestamp);
             try
             {
                 var usage = model.GetUsage(result);
@@ -103,7 +103,7 @@ namespace PromptPlayground.Services
                 {
                     Text = result.GetValue<string>() ?? "",
                     TokenUsage = usage,
-                    Elapsed = sw.Elapsed,
+                    Elapsed = elapsed,
                     PromptRendered = promptFilter.PromptRendered
                 };
             }
@@ -112,7 +112,7 @@ namespace PromptPlayground.Services
                 return new GenerateResult()
                 {
                     Text = ex.Message,
-                    Elapsed = sw.Elapsed,
+                    Elapsed = elapsed,
                     Error = ex.Message,
                 };
             }
