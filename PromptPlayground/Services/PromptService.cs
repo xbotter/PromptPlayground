@@ -64,9 +64,8 @@ namespace PromptPlayground.Services
             var func = _kernel.CreateFunctionFromPrompt(prompt, config, templateFormat: templateFormat, promptTemplateFactory: templateFactory);
 
             var results = func.InvokeStreamingAsync(_kernel, arguments, cancellationToken);
-
             var sb = new StringBuilder();
-            await foreach (var result in results)
+            await foreach (var result in results.ConfigureAwait(false))
             {
                 sb.Append(result.ToString());
                 yield return new GenerateResult()

@@ -235,7 +235,8 @@ namespace PromptPlayground.ViewModels
                          Results.Add(r);
                          if (GetRunStream())
                          {
-                             var results = service.RunStreamAsync(Prompt, PromptConfig.TemplateFormat, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken);
+                             var results = service.RunStreamAsync(Prompt, PromptConfig.TemplateFormat, PromptConfig.DefaultExecutionSettings, new KernelArguments(arguments), cancellationToken)
+                                                 .ConfigureAwait(false);
                              await foreach (var result in results)
                              {
                                  r.PromptRendered = result.PromptRendered;
@@ -257,35 +258,35 @@ namespace PromptPlayground.ViewModels
                      })
                      .ToList();
 
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks).ConfigureAwait(false);
 
-                var db = DbStore.NewScoped;
+                //var db = DbStore.NewScoped;
 
-                foreach (var result in results)
-                {
-                    if (!result.HasError)
-                    {
-                        db.GenerationResultStores
-                            .Add(new Services.Models.GenerationResultStore()
-                            {
-                                FunctionPath = this.Folder,
-                                Text = result.Text,
-                                RenderedPrompt = result.PromptRendered!,
-                                Usage = result.TokenUsage,
-                                CreatedAt = DateTime.Now,
-                                Elapsed = result.Elapsed.Value
-                            });
-                    }
-                }
-                await db.SaveChangesAsync();
+                //foreach (var result in results)
+                //{
+                //    if (!result.HasError)
+                //    {
+                //        db.GenerationResultStores
+                //            .Add(new Services.Models.GenerationResultStore()
+                //            {
+                //                FunctionPath = this.Folder,
+                //                Text = result.Text,
+                //                RenderedPrompt = result.PromptRendered!,
+                //                Usage = result.TokenUsage,
+                //                CreatedAt = DateTime.Now,
+                //                Elapsed = result.Elapsed.Value
+                //            });
+                //    }
+                //}
+                //await db.SaveChangesAsync();
 
-                Average.HasResults = true;
-                Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Where(_ => _.Elapsed.HasValue).Average(_ => _.Elapsed!.Value.TotalMilliseconds));
-                Average.TokenUsage = new ResultTokenUsage(
-                        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Total ?? 0),
-                        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Prompt ?? 0),
-                        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Completion ?? 0)
-                        );
+                //Average.HasResults = true;
+                //Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Where(_ => _.Elapsed.HasValue).Average(_ => _.Elapsed!.Value.TotalMilliseconds));
+                //Average.TokenUsage = new ResultTokenUsage(
+                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Total ?? 0),
+                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Prompt ?? 0),
+                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Completion ?? 0)
+                //        );
             }
             catch (OperationCanceledException ex)
             {
@@ -300,6 +301,8 @@ namespace PromptPlayground.ViewModels
                 this.IsGenerating = false;
             }
         }
+
+
 
         private int GetMaxCount()
         {
