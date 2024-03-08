@@ -5,7 +5,7 @@
         mc:Ignorable="d"
         MinWidth="360"
 		SizeToContent="WidthAndHeight"
-		xmlns:vm="clr-namespace:PromptPlayground.ViewModels;assembly=PromptPlayground"
+		xmlns:vm="clr-namespace:PromptPlayground.ViewModels"
 		xmlns:i="https://github.com/projektanker/icons.avalonia"
     x:Class="PromptPlayground.Views.VariablesWindows"
 		x:DataType="vm:VariablesViewModel"

@@ -3,8 +3,7 @@ using Projektanker.Icons.Avalonia.MaterialDesign;
 using Projektanker.Icons.Avalonia;
 using System;
 
-namespace PromptPlayground.Desktop;
-
+namespace PromptPlayground;
 class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
