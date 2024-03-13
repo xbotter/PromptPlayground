@@ -258,35 +258,7 @@ namespace PromptPlayground.ViewModels
                      })
                      .ToList();
 
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-
-                //var db = DbStore.NewScoped;
-
-                //foreach (var result in results)
-                //{
-                //    if (!result.HasError)
-                //    {
-                //        db.GenerationResultStores
-                //            .Add(new Services.Models.GenerationResultStore()
-                //            {
-                //                FunctionPath = this.Folder,
-                //                Text = result.Text,
-                //                RenderedPrompt = result.PromptRendered!,
-                //                Usage = result.TokenUsage,
-                //                CreatedAt = DateTime.Now,
-                //                Elapsed = result.Elapsed.Value
-                //            });
-                //    }
-                //}
-                //await db.SaveChangesAsync();
-
-                //Average.HasResults = true;
-                //Average.Elapsed = TimeSpan.FromMilliseconds(Results.Where(_ => !_.HasError).Where(_ => _.Elapsed.HasValue).Average(_ => _.Elapsed!.Value.TotalMilliseconds));
-                //Average.TokenUsage = new ResultTokenUsage(
-                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Total ?? 0),
-                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Prompt ?? 0),
-                //        (int)Results.Where(_ => !_.HasError).Average(_ => _.TokenUsage?.Completion ?? 0)
-                //        );
+                await Task.WhenAll(tasks);
             }
             catch (OperationCanceledException ex)
             {
@@ -294,6 +266,7 @@ namespace PromptPlayground.ViewModels
             }
             catch (Exception ex)
             {
+             
                 WeakReferenceMessenger.Default.Send(new NotificationMessage("Error", ex.Message, NotificationMessage.NotificationType.Warning));
             }
             finally
