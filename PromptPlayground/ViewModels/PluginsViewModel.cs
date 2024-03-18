@@ -27,7 +27,7 @@ namespace PromptPlayground.ViewModels
         public PluginsViewModel()
         {
             this.profile = new ProfileService<List<string>>("openedPlugins.json");
-            Plugins = new ObservableCollection<PluginViewModel>();
+            Plugins = [];
             OpenedPlugin = new PluginViewModel(DefaultPlugin);
             Plugins.Add(OpenedPlugin);
 
@@ -46,7 +46,7 @@ namespace PromptPlayground.ViewModels
         }
 
         [RelayCommand]
-        public void FunctionSelected(SemanticFunctionViewModel viewModel)
+        public static void FunctionSelected(SemanticFunctionViewModel viewModel)
         {
             WeakReferenceMessenger.Default.Send(new FunctionSelectedMessage(viewModel));
         }

@@ -37,7 +37,7 @@ namespace PromptPlayground.Services
             return _kernel;
         }
 
-        private IPromptTemplateFactory? CreatePromptTemplateFactory(string templateFormat)
+        private static IPromptTemplateFactory? CreatePromptTemplateFactory(string templateFormat)
         {
             return templateFormat switch
             {
@@ -117,7 +117,7 @@ namespace PromptPlayground.Services
             }
         }
 
-        public KernelArguments CreateArguments() => new KernelArguments();
+        public static KernelArguments CreateArguments() => [];
     }
 
     public class KernelFilter : IPromptFilter, IFunctionFilter

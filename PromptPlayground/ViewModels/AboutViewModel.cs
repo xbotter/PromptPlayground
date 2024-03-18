@@ -32,7 +32,7 @@ namespace PromptPlayground.ViewModels
         [RelayCommand]
         public void CheckVersion() => OpenLink(ReleaseLink);
 
-        public void OpenLink(string link)
+        public static void OpenLink(string link)
         {
             var psi = new ProcessStartInfo()
             {

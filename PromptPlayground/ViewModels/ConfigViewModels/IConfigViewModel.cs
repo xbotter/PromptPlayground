@@ -20,7 +20,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
     public abstract class ConfigViewModelBase : ViewModelBase, IConfigViewModel
     {
         protected readonly IConfigAttributesProvider provider;
-        private List<string> _requiredAttributes = new();
+        private List<string> _requiredAttributes = [];
 
         public ConfigViewModelBase(IConfigAttributesProvider provider)
         {
