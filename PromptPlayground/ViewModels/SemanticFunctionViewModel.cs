@@ -24,6 +24,11 @@ namespace PromptPlayground.ViewModels
     public partial class SemanticFunctionViewModel : ViewModelBase, IEquatable<SemanticFunctionViewModel>
     {
         #region static
+        static readonly JsonSerializerOptions _options = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
         static string DefaultConfig()
         {
             return JsonSerializer.Serialize(new
@@ -33,7 +38,7 @@ namespace PromptPlayground.ViewModels
                 template_format = "semantic-kernel",
                 input_variables = new List<InputVariable>()
                 {
-                    new InputVariable()
+                    new()
                     {
                         Name = "input",
                         Default = "",
@@ -45,11 +50,7 @@ namespace PromptPlayground.ViewModels
                 {
                     @default = new { }
                 }
-            }, new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-            });
+            }, _options);
         }
 
         public static SemanticFunctionViewModel Create(string folder) => new(folder);
@@ -194,7 +195,7 @@ namespace PromptPlayground.ViewModels
                 var configProvider = WeakReferenceMessenger.Default.Send(new RequestMessage<IConfigAttributesProvider>());
                 var service = new PromptService(configProvider.Response);
 
-                var arguments = service.CreateArguments();
+                var arguments = PromptService.CreateArguments();
                 var varBlocks = this.InputVariables;
                 if (varBlocks.Count > 0)
                 {
@@ -266,7 +267,7 @@ namespace PromptPlayground.ViewModels
             }
             catch (Exception ex)
             {
-             
+
                 WeakReferenceMessenger.Default.Send(new NotificationMessage("Error", ex.Message, NotificationMessage.NotificationType.Warning));
             }
             finally
@@ -277,24 +278,33 @@ namespace PromptPlayground.ViewModels
 
 
 
-        private int GetMaxCount()
+        private static int GetMaxCount()
         {
             var result = WeakReferenceMessenger.Default.Send(new ConfigurationRequestMessage("MaxCount"));
 
             return int.Parse(result.Response);
         }
 
-        private bool GetRunStream()
+        private static bool GetRunStream()
         {
             var result = WeakReferenceMessenger.Default.Send(new ConfigurationRequestMessage("RunStream"));
 
             return bool.Parse(result.Response);
         }
 
-        public ObservableCollection<GenerateResult> Results { get; set; } = new();
+        public ObservableCollection<GenerateResult> Results { get; set; } = [];
 
         [ObservableProperty]
-        private AverageResult average = new AverageResult();
+        private AverageResult average = new();
 
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as SemanticFunctionViewModel);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Folder.GetHashCode();
+        }
     }
 }

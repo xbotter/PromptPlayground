@@ -6,7 +6,7 @@ namespace PromptPlayground.Views;
 
 public partial class VariablesWindows : Window
 {
-    private VariablesViewModel model => (this.DataContext as VariablesViewModel)!;
+    private VariablesViewModel Model => (this.DataContext as VariablesViewModel)!;
     public VariablesWindows()
     {
         InitializeComponent();
@@ -14,18 +14,18 @@ public partial class VariablesWindows : Window
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        if (!this.model.IsCanceled)
+        if (!this.Model.IsCanceled)
         {
             if (!e.IsProgrammatic)
             {
-                this.model.IsCanceled = true;
+                this.Model.IsCanceled = true;
             }
         }
     }
 
     public void OnCanceledClick(object sender, RoutedEventArgs e)
     {
-        this.model.IsCanceled = true;
+        this.Model.IsCanceled = true;
         this.Close();
     }
     public void OnContinuedClick(object sender, RoutedEventArgs e)

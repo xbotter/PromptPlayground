@@ -11,7 +11,7 @@ namespace PromptPlayground.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    IMessenger Messenger => WeakReferenceMessenger.Default;
+    static IMessenger Messenger => WeakReferenceMessenger.Default;
 
     public ConfigViewModel Config { get; set; } = new(true);
 
@@ -26,7 +26,7 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void NewFile()
+    public static void NewFile()
     {
         WeakReferenceMessenger.Default.Send(new FunctionCreateMessage());
     }
@@ -34,7 +34,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task OpenFileAsync()
     {
-        var response = await this.Messenger.Send<RequestFileOpen>();
+        var response = await Messenger.Send<RequestFileOpen>();
 
         if (!string.IsNullOrWhiteSpace(response))
         {
@@ -45,7 +45,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public async Task OpenFolderAsync()
     {
-        var response = await this.Messenger.Send<RequestFolderOpen>();
+        var response = await Messenger.Send<RequestFolderOpen>();
 
         if (!string.IsNullOrWhiteSpace(response))
         {

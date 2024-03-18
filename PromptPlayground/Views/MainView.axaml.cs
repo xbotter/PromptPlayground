@@ -26,10 +26,10 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
                                              IRecipient<CopyTextMessage>,
                                              IRecipient<RequestVariablesMessage>
 {
-    private WindowNotificationManager _manager;
+    private WindowNotificationManager? _manager;
 
-    private MainViewModel model => (this.DataContext as MainViewModel)!;
-    private Window mainWindow => (this.Parent as Window)!;
+    private MainViewModel Model => (this.DataContext as MainViewModel)!;
+    private Window MainWindow => (this.Parent as Window)!;
 
     public MainView()
     {
@@ -54,23 +54,23 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
     {
         var aboutWindow = new AboutView()
         {
-            DataContext = model.About,
+            DataContext = Model.About,
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
-        aboutWindow.Show(mainWindow);
+        aboutWindow.Show(MainWindow);
     }
 
     private void OnConfigClick(object sender, RoutedEventArgs e)
     {
         var configWindow = new ConfigWindow()
         {
-            DataContext = model.Config,
+            DataContext = Model.Config,
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
-        configWindow.ShowDialog(mainWindow);
+        configWindow.ShowDialog(MainWindow);
     }
 
     private async Task<string?> FolderOpenAsync()
@@ -79,7 +79,7 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
         {
             AllowMultiple = false
         });
-        var folder = folders.FirstOrDefault()?.TryGetLocalPath();
+        var folder = folders[0]?.TryGetLocalPath();
         return folder;
     }
     private async Task<string?> FileOpenAsync()
@@ -87,15 +87,15 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
         var file = await TopLevel.GetTopLevel(this)!.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             AllowMultiple = false,
-            FileTypeFilter = new FilePickerFileType[]
-            {
+            FileTypeFilter =
+            [
                 new FilePickerFileType("sk prompt")
                 {
-                    Patterns = new string[] { Constants.SkPrompt }
+                    Patterns = [Constants.SkPrompt]
                 }
-            }
+            ]
         });
-        var filePath = file.FirstOrDefault()?.TryGetLocalPath();
+        var filePath = file[0]?.TryGetLocalPath();
         return filePath;
     }
 
@@ -151,7 +151,7 @@ public partial class MainView : UserControl, IRecipient<RequestFolderOpen>,
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
-        await variableWindows.ShowDialog(mainWindow);
+        await variableWindows.ShowDialog(MainWindow);
         return variablesVm;
     }
 }

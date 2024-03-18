@@ -36,7 +36,7 @@ namespace PromptPlayground.ViewModels.ConfigViewModels
         {
             Name = name;
             this.Type = _fields[name].Type;
-            this.SelectValues = _fields[name].SelectValues?.ToList() ?? new List<string>();
+            this.SelectValues = _fields[name].SelectValues?.ToList() ?? [];
         }
         private string _value = string.Empty;
         [JsonIgnore]

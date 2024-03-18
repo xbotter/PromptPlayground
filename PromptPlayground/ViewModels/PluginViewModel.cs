@@ -36,7 +36,7 @@ namespace PromptPlayground.ViewModels
             else
             {
                 this.Title = folder;
-                Functions = new ObservableCollection<SemanticFunctionViewModel>();
+                Functions = [];
             }
             IsActive = true;
         }

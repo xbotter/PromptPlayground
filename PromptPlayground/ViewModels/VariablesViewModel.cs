@@ -8,16 +8,16 @@ namespace PromptPlayground.ViewModels
 {
     public class VariablesViewModel : ViewModelBase
     {
-        static Dictionary<string, string> VariablesCache = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> _variablesCache = [];
 
         /// <summary>
         /// only for design time
         /// </summary>
         public VariablesViewModel()
         {
-            Variables = new ObservableCollection<Variable>(new Faker<Variable>()
+            Variables = new ObservableCollection<Variable>([.. new Faker<Variable>()
                 .RuleFor(x => x.Name, f => f.Lorem.Word())
-                .Generate(5).ToList());
+                .Generate(5)]);
         }
 
         public VariablesViewModel(List<Variable> variables)
@@ -26,9 +26,9 @@ namespace PromptPlayground.ViewModels
 
             foreach (var var in Variables)
             {
-                if (VariablesCache.ContainsKey(var.Name))
+                if (_variablesCache.TryGetValue(var.Name, out string? value))
                 {
-                    var.Value = VariablesCache[var.Name];
+                    var.Value = value;
                 }
                 else if (string.IsNullOrWhiteSpace(var.Value) && !string.IsNullOrWhiteSpace(var.DefaultValue))
                 {
@@ -49,7 +49,7 @@ namespace PromptPlayground.ViewModels
                 }
                 if (var.Value != var.DefaultValue)
                 {
-                    VariablesCache[var.Name] = var.Value;
+                    _variablesCache[var.Name] = var.Value;
                 }
             }
             return true;
