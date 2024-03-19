@@ -17,17 +17,17 @@ namespace PromptPlayground.Services
     public class PromptService
     {
         private readonly TimeProvider _timeProvider = TimeProvider.System;
-        private readonly ILLMConfigViewModel model;
+        private readonly ILLMConfigViewModel _model;
 
         public PromptService(IConfigAttributesProvider provider)
         {
-            this.model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
+            this._model = provider.GetLLM() ?? throw new Exception("无法创建Kernel，请检查LLM配置");
         }
 
         private Kernel Build()
         {
 
-            var builder = model.CreateKernelBuilder();
+            var builder = _model.CreateKernelBuilder();
 
             var _kernel = builder.Build();
 
@@ -97,7 +97,7 @@ namespace PromptPlayground.Services
             var elapsed = _timeProvider.GetElapsedTime(startTimestamp);
             try
             {
-                var usage = model.GetUsage(result);
+                var usage = _model.GetUsage(result);
                 return new GenerateResult()
                 {
                     Text = result.GetValue<string>() ?? "",
