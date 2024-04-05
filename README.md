@@ -1,63 +1,63 @@
 ﻿# Prompt Playground
 
-一个简易的Semantic Kernel提示词调试工具。
+A simple Semantic Kernel prompt debugging tool.
 
-## 使用方法 🐣
+## How to use 🐣
 
-### 下载安装
+### Download and Install
 
-1. 从Release下载最新的安装包。
-2. 安装运行`prompt-playground.exe` 即可。
+1. Download the latest installation package from Release.
+2. Install and run `prompt-playground.exe`.
 
-### 首次使用
+### First-time use
 
-首次使用需要先进入配置设置。
+You need to enter the configuration settings for the first time.
 
-点击菜单的配置，即可进入配置界面。
+Click on the configuration in the menu to enter the configuration interface.
 ![Configuration](assets/README/image-5.png)
 
-目前模型的选择支持:
+The current model selection supports:
 
 1. Azure OpenAI ChatCompletion (gpt-35/gpt-4)
 1. OpenAI ChatCompletion
 1. Baidu ERNIE-Bot
 1. Aliyun DashScope
 
-`生成数量`指最大生成结果数量，默认为3。
+`Generation quantity` refers to the maximum number of results generated, the default is 3.
 
-填写入对应的参数，关闭即可。
+Fill in the corresponding parameters and close.
 
-### 直接使用
+### Direct use
 
-在主界面的提示词框中直接输入提示词，点击`生成`(Ctrl+G/Ctrl+Enter)即可。
+Enter the prompt directly in the prompt box on the main interface, and click `Generate` (Ctrl+G/Ctrl+Enter).
 
-### 导入skprompt
+### Import skprompt
 
-点击菜单栏的`打开文件`按钮，选择skprompt.txt文件，即可自动导入提示词，同时会导入对于config.json文件。
+Click the `Open File` button on the menu bar, select the skprompt.txt file, and the prompt will be automatically imported, and the corresponding config.json file will be imported at the same time.
 
-对于没有config.json文件的skprompt，会自动创建一个默认的config.json文件。
+For skprompts without a config.json file, a default config.json file will be automatically created.
 
-点击输入框上方的Tab，可以切换到config.json编辑界面。
+Click the Tab above the input box to switch to the config.json editing interface.
 
-### 保存skprompt
+### Save skprompt
 
-对于skprompt.txt或者config.json文件修改后，点击保存(Ctrl+S)按钮，即可保存到对应的文件。
+After modifying the skprompt.txt or config.json file, click the Save (Ctrl+S) button to save to the corresponding file.
 
-## 导入Semantic Plugin
+## Import Semantic Plugin
 
-1. 点击菜单栏，选择[打开文件夹]，选择包含Semantic Functions的文件夹
-1. 展开侧边栏，即可看到当前文件夹下的所有Semantic Functions
-1. 选择对应的 Function ，即可进行编辑运行
+1. Click on the menu bar, select [Open Folder], and choose the folder containing Semantic Functions
+1. Expand the sidebar to see all Semantic Functions in the current folder
+1. Select the corresponding Function to edit and run
 
-## 截图
+## Screenshots
 
-![界面截图](assets/README/image-4.png)
+![Interface screenshot](assets/README/image-4.png)
 
-## 构建 🛠
+## Build 🛠
 
-1. 安装 .NET 8 SDK
-2. 下载源码
-3. 运行 `dotnet build` 即可
+1. Install .NET 8 SDK
+2. Download the source code
+3. Run `dotnet build`
 
 ## Roadmap 🚧
 
@@ -75,3 +75,4 @@ See [Roadmap](https://github.com/xbotter/PromptPlayground/issues/1)
 ## License 📃
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
