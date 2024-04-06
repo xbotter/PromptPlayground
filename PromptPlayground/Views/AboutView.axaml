@@ -27,9 +27,32 @@
     <Button HorizontalAlignment="Right" Click="CloseClick" FontSize="18" Background="Transparent" Foreground="Gray">
       <i:Icon Value="mdi-close"/>
     </Button>
-    <TextBlock Margin="120 20" FontSize="23">Prompt Playground</TextBlock>
+    <TextBlock Margin="120 20" FontSize="23">
+      Prompt Playground <ToggleSwitch
+                    Grid.Column="1"
+                    IsCheckedChanged="ToggleTheme"
+                    Padding="4"
+                    Theme="{DynamicResource ButtonToggleSwitch}">
+        <ToggleSwitch.OnContent>
+          <PathIcon
+              Data="M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23ZM17 15C17.476 15 17.9408 14.9525 18.3901 14.862C17.296 17.3011 14.8464 19 12 19C8.13401 19 5 15.866 5 12C5 8.60996 7.40983 5.78277 10.6099 5.13803C10.218 6.01173 10 6.98041 10 8C10 11.866 13.134 15 17 15Z"
+              Foreground="{DynamicResource ButtonDefaultTertiaryForeground}"
+              Height="16"
+              Width="16" />
+        </ToggleSwitch.OnContent>
+        <ToggleSwitch.OffContent>
+          <PathIcon
+              Data="M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13"
+              Foreground="{DynamicResource ButtonDefaultTertiaryForeground}"
+              Height="16"
+              Width="16" />
+        </ToggleSwitch.OffContent>
+      </ToggleSwitch>
+    </TextBlock>
+    
     <TextBlock Text="{Binding CurrentVersion}" />
     <Button i:Attached.Icon="mdi-github" Margin="200 20" Background="White" FontSize="30" Foreground="Black" Command="{Binding OpenGitHubCommand}"/>
+    
     <Button Margin="120 0 120 30" Command="{Binding CheckVersionCommand}">检查更新</Button>
   </StackPanel>
 	</Border>
